@@ -35,25 +35,14 @@ export const metadata: Metadata = {
     siteName: 'Kiyo',
     locale: 'zh_CN',
     type: 'website',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Kiyo · AI 音乐创作平台',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Kiyo · 让旋律自由生长',
     description: '基于多模型协同的 AI 音乐创作平台。',
-    images: ['/og-image.png'],
   },
-  icons: {
-    icon: '/icon.svg',
-    apple: '/apple-touch-icon.png',
-  },
+  // icon.svg 通过 app/icon.svg 文件约定自动注入
+  // OG/apple-touch 资源后续 PR 用 next/og 动态生成
 }
 
 export const viewport: Viewport = {
