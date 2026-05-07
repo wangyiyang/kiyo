@@ -19,7 +19,14 @@ export async function GET(request: Request, { params }: { params: { id: string }
     .eq('user_id', user.id)
     .single()
 
-  if (error || !lyric) {
+  if (error) {
+    return NextResponse.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    )
+  }
+
+  if (!lyric) {
     return NextResponse.json(
       { error: { code: 'NOT_FOUND', message: 'Lyric not found' } },
       { status: 404 }
@@ -67,7 +74,14 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   const allowed = ['title', 'content', 'language', 'style', 'mood', 'status']
   const updates: Record<string, unknown> = {}
   for (const key of allowed) {
-    if (key in body) updates[key] = body[key]
+    if (key in body && typeof body[key] === 'string') updates[key] = body[key]
+  }
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json(
+      { error: { code: 'VALIDATION_ERROR', message: 'No valid fields to update' } },
+      { status: 400 }
+    )
   }
 
   const { data: lyric, error } = await supabase
