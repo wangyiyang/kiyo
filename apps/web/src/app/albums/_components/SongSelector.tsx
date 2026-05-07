@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SongRow } from '@kiyo/ui'
-import { Input } from '@kiyo/ui/src/components/ui/input'
+import { Input, SongRow } from '@kiyo/ui'
 
 interface Song {
   id: string
@@ -47,7 +46,7 @@ export function SongSelector({ selectedIds, onChange }: SongSelectorProps) {
       <Input
         placeholder="搜索歌曲..."
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
       />
       <div className="max-h-60 space-y-2 overflow-y-auto">
         {filteredSongs.map((song) => (

@@ -2,13 +2,13 @@
 
 import { useState } from 'react'
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@kiyo/ui/src/components/ui/dialog'
-import { Button } from '@kiyo/ui'
+} from '@kiyo/ui'
 import { useRouter } from 'next/navigation'
 
 interface DeleteConfirmDialogProps {

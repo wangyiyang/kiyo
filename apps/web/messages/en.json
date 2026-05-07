@@ -1,7 +1,8 @@
 {
   "metadata": {
-    "title": "Kiyo",
-    "description": "AI Music Creation Platform"
+    "title": "Kiyo — AI Music Creation Platform",
+    "description": "A multi-model AI music workflow that turns lyrics, melody, vocals, and mixing into a single creator-controlled pipeline.",
+    "applicationName": "Kiyo"
   },
   "home": {
     "title": "Kiyo",
@@ -20,5 +21,198 @@
   "notFound": {
     "title": "Page Not Found",
     "description": "The page you are looking for does not exist."
+  },
+  "header": {
+    "nav": {
+      "features": "Features",
+      "howItWorks": "Workflow",
+      "showcase": "Showcase"
+    },
+    "cta": "Join Waitlist"
+  },
+  "footer": {
+    "tagline": "A multi-model AI music platform that gives creators a single workflow from spark to release.",
+    "groups": {
+      "product": {
+        "title": "Product",
+        "links": {
+          "features": "Features",
+          "howItWorks": "Workflow",
+          "showcase": "Showcase"
+        }
+      },
+      "resources": {
+        "title": "Resources",
+        "links": {
+          "docs": "Documentation",
+          "roadmap": "Roadmap",
+          "changelog": "Changelog"
+        }
+      },
+      "about": {
+        "title": "About",
+        "links": {
+          "team": "Team",
+          "contact": "Contact",
+          "privacy": "Privacy"
+        }
+      }
+    },
+    "copyright": "© {year} Kiyo. Let melody grow free."
+  },
+  "hero": {
+    "badge": "Multi-model · AI music workflow",
+    "headline": {
+      "prefix": "Let melody",
+      "highlight": "grow free",
+      "suffix": ""
+    },
+    "description": "Kiyo connects inspiration, arrangement, vocals, and mixing on one timeline — every step keeps the creator in charge.",
+    "cta": {
+      "primary": "Join Waitlist",
+      "secondary": "See what it does"
+    },
+    "stats": {
+      "models": {
+        "label": "Models",
+        "value": "5+"
+      },
+      "genres": {
+        "label": "Genres",
+        "value": "30+"
+      },
+      "cycle": {
+        "label": "Turnaround",
+        "value": "Minutes"
+      }
+    }
+  },
+  "features": {
+    "eyebrow": "What it does",
+    "heading": "An AI workflow rebuilt for creators",
+    "description": "Not just generation — collaboration. Make AI a bandmate, not a button.",
+    "items": {
+      "multiModel": {
+        "title": "Multi-model collaboration",
+        "description": "Top music and language models hand off work along one timeline — inspiration, melody, vocals, and mixing each play their part while you conduct."
+      },
+      "controllable": {
+        "title": "A controllable process",
+        "description": "Not a one-click black box. Lyrics, key, genre, vocals, rhythm, and pauses are all exposed — go SUNO-loose or producer-tight, your call."
+      },
+      "endToEnd": {
+        "title": "Spark to finished track",
+        "description": "One workflow: drafts, collaborative edits, version history, cover and lyric management, export and release. No more juggling ten tools."
+      }
+    }
+  },
+  "howItWorks": {
+    "eyebrow": "Workflow",
+    "heading": "Four steps from spark to release",
+    "description": "Every step keeps the creator driving — never dragged along by the pipeline.",
+    "steps": {
+      "describe": {
+        "step": "01",
+        "title": "Describe the spark",
+        "description": "A line of lyrics, an image, a mood. Kiyo turns it into genre, emotion, and section structure."
+      },
+      "generate": {
+        "step": "02",
+        "title": "Co-generate",
+        "description": "Multiple models draft in parallel — verse, chorus, and bridge variants side by side. Pick one and Kiyo carries on."
+      },
+      "refine": {
+        "step": "03",
+        "title": "Refine and voice",
+        "description": "Adjust tempo, modulate keys, swap timbres, layer AI vocals — male, female, articulation style, all directable."
+      },
+      "release": {
+        "step": "04",
+        "title": "Mix and release",
+        "description": "One-click mastering, export lossless or streaming-ready — spark to live track in minutes."
+      }
+    }
+  },
+  "showcase": {
+    "eyebrow": "Showcase preview",
+    "heading": "Sample tracks crafted with Kiyo",
+    "description": "From Synthwave to Cinematic, Lofi to Future Funk — genre is just the starting line.",
+    "tracks": {
+      "cityNight": {
+        "title": "City Nightdrive",
+        "genre": "Synthwave",
+        "mood": "Cool · Drifting"
+      },
+      "summerBird": {
+        "title": "Late-Summer Bird",
+        "genre": "Lofi · City Pop",
+        "mood": "Warm · Lazy"
+      },
+      "blackstone": {
+        "title": "Blackstone Heart",
+        "genre": "Cinematic Rock",
+        "mood": "High contrast · Tension"
+      },
+      "tide": {
+        "title": "Tide 04:00",
+        "genre": "Ambient Electronic",
+        "mood": "Deep space · Stillness"
+      },
+      "radio12": {
+        "title": "Radio 12F",
+        "genre": "Future Funk",
+        "mood": "Saturated · Groove"
+      },
+      "weightlessGarden": {
+        "title": "Weightless Garden",
+        "genre": "Dream Pop",
+        "mood": "Soft light · Floating"
+      }
+    }
+  },
+  "finalCta": {
+    "headline": {
+      "prefix": "Turn the melody",
+      "highlight": "you're humming",
+      "suffix": "into a finished track"
+    },
+    "description": "Kiyo is in private beta. Drop your email, join the waitlist — we'll let you know the moment we launch.",
+    "cta": {
+      "primary": "Join Waitlist",
+      "secondary": "See what it does"
+    }
+  },
+  "waitlist": {
+    "title": "Join the Kiyo Waitlist",
+    "description": "Leave your email and we'll tell you the moment we launch.",
+    "fields": {
+      "email": {
+        "label": "Email",
+        "placeholder": "you@example.com"
+      },
+      "role": {
+        "label": "You are… (optional)",
+        "options": {
+          "producer": "Producer",
+          "songwriter": "Songwriter",
+          "enthusiast": "Music enthusiast",
+          "other": "Other"
+        }
+      }
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "submit": "Join Waitlist",
+      "submitting": "Submitting…"
+    },
+    "toast": {
+      "success": {
+        "title": "You're on the waitlist!",
+        "description": "We'll email you the moment we launch."
+      },
+      "duplicate": "Try a different email, or just hang tight for our update.",
+      "invalid": "Check the email format and try again.",
+      "unknown": "Try again later, or reach us at hello@kiyo.ai."
+    }
   }
 }

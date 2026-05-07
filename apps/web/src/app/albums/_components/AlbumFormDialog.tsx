@@ -2,15 +2,15 @@
 
 import { useState } from 'react'
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@kiyo/ui/src/components/ui/dialog'
-import { Button } from '@kiyo/ui'
-import { Input } from '@kiyo/ui/src/components/ui/input'
-import { Textarea } from '@kiyo/ui/src/components/ui/textarea'
+  Input,
+  Textarea,
+} from '@kiyo/ui'
 import { SongSelector } from './SongSelector'
 import { useRouter } from 'next/navigation'
 
@@ -77,7 +77,7 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
             <label className="mb-1 block text-sm font-medium">专辑名称</label>
             <Input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
               placeholder="输入专辑名称"
               required
             />
@@ -86,7 +86,7 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
             <label className="mb-1 block text-sm font-medium">描述（可选）</label>
             <Textarea
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
               placeholder="输入专辑描述"
               rows={3}
             />

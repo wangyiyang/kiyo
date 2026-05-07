@@ -1,14 +1,12 @@
 import type { Config } from 'tailwindcss'
+import sharedConfig from '../../packages/ui/tailwind.config'
 
 const config: Config = {
+  presets: [sharedConfig],
   content: [
     './src/**/*.{ts,tsx}',
     '../../packages/ui/src/**/*.{ts,tsx}',
   ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
 }
 
 export default config
