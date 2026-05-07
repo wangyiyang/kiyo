@@ -49,3 +49,8 @@ export { EmptyState } from './src/components/empty-state'
 export { SongRow } from './src/components/song-row'
 export { AlbumCard } from './src/components/album-card'
 export { Skeleton } from './src/components/ui/skeleton'
+
+export { textToBlocks, blocksToText } from './src/lib/blocks'
+export type { Block } from './src/lib/blocks'
+export { StructuredBlockEditor } from './src/components/structured-block-editor'
+export type { StructuredBlockEditorProps } from './src/components/structured-block-editor'
