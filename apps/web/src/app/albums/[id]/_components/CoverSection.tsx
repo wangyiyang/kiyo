@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Button, Skeleton } from '@kiyo/ui'
 import { Disc3 } from 'lucide-react'
 
@@ -53,9 +54,9 @@ export function CoverSection({ albumId, coverUrl, coverStatus, title }: CoverSec
 
   return (
     <div className="mb-6">
-      <div className="aspect-square max-w-md rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+      <div className="relative aspect-square max-w-md rounded-lg bg-muted flex items-center justify-center overflow-hidden">
         {status === 'completed' && url ? (
-          <img src={url} alt={title} className="h-full w-full object-cover" />
+          <Image src={url} alt={title} fill className="object-cover" />
         ) : status === 'generating' ? (
           <Skeleton className="h-full w-full" />
         ) : (
