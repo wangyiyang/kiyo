@@ -49,4 +49,4 @@ enable_anonymous_sign_ins = false
 
 [edge_runtime]
 enabled = true
-policy = "permissive"
+policy = "per_worker"
