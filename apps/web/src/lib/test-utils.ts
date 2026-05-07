@@ -146,5 +146,19 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     }),
   }
 
-  return { from, auth, dataStore, chain }
+  const uploadedFiles: { path: string; buffer: ArrayBuffer; contentType?: string }[] = []
+
+  const storage = {
+    from: (_bucket: string) => ({
+      upload: vi.fn().mockImplementation((path: string, buffer: ArrayBuffer, options?: { contentType?: string }) => {
+        uploadedFiles.push({ path, buffer, contentType: options?.contentType })
+        return Promise.resolve({ data: { path }, error: null })
+      }),
+      getPublicUrl: vi.fn().mockImplementation((path: string) => ({
+        data: { publicUrl: `https://mock-cdn.supabase.co/storage/v1/object/public/covers/${path}` },
+      })),
+    }),
+  }
+
+  return { from, auth, dataStore, chain, storage, uploadedFiles }
 }
