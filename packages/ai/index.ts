@@ -1,2 +1,3 @@
 export { MinimaxError } from './src/errors'
 export type { MinimaxErrorCode } from './src/errors'
+export { minimaxFetch } from './src/client'
