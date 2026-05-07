@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "title": "Kiyo",
+    "description": "AI音乐创作平台"
+  },
+  "home": {
+    "title": "Kiyo",
+    "subtitle": "AI音乐创作平台",
+    "buttons": {
+      "primary": "开始使用",
+      "secondary": "了解更多",
+      "outline": "查看文档"
+    }
+  },
+  "localeSwitcher": {
+    "label": "语言",
+    "en": "English",
+    "zh": "中文"
+  },
+  "notFound": {
+    "title": "页面未找到",
+    "description": "您访问的页面不存在。"
+  }
+}
