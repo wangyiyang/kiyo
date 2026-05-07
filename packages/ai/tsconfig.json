@@ -10,7 +10,6 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "./dist",
     "noEmit": true,
     "isolatedModules": true,
     "esModuleInterop": true,
