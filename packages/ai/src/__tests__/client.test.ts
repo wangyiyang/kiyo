@@ -1,3 +1,5 @@
+process.env.MINIMAX_TIMEOUT_MS = '50'
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { minimaxFetch } from '../client'
 import { MinimaxError } from '../errors'
@@ -44,16 +46,9 @@ describe('minimaxFetch', () => {
   })
 
   it('throws MinimaxError(timeout) when request exceeds timeout', async () => {
-    vi.useRealTimers()
-    process.env.MINIMAX_TIMEOUT_MS = '50'
-
-    const abortController = new AbortController()
     globalThis.fetch = vi.fn((_url, options) => {
-      if (options?.signal) {
-        options.signal.addEventListener('abort', () => abortController.abort())
-      }
       return new Promise((_resolve, reject) => {
-        abortController.signal.addEventListener('abort', () => {
+        options?.signal?.addEventListener('abort', () => {
           const err = new Error('The operation was aborted')
           err.name = 'AbortError'
           reject(err)
@@ -61,11 +56,9 @@ describe('minimaxFetch', () => {
       })
     })
 
-    await expect(minimaxFetch('/v1/test', { body: JSON.stringify({}) }))
-      .rejects.toMatchObject({ code: 'timeout' })
-
-    delete process.env.MINIMAX_TIMEOUT_MS
-    vi.useFakeTimers({ shouldAdvanceTime: true })
+    const promise = minimaxFetch('/v1/test', { body: JSON.stringify({}) })
+    vi.advanceTimersByTime(100)
+    await expect(promise).rejects.toMatchObject({ code: 'timeout' })
   }, 10000)
 
   it('throws MinimaxError(rate_limit) on 429', async () => {
