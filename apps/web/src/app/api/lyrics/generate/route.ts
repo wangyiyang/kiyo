@@ -1,8 +1,8 @@
 import { createServerClient } from '@kiyo/supabase'
-import { generateLyrics } from '@kiyo/ai'
+import { generateLyrics, MinimaxError } from '@kiyo/ai'
 import { NextResponse } from 'next/server'
 
-function buildLyricsPrompt(params: {
+export function buildLyricsPrompt(params: {
   prompt: string
   language?: string
   style?: string
@@ -42,9 +42,28 @@ export async function POST(request: Request) {
   }
 
   const { prompt, language, style, mood } = body
-  if (!prompt || typeof prompt !== 'string') {
+  if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
     return NextResponse.json(
       { error: { code: 'VALIDATION_ERROR', message: 'Prompt is required' } },
+      { status: 400 }
+    )
+  }
+
+  if (language !== undefined && typeof language !== 'string') {
+    return NextResponse.json(
+      { error: { code: 'VALIDATION_ERROR', message: 'Language must be a string' } },
+      { status: 400 }
+    )
+  }
+  if (style !== undefined && typeof style !== 'string') {
+    return NextResponse.json(
+      { error: { code: 'VALIDATION_ERROR', message: 'Style must be a string' } },
+      { status: 400 }
+    )
+  }
+  if (mood !== undefined && typeof mood !== 'string') {
+    return NextResponse.json(
+      { error: { code: 'VALIDATION_ERROR', message: 'Mood must be a string' } },
       { status: 400 }
     )
   }
@@ -80,12 +99,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ lyric })
   } catch (err) {
+    const isMinimaxError = err instanceof MinimaxError
     const message = err instanceof Error ? err.message : 'Lyrics generation failed'
-    const statusCode = message.includes('Minimax') || message.includes('generation') ? 422 : 500
+    const statusCode = isMinimaxError ? 422 : 500
     return NextResponse.json(
       {
         error: {
-          code: statusCode === 422 ? 'GENERATION_FAILED' : 'INTERNAL_ERROR',
+          code: isMinimaxError ? 'GENERATION_FAILED' : 'INTERNAL_ERROR',
           message,
         },
       },
