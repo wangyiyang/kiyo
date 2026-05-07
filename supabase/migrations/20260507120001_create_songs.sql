@@ -1,3 +1,6 @@
+-- 确保 moddatetime 扩展可用
+create extension if not exists moddatetime schema extensions;
+
 -- 创建 songs 表（最小结构）
 create table songs (
   id uuid primary key default gen_random_uuid(),
