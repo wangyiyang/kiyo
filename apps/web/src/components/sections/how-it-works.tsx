@@ -48,8 +48,8 @@ export function HowItWorks() {
           />
           <ol className="grid gap-10 md:grid-cols-4 md:gap-6">
             {steps.map((s, idx) => (
-              <ScrollReveal key={s.step} delay={idx * 0.1}>
-                <li className="relative">
+              <li key={s.step} className="relative">
+                <ScrollReveal delay={idx * 0.1}>
                   <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[hsl(var(--kiyo-purple)/0.35)] bg-background text-base font-semibold tracking-wide text-kiyo-purple shadow-[0_0_40px_-10px_hsl(var(--kiyo-purple)/0.5)]">
                     {s.step}
                   </div>
@@ -59,8 +59,8 @@ export function HowItWorks() {
                   <p className="mt-2 text-center text-sm leading-relaxed text-muted-foreground">
                     {s.description}
                   </p>
-                </li>
-              </ScrollReveal>
+                </ScrollReveal>
+              </li>
             ))}
           </ol>
         </div>

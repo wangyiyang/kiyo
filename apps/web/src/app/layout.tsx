@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next'
-import { Noto_Sans_SC } from 'next/font/google'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Toaster } from '@kiyo/ui'
@@ -8,14 +7,6 @@ import { Providers } from './providers'
 import { WaitlistDialog } from '@/components/waitlist-dialog'
 
 import './globals.css'
-
-const notoSansSC = Noto_Sans_SC({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-noto-sc',
-  display: 'swap',
-  preload: false,
-})
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kiyo.ai'
 
@@ -63,7 +54,7 @@ export default function RootLayout({
     <html
       lang="zh-CN"
       suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistMono.variable} ${notoSansSC.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <Providers>

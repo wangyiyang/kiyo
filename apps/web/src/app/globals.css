@@ -39,7 +39,7 @@
     --card-foreground: 210 40% 98%;
     --popover: 240 18% 9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 262 83% 70%;
+    --primary: 262 83% 55%;
     --primary-foreground: 0 0% 100%;
     --secondary: 240 14% 14%;
     --secondary-foreground: 210 40% 98%;
@@ -51,7 +51,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 240 12% 18%;
     --input: 240 12% 18%;
-    --ring: 262 83% 70%;
+    --ring: 262 83% 55%;
 
     /* Kiyo brand tokens (dark) */
     --kiyo-purple: 262 83% 70%;

@@ -1,12 +1,20 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Sparkles } from 'lucide-react'
 
 import { Button } from '@kiyo/ui'
 
-import { HeroWaveform } from './hero-waveform'
 import { useWaitlist } from '@/lib/waitlist-context'
+
+const HeroWaveform = dynamic(
+  () => import('./hero-waveform').then((m) => ({ default: m.HeroWaveform })),
+  {
+    ssr: false,
+    loading: () => <div aria-hidden className="h-full w-full" />,
+  },
+)
 
 export function Hero() {
   const reduce = useReducedMotion()
@@ -36,27 +44,17 @@ export function Hero() {
               <span>多模型协同 · AI 音乐工作流</span>
             </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="mt-6 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
-            >
+            <h1 className="mt-6 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
               让旋律
               <span className="bg-gradient-to-r from-kiyo-purple to-kiyo-cyan bg-clip-text text-transparent">
                 {' '}
                 自由生长
               </span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: reduce ? 0 : 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
-            >
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
               Kiyo 把灵感、编曲、人声、混音一线打通。从一句歌词到一支可发布的作品 —— 每一步都为创作者保留掌控权。
-            </motion.p>
+            </p>
 
             <motion.div
               initial={{ opacity: 0, y: reduce ? 0 : 12 }}
