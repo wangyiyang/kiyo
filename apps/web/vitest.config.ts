@@ -10,8 +10,8 @@ export default defineConfig({
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
   },
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
+    alias: [
+      { find: /^@\/(.*)$/, replacement: path.resolve(__dirname, './src/$1') },
+    ],
   },
 })
