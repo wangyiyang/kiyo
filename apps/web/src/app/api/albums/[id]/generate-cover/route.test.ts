@@ -144,7 +144,7 @@ describe('POST /api/albums/[id]/generate-cover', () => {
     expect(album.cover_status).toBe('failed')
   })
 
-  it('returns 422 when Storage upload fails', async () => {
+  it('returns 500 when Storage upload fails', async () => {
     const { createServerClient } = await import('@kiyo/supabase')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
@@ -170,7 +170,7 @@ describe('POST /api/albums/[id]/generate-cover', () => {
 
     globalThis.fetch = originalFetch
 
-    expect(response.status).toBe(422)
+    expect(response.status).toBe(500)
     const json = await response.json()
     expect(json.coverStatus).toBe('failed')
 

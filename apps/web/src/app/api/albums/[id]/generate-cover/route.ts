@@ -91,7 +91,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       .update({ cover_status: 'failed' })
       .eq('id', albumId)
 
-    const errorMessage = error instanceof Error ? error.message : 'Cover generation failed'
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : typeof error === 'object' && error !== null && 'message' in error
+          ? String((error as any).message)
+          : 'Cover generation failed'
     const statusCode = errorMessage.includes('Minimax') || errorMessage.includes('generation') ? 422 : 500
 
     return NextResponse.json(
