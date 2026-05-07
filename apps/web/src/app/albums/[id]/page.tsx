@@ -3,6 +3,7 @@ import { EmptyState } from '@kiyo/ui'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { DraggableSongList } from '../_components/DraggableSongList'
+import { CoverSection } from './_components/CoverSection'
 
 interface AlbumDetailPageProps {
   params: Promise<{ id: string }>
@@ -43,6 +44,13 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
           ← 返回专辑列表
         </Link>
       </div>
+
+      <CoverSection
+        albumId={id}
+        coverUrl={album.cover_url}
+        coverStatus={album.cover_status}
+        title={album.title}
+      />
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold">{album.title}</h1>
