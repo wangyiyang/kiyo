@@ -31,12 +31,44 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     insert: (values: any | any[]) => {
       const arr = Array.isArray(values) ? values : [values]
       arr.forEach((v) => dataStore[currentTable].push({ ...v, id: v.id || `mock-${Math.random().toString(36).slice(2)}` }))
-      return { data: arr.length === 1 ? arr[0] : arr, error: null }
+      return {
+        data: arr.length === 1 ? arr[0] : arr,
+        error: null,
+        select: (columns = '*') => ({
+          single: () => ({
+            then: async (resolve: any) => {
+              const result = arr.length === 1 ? arr[0] : arr
+              reset()
+              return resolve({ data: result, error: null })
+            },
+          }),
+          then: async (resolve: any) => {
+            reset()
+            return resolve({ data: arr, error: null })
+          },
+        }),
+      }
     },
     update: (values: any) => {
       let items = dataStore[currentTable].filter((item) => currentFilters.every((f) => f(item)))
       items.forEach((item) => Object.assign(item, values))
-      return { data: items.length === 1 ? items[0] : items, error: null }
+      return {
+        data: items.length === 1 ? items[0] : items,
+        error: null,
+        select: (columns = '*') => ({
+          single: () => ({
+            then: async (resolve: any) => {
+              const result = items.length === 1 ? items[0] : items
+              reset()
+              return resolve({ data: result, error: null })
+            },
+          }),
+          then: async (resolve: any) => {
+            reset()
+            return resolve({ data: items, error: null })
+          },
+        }),
+      }
     },
     delete: () => {
       const before = dataStore[currentTable].length
