@@ -1,7 +1,7 @@
 import { MinimaxError } from './errors'
 
 const BASE_URL = process.env.MINIMAX_BASE_URL || 'https://api.minimaxi.com'
-const TIMEOUT_MS = () => Number(process.env.MINIMAX_TIMEOUT_MS || '30000')
+const TIMEOUT_MS = Number(process.env.MINIMAX_TIMEOUT_MS || '30000')
 const MAX_RETRIES = Number(process.env.MINIMAX_MAX_RETRIES || '3')
 
 function delay(ms: number): Promise<void> {
@@ -13,7 +13,7 @@ async function fetchWithTimeout(
   options: RequestInit
 ): Promise<Response> {
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS())
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)
 
   try {
     const response = await fetch(url, {
@@ -48,8 +48,6 @@ export async function minimaxFetch(
     headers.set('Content-Type', 'application/json')
   }
 
-  let lastError: unknown
-
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     try {
       const response = await fetchWithTimeout(url, {
@@ -74,21 +72,15 @@ export async function minimaxFetch(
 
       return await response.json()
     } catch (err) {
-      lastError = err
-
-      if (err instanceof MinimaxError && err.code === 'timeout') {
-        throw err
-      }
-
-      if (err instanceof MinimaxError && (err.code === 'rate_limit' || err.code === 'api_error')) {
+      if (
+        err instanceof MinimaxError &&
+        (err.code === 'timeout' || err.code === 'rate_limit' || err.code === 'api_error')
+      ) {
         throw err
       }
 
       const isLastAttempt = attempt === MAX_RETRIES
       if (isLastAttempt) {
-        if (err instanceof MinimaxError) {
-          throw err
-        }
         throw new MinimaxError(
           err instanceof Error ? err.message : 'Network request failed',
           'network'
@@ -96,9 +88,9 @@ export async function minimaxFetch(
       }
 
       await delay(2 ** attempt * 1000)
-      continue
     }
   }
 
-  throw lastError
+  // Unreachable, but satisfies TypeScript's control flow analysis
+  throw new MinimaxError('Network request failed', 'network')
 }
