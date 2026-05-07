@@ -3,19 +3,22 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { Music2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { Button, cn } from '@kiyo/ui'
 
+import { LocaleSwitcher } from './LocaleSwitcher'
 import { ThemeToggle } from './theme-toggle'
 import { useWaitlist } from '@/lib/waitlist-context'
 
 const navLinks = [
-  { href: '#features', label: '能力' },
-  { href: '#how', label: '工作流' },
-  { href: '#showcase', label: '作品' },
-]
+  { href: '#features', key: 'features' },
+  { href: '#how', key: 'howItWorks' },
+  { href: '#showcase', key: 'showcase' },
+] as const
 
 export function SiteHeader() {
+  const t = useTranslations('header')
   const { show } = useWaitlist()
   const [scrolled, setScrolled] = React.useState(false)
 
@@ -53,15 +56,16 @@ export function SiteHeader() {
               href={link.href}
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              {link.label}
+              {t(`nav.${link.key}`)}
             </a>
           ))}
         </nav>
 
         <div className="flex items-center gap-2">
+          <LocaleSwitcher />
           <ThemeToggle />
           <Button size="sm" onClick={show}>
-            加入 Waitlist
+            {t('cta')}
           </Button>
         </div>
       </div>

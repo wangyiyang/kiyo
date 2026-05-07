@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Sparkles } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { Button } from '@kiyo/ui'
 
@@ -16,7 +17,10 @@ const HeroWaveform = dynamic(
   },
 )
 
+const statKeys = ['models', 'genres', 'cycle'] as const
+
 export function Hero() {
+  const t = useTranslations('hero')
   const reduce = useReducedMotion()
   const { show } = useWaitlist()
 
@@ -41,19 +45,20 @@ export function Hero() {
               className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--kiyo-purple)/0.35)] bg-[hsl(var(--kiyo-purple)/0.08)] px-3 py-1 text-xs font-medium text-foreground/90"
             >
               <Sparkles className="h-3.5 w-3.5 text-kiyo-purple" />
-              <span>多模型协同 · AI 音乐工作流</span>
+              <span>{t('badge')}</span>
             </motion.div>
 
             <h1 className="mt-6 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              让旋律
+              {t('headline.prefix')}
               <span className="bg-gradient-to-r from-kiyo-purple to-kiyo-cyan bg-clip-text text-transparent">
                 {' '}
-                自由生长
+                {t('headline.highlight')}
               </span>
+              {t('headline.suffix') ? <> {t('headline.suffix')}</> : null}
             </h1>
 
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Kiyo 把灵感、编曲、人声、混音一线打通。从一句歌词到一支可发布的作品 —— 每一步都为创作者保留掌控权。
+              {t('description')}
             </p>
 
             <motion.div
@@ -63,11 +68,11 @@ export function Hero() {
               className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
             >
               <Button size="lg" onClick={show} className="group">
-                加入 Waitlist
+                {t('cta.primary')}
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Button>
               <Button size="lg" variant="ghost" asChild>
-                <a href="#features">了解能力</a>
+                <a href="#features">{t('cta.secondary')}</a>
               </Button>
             </motion.div>
 
@@ -77,24 +82,16 @@ export function Hero() {
               transition={{ duration: 0.7, delay: 0.5 }}
               className="mt-10 grid max-w-md grid-cols-3 gap-6"
             >
-              <div>
-                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
-                  模型
-                </dt>
-                <dd className="mt-1 text-2xl font-semibold tracking-tight">5+</dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
-                  流派
-                </dt>
-                <dd className="mt-1 text-2xl font-semibold tracking-tight">30+</dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
-                  出品周期
-                </dt>
-                <dd className="mt-1 text-2xl font-semibold tracking-tight">分钟级</dd>
-              </div>
+              {statKeys.map((key) => (
+                <div key={key}>
+                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+                    {t(`stats.${key}.label`)}
+                  </dt>
+                  <dd className="mt-1 text-2xl font-semibold tracking-tight">
+                    {t(`stats.${key}.value`)}
+                  </dd>
+                </div>
+              ))}
             </motion.dl>
           </div>
 

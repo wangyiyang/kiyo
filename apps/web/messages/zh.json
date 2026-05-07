@@ -1,11 +1,12 @@
 {
   "metadata": {
-    "title": "Kiyo",
-    "description": "AI音乐创作平台"
+    "title": "Kiyo — AI 音乐创作平台",
+    "description": "多模型协同的 AI 音乐工作流，把灵感、词曲、人声与混音整合到一个由创作者掌控的流程中。",
+    "applicationName": "Kiyo"
   },
   "home": {
     "title": "Kiyo",
-    "subtitle": "AI音乐创作平台",
+    "subtitle": "AI 音乐创作平台",
     "buttons": {
       "primary": "开始使用",
       "secondary": "了解更多",
@@ -20,5 +21,198 @@
   "notFound": {
     "title": "页面未找到",
     "description": "您访问的页面不存在。"
+  },
+  "header": {
+    "nav": {
+      "features": "能力",
+      "howItWorks": "工作流",
+      "showcase": "作品"
+    },
+    "cta": "加入 Waitlist"
+  },
+  "footer": {
+    "tagline": "多模型协同的 AI 音乐平台，让创作者用一套工作流，从灵感走到发布。",
+    "groups": {
+      "product": {
+        "title": "产品",
+        "links": {
+          "features": "能力",
+          "howItWorks": "工作流",
+          "showcase": "作品集"
+        }
+      },
+      "resources": {
+        "title": "资源",
+        "links": {
+          "docs": "文档",
+          "roadmap": "路线图",
+          "changelog": "更新日志"
+        }
+      },
+      "about": {
+        "title": "关于",
+        "links": {
+          "team": "团队",
+          "contact": "联系我们",
+          "privacy": "隐私政策"
+        }
+      }
+    },
+    "copyright": "© {year} Kiyo. 让旋律自由生长。"
+  },
+  "hero": {
+    "badge": "多模型协同 · AI 音乐工作流",
+    "headline": {
+      "prefix": "让旋律",
+      "highlight": "自由生长",
+      "suffix": ""
+    },
+    "description": "Kiyo 把灵感、编曲、人声与混音串到同一条时间线上 —— 每一步都由创作者主导。",
+    "cta": {
+      "primary": "加入 Waitlist",
+      "secondary": "看看它能做什么"
+    },
+    "stats": {
+      "models": {
+        "label": "模型",
+        "value": "5+"
+      },
+      "genres": {
+        "label": "流派",
+        "value": "30+"
+      },
+      "cycle": {
+        "label": "出品周期",
+        "value": "分钟级"
+      }
+    }
+  },
+  "features": {
+    "eyebrow": "产品能力",
+    "heading": "为创作者重新设计的 AI 工作流",
+    "description": "不只是生成，而是协作。让 AI 成为你的乐队成员，而不是一个按钮。",
+    "items": {
+      "multiModel": {
+        "title": "多模型协同",
+        "description": "顶尖音乐与语言模型在同一条时间线上接力 —— 灵感、旋律、人声、混音各司其职，由你统一指挥。"
+      },
+      "controllable": {
+        "title": "可控的创作过程",
+        "description": "不是一键黑盒。歌词、调式、流派、人声、节奏与停顿都开放给你 —— 想要 SUNO 般洒脱，还是制作人级精修，都能精确控制。"
+      },
+      "endToEnd": {
+        "title": "从灵感到成品",
+        "description": "一条工作流：草稿、协作编辑、版本历史、封面与歌词管理、导出与发布。不再在十个工具之间来回切换。"
+      }
+    }
+  },
+  "howItWorks": {
+    "eyebrow": "工作流",
+    "heading": "四步，从灵感到发布",
+    "description": "每一步都让创作者驱动 —— 而不是被流程拖着走。",
+    "steps": {
+      "describe": {
+        "step": "01",
+        "title": "描述灵感",
+        "description": "一句歌词、一张图、一种情绪。Kiyo 会转化成流派、情感与段落结构。"
+      },
+      "generate": {
+        "step": "02",
+        "title": "协同生成",
+        "description": "多个模型并行起草 —— 主歌、副歌、桥段并排呈现。挑一个，Kiyo 接着往下走。"
+      },
+      "refine": {
+        "step": "03",
+        "title": "精修与人声",
+        "description": "调速度、变调式、换音色、叠加 AI 人声 —— 男声、女声、咬字方式都可指挥。"
+      },
+      "release": {
+        "step": "04",
+        "title": "混音与发布",
+        "description": "一键母带，导出无损或流媒体规格 —— 灵感到成品只要几分钟。"
+      }
+    }
+  },
+  "showcase": {
+    "eyebrow": "作品集预览",
+    "heading": "创作者用 Kiyo 做出的样片",
+    "description": "从 Synthwave 到 Cinematic，从 Lofi 到 Future Funk —— 流派只是起点。",
+    "tracks": {
+      "cityNight": {
+        "title": "城市夜行",
+        "genre": "Synthwave",
+        "mood": "冷感 · 漂移"
+      },
+      "summerBird": {
+        "title": "夏末候鸟",
+        "genre": "Lofi · City Pop",
+        "mood": "暖意 · 慵懒"
+      },
+      "blackstone": {
+        "title": "黑石之心",
+        "genre": "Cinematic Rock",
+        "mood": "高反差 · 张力"
+      },
+      "tide": {
+        "title": "潮汐 04:00",
+        "genre": "Ambient Electronic",
+        "mood": "深空 · 静默"
+      },
+      "radio12": {
+        "title": "十二楼电台",
+        "genre": "Future Funk",
+        "mood": "饱和 · Groove"
+      },
+      "weightlessGarden": {
+        "title": "失重花园",
+        "genre": "Dream Pop",
+        "mood": "柔光 · 漂浮"
+      }
+    }
+  },
+  "finalCta": {
+    "headline": {
+      "prefix": "把",
+      "highlight": "正在哼的旋律",
+      "suffix": "变成完整作品"
+    },
+    "description": "Kiyo 正在内测中。留下邮箱加入 Waitlist —— 上线第一时间通知你。",
+    "cta": {
+      "primary": "加入 Waitlist",
+      "secondary": "看看它能做什么"
+    }
+  },
+  "waitlist": {
+    "title": "加入 Kiyo Waitlist",
+    "description": "留下邮箱，上线第一时间告诉你。",
+    "fields": {
+      "email": {
+        "label": "邮箱",
+        "placeholder": "you@example.com"
+      },
+      "role": {
+        "label": "你是…（选填）",
+        "options": {
+          "producer": "制作人",
+          "songwriter": "词曲创作",
+          "enthusiast": "音乐爱好者",
+          "other": "其它"
+        }
+      }
+    },
+    "actions": {
+      "cancel": "取消",
+      "submit": "加入 Waitlist",
+      "submitting": "提交中…"
+    },
+    "toast": {
+      "success": {
+        "title": "已加入 Waitlist！",
+        "description": "上线第一时间会发邮件通知你。"
+      },
+      "duplicate": "换个邮箱试试，或者继续等我们的更新。",
+      "invalid": "请检查邮箱格式后重试。",
+      "unknown": "稍后再试一次，或邮件联系 hello@kiyo.ai。"
+    }
   }
 }

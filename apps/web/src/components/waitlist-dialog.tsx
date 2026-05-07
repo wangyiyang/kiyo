@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
 
 import {
   Button,
@@ -27,16 +28,12 @@ import { joinWaitlist } from '@/app/actions/waitlist'
 import { useWaitlist } from '@/lib/waitlist-context'
 import { waitlistSchema, type WaitlistInput } from '@/lib/schemas/waitlist'
 
-const roleOptions: { value: NonNullable<WaitlistInput['role']>; label: string }[] = [
-  { value: 'producer', label: '制作人' },
-  { value: 'songwriter', label: '词曲创作' },
-  { value: 'enthusiast', label: '音乐爱好者' },
-  { value: 'other', label: '其它' },
-]
+const roleKeys = ['producer', 'songwriter', 'enthusiast', 'other'] as const
 
 export function WaitlistDialog() {
   const { open, setOpen, hide } = useWaitlist()
   const [pending, startTransition] = React.useTransition()
+  const t = useTranslations('waitlist')
 
   const form = useForm<WaitlistInput>({
     resolver: zodResolver(waitlistSchema),
@@ -48,8 +45,8 @@ export function WaitlistDialog() {
     startTransition(async () => {
       const result = await joinWaitlist(values)
       if (result.ok) {
-        toast.success('已加入 Waitlist!', {
-          description: '我们会第一时间发邮件通知你产品上线。',
+        toast.success(t('toast.success.title'), {
+          description: t('toast.success.description'),
         })
         form.reset()
         hide()
@@ -58,10 +55,10 @@ export function WaitlistDialog() {
 
       const description =
         result.code === 'DUPLICATE'
-          ? '换个邮箱试试,或者耐心等待我们的通知。'
+          ? t('toast.duplicate')
           : result.code === 'INVALID'
-            ? '请检查邮箱格式后重新提交。'
-            : '稍后再试,或联系 hello@kiyo.ai。'
+            ? t('toast.invalid')
+            : t('toast.unknown')
 
       toast.error(result.message, { description })
     })
@@ -76,10 +73,8 @@ export function WaitlistDialog() {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>加入 Kiyo Waitlist</DialogTitle>
-          <DialogDescription>
-            留下邮箱,第一时间获取产品上线通知。
-          </DialogDescription>
+          <DialogTitle>{t('title')}</DialogTitle>
+          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -89,11 +84,11 @@ export function WaitlistDialog() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>邮箱</FormLabel>
+                  <FormLabel>{t('fields.email.label')}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="you@example.com"
+                      placeholder={t('fields.email.placeholder')}
                       autoComplete="email"
                       autoFocus
                       disabled={pending}
@@ -110,18 +105,18 @@ export function WaitlistDialog() {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>你是…(可选)</FormLabel>
+                  <FormLabel>{t('fields.role.label')}</FormLabel>
                   <FormControl>
                     <div className="grid grid-cols-2 gap-2">
-                      {roleOptions.map((option) => {
-                        const active = field.value === option.value
+                      {roleKeys.map((roleKey) => {
+                        const active = field.value === roleKey
                         return (
                           <button
-                            key={option.value}
+                            key={roleKey}
                             type="button"
                             disabled={pending}
                             onClick={() =>
-                              field.onChange(active ? undefined : option.value)
+                              field.onChange(active ? undefined : roleKey)
                             }
                             className={cn(
                               'rounded-md border px-3 py-2 text-sm transition-colors',
@@ -130,7 +125,7 @@ export function WaitlistDialog() {
                                 : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
                             )}
                           >
-                            {option.label}
+                            {t(`fields.role.options.${roleKey}`)}
                           </button>
                         )
                       })}
@@ -148,10 +143,10 @@ export function WaitlistDialog() {
                 onClick={() => handleOpenChange(false)}
                 disabled={pending}
               >
-                取消
+                {t('actions.cancel')}
               </Button>
               <Button type="submit" disabled={pending}>
-                {pending ? '提交中…' : '加入 Waitlist'}
+                {pending ? t('actions.submitting') : t('actions.submit')}
               </Button>
             </DialogFooter>
           </form>
