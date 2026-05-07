@@ -12,6 +12,10 @@
     "@supabase/ssr": "^0.6.1"
   },
   "devDependencies": {
+    "@types/node": "^20",
     "typescript": "^5"
+  },
+  "peerDependencies": {
+    "next": "^14"
   }
 }
