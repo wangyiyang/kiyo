@@ -1,33 +1,43 @@
-import { createServerClient } from '@supabase/ssr'
-import { type CookieOptions } from '@supabase/ssr'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+/**
+ * 刷新 Supabase session。可选地把 cookie 写入上游 response（例如 next-intl
+ * 返回的 redirect/rewrite 响应），从而与其它 middleware 链式组合。
+ *
+ * 如果环境变量缺失（如本地未配置 .env.local），优雅降级为透传 response。
+ */
+export async function updateSession(
+  request: NextRequest,
+  upstream?: NextResponse,
+): Promise<NextResponse> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
+  const response =
+    upstream ?? NextResponse.next({ request: { headers: request.headers } })
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return response
+  }
 
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll()
       },
-      setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
+      setAll(
+        cookiesToSet: { name: string; value: string; options: CookieOptions }[],
+      ) {
         cookiesToSet.forEach(({ name, value, options }) => {
           request.cookies.set(name, value)
-          supabaseResponse.cookies.set(name, value, options)
+          response.cookies.set(name, value, options)
         })
       },
     },
   })
 
-  // 刷新 session
   await supabase.auth.getSession()
 
-  return supabaseResponse
+  return response
 }
