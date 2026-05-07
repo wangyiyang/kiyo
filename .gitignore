@@ -34,3 +34,7 @@ Thumbs.db
 *.pem
 .cache
 *.tsbuildinfo
+
+# Supabase
+supabase/.branches
+supabase/.temp
