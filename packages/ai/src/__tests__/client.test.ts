@@ -46,8 +46,8 @@ describe('minimaxFetch', () => {
   })
 
   it('throws MinimaxError(timeout) when request exceeds timeout', async () => {
-    globalThis.fetch = vi.fn((_url, options) => {
-      return new Promise((_resolve, reject) => {
+    globalThis.fetch = vi.fn((_url: string | URL | Request, options?: RequestInit) => {
+      return new Promise<never>((_resolve, reject) => {
         options?.signal?.addEventListener('abort', () => {
           const err = new Error('The operation was aborted')
           err.name = 'AbortError'

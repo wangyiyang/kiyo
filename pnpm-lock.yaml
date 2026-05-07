@@ -14,6 +14,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@kiyo/ai':
+        specifier: workspace:*
+        version: link:../../packages/ai
       '@kiyo/supabase':
         specifier: workspace:*
         version: link:../../packages/supabase

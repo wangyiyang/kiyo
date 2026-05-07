@@ -14,7 +14,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "@kiyo/ui": "workspace:*",
-    "@kiyo/supabase": "workspace:*"
+    "@kiyo/supabase": "workspace:*",
+    "@kiyo/ai": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20",
