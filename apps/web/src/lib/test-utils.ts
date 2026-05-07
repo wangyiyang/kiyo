@@ -23,6 +23,26 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     currentLimit = null
   }
 
+  const buildResult = () => {
+    let result = [...dataStore[currentTable]]
+    currentFilters.forEach((f) => {
+      result = result.filter(f)
+    })
+    if (currentOrder) {
+      result.sort((a, b) => {
+        const dir = currentOrder!.ascending ? 1 : -1
+        return a[currentOrder!.column] > b[currentOrder!.column] ? dir : -dir
+      })
+    }
+    if (currentLimit) {
+      result = result.slice(0, currentLimit)
+    }
+    if (currentSingle) {
+      result = result[0] ?? null
+    }
+    return result
+  }
+
   const chain = {
     select: (columns = '*') => {
       currentSelect = columns
@@ -55,6 +75,10 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
       return {
         data: items.length === 1 ? items[0] : items,
         error: null,
+        eq: (column: string, value: any) => {
+          currentFilters.push((item) => item[column] === value)
+          return chain
+        },
         select: (columns = '*') => ({
           single: () => ({
             then: async (resolve: any) => {
@@ -74,7 +98,14 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
       const before = dataStore[currentTable].length
       dataStore[currentTable] = dataStore[currentTable].filter((item) => !currentFilters.every((f) => f(item)))
       const deleted = before - dataStore[currentTable].length
-      return { data: deleted > 0 ? { count: deleted } : null, error: null }
+      return {
+        data: deleted > 0 ? { count: deleted } : null,
+        error: null,
+        eq: (column: string, value: any) => {
+          currentFilters.push((item) => item[column] === value)
+          return chain
+        },
+      }
     },
     eq: (column: string, value: any) => {
       currentFilters.push((item) => item[column] === value)
@@ -97,22 +128,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
       return chain
     },
     then: async (resolve: any) => {
-      let result = [...dataStore[currentTable]]
-      currentFilters.forEach((f) => {
-        result = result.filter(f)
-      })
-      if (currentOrder) {
-        result.sort((a, b) => {
-          const dir = currentOrder!.ascending ? 1 : -1
-          return a[currentOrder!.column] > b[currentOrder!.column] ? dir : -dir
-        })
-      }
-      if (currentLimit) {
-        result = result.slice(0, currentLimit)
-      }
-      if (currentSingle) {
-        result = result[0] ?? null
-      }
+      const result = buildResult()
       reset()
       return resolve({ data: result, error: null })
     },
