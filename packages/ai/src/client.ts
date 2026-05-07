@@ -48,7 +48,8 @@ export async function minimaxFetch(
     headers.set('Content-Type', 'application/json')
   }
 
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+  let attempt = 0
+  while (true) {
     try {
       const response = await fetchWithTimeout(url, {
         ...options,
@@ -88,9 +89,7 @@ export async function minimaxFetch(
       }
 
       await delay(2 ** attempt * 1000)
+      attempt++
     }
   }
-
-  // Unreachable, but satisfies TypeScript's control flow analysis
-  throw new MinimaxError('Network request failed', 'network')
 }
