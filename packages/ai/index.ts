@@ -1,3 +1,5 @@
 export { MinimaxError } from './src/errors'
 export type { MinimaxErrorCode } from './src/errors'
 export { minimaxFetch } from './src/client'
+export { generateImage } from './src/image'
+export type { GenerateImageOptions, GenerateImageResult } from './src/image'
