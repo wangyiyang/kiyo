@@ -13,6 +13,7 @@
     "@kiyo/ai": "workspace:*",
     "@kiyo/supabase": "workspace:*",
     "@kiyo/ui": "workspace:*",
+    "lucide-react": "^0.460.0",
     "next": "^14.2.35",
     "next-intl": "^4.11.0",
     "react": "^18.3.1",
