@@ -5,6 +5,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     songs: [],
     albums: [],
     album_songs: [],
+    lyrics: [],
   }
 
   let currentTable = ''
