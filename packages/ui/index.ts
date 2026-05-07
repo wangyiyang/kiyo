@@ -40,6 +40,7 @@ export { Input } from './src/components/ui/input'
 export { Label } from './src/components/ui/label'
 export { Separator } from './src/components/ui/separator'
 export { Toaster } from './src/components/ui/sonner'
+export { toast } from 'sonner'
 
 export * from './src/components/ui/dropdown-menu'
 
