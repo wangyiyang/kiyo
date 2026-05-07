@@ -1,2 +1,2 @@
-// Public exports will be added as modules are implemented
-export {}
+export { MinimaxError } from './src/errors'
+export type { MinimaxErrorCode } from './src/errors'
