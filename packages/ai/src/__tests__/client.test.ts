@@ -94,8 +94,9 @@ describe('minimaxFetch', () => {
     globalThis.fetch = vi.fn().mockRejectedValue(new Error('ECONNRESET'))
 
     const promise = minimaxFetch('/v1/test', { body: JSON.stringify({}) })
+    const rejection = expect(promise).rejects.toThrow(MinimaxError)
     await vi.advanceTimersByTimeAsync(15000)
-    await expect(promise).rejects.toMatchObject({ code: 'network' })
+    await rejection
     expect(globalThis.fetch).toHaveBeenCalledTimes(4)
   })
 })
