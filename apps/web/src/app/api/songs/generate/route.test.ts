@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { POST } from './route'
 import { createMockSupabaseClient } from '@/lib/test-utils'
 
-vi.mock('@kiyo/supabase', async () => {
-  const actual = await vi.importActual('@kiyo/supabase')
+vi.mock('@kiyo/supabase/server', async () => {
+  const actual = await vi.importActual('@kiyo/supabase/server')
   return {
     ...actual,
     createServerClient: vi.fn(),
@@ -34,7 +34,7 @@ function createRequest(body: Record<string, unknown>) {
 
 describe('POST /api/songs/generate', () => {
   it('auto_lyrics mode success (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const { generateMusic } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
@@ -70,7 +70,7 @@ describe('POST /api/songs/generate', () => {
   })
 
   it('instrumental mode success (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const { generateMusic } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
@@ -103,7 +103,7 @@ describe('POST /api/songs/generate', () => {
   })
 
   it('existing_lyric mode success (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const { generateMusic } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
@@ -140,7 +140,7 @@ describe('POST /api/songs/generate', () => {
   })
 
   it('invalid mode returns 400', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -155,7 +155,7 @@ describe('POST /api/songs/generate', () => {
   })
 
   it('existing_lyric missing lyric_id returns 400', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -170,7 +170,7 @@ describe('POST /api/songs/generate', () => {
   })
 
   it('lyric owned by another user returns 403', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
       { id: 'l1', title: 'Lyric 1', user_id: 'user-2', content: 'Secret lyrics' },
@@ -189,7 +189,7 @@ describe('POST /api/songs/generate', () => {
   })
 
   it('unauthenticated returns 401', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -204,7 +204,7 @@ describe('POST /api/songs/generate', () => {
   })
 
   it('Minimax failure returns 422 and updates song status to failed', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const { generateMusic, MinimaxError } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)

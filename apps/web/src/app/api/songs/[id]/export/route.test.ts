@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { GET } from './route'
 import { createMockSupabaseClient } from '@/lib/test-utils'
 
-vi.mock('@kiyo/supabase', async () => {
-  const actual = await vi.importActual('@kiyo/supabase')
+vi.mock('@kiyo/supabase/server', async () => {
+  const actual = await vi.importActual('@kiyo/supabase/server')
   return {
     ...actual,
     createServerClient: vi.fn(),
@@ -16,7 +16,7 @@ beforeEach(() => {
 
 describe('GET /api/songs/:id/export', () => {
   it('returns signed download URL for completed song with file_path (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       {
@@ -39,7 +39,7 @@ describe('GET /api/songs/:id/export', () => {
   })
 
   it('falls back to parsing audio_url when file_path is missing (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       {
@@ -60,7 +60,7 @@ describe('GET /api/songs/:id/export', () => {
   })
 
   it('returns 400 for non-completed song', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       { id: 's1', title: 'Draft', user_id: 'user-1', status: 'draft', file_path: null, audio_url: null },
@@ -74,7 +74,7 @@ describe('GET /api/songs/:id/export', () => {
   })
 
   it('returns 400 when no audio file exists', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       { id: 's1', title: 'No Audio', user_id: 'user-1', status: 'completed', file_path: null, audio_url: null },
@@ -88,7 +88,7 @@ describe('GET /api/songs/:id/export', () => {
   })
 
   it('returns 404 for non-existent song', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -99,7 +99,7 @@ describe('GET /api/songs/:id/export', () => {
   })
 
   it('returns 401 when not authenticated', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -110,7 +110,7 @@ describe('GET /api/songs/:id/export', () => {
   })
 
   it('returns 500 when storage signature fails', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       {
