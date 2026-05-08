@@ -1,7 +1,6 @@
 'use client'
 
 import { usePlayerStore } from '../../store/usePlayerStore'
-import { cn } from '../../lib/utils'
 import { Play, Pause, SkipBack, SkipForward, ChevronUp, ChevronDown, X, Music2 } from 'lucide-react'
 import { PlaylistPanel } from './PlaylistPanel'
 import { ProgressBar } from './ProgressBar'

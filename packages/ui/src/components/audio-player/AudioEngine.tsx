@@ -70,7 +70,6 @@ export function AudioEngine() {
         clearInterval(progressIntervalRef.current)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTrack?.audio_url])
 
   // Sync play / pause
@@ -91,7 +90,6 @@ export function AudioEngine() {
         stopVisualizer()
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying])
 
   // Sync volume
@@ -112,7 +110,6 @@ export function AudioEngine() {
     if (Math.abs(currentHowlTime - currentTime) > 1) {
       howl.seek(currentTime)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime])
 
   function startProgressLoop() {

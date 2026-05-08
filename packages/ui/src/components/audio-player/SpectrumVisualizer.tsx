@@ -9,7 +9,6 @@ interface SpectrumVisualizerProps {
   barCount?: number
 }
 
-const FFT_SIZE = 256
 const DEFAULT_BAR_COUNT = 48
 const SMOOTHING = 0.7
 

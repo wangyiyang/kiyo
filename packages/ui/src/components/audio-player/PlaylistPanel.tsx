@@ -18,7 +18,6 @@ function formatDuration(seconds?: number | null): string {
 export function PlaylistPanel({ className }: PlaylistPanelProps) {
   const playlist = usePlayerStore((s) => s.playlist)
   const currentTrack = usePlayerStore((s) => s.currentTrack)
-  const currentIndex = usePlayerStore((s) => s.currentIndex)
   const play = usePlayerStore((s) => s.play)
   const playlistLength = playlist.length
 
