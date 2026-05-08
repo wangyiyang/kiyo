@@ -24,6 +24,18 @@ export {
   DialogTitle,
   DialogDescription,
 } from './src/components/ui/dialog'
+export {
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from './src/components/ui/sheet'
 
 export {
   Form,
