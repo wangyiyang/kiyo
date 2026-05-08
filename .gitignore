@@ -44,3 +44,4 @@ supabase/.temp
 
 # Pi Agent
 .agents/
+.ant-colony/
