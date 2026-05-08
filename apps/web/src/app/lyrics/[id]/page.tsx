@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { StructuredBlockEditor, textToBlocks, Button, SongStatusBadge } from '@kiyo/ui'
 import { Pencil, ArrowLeft } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import { GenerateSongDialog } from './generate-song-dialog'
 
 export default async function LyricDetailPage({
   params,
@@ -66,9 +67,12 @@ export default async function LyricDetailPage({
             {lyric.mood && <span>{lyric.mood}</span>}
           </div>
         </div>
-        <Button size="sm">
-          🎵 生成音乐
-        </Button>
+        <GenerateSongDialog
+          lyricId={lyric.id}
+          lyricTitle={lyric.title}
+          lyricContent={lyric.content}
+          lyricLanguage={lyric.language}
+        />
         <Link href={`/lyrics/${lyric.id}/edit`}>
           <Button variant="outline" size="sm">
             <Pencil className="mr-1 h-4 w-4" />
