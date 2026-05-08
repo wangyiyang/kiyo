@@ -31,6 +31,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
     )
   }
 
+  const uniqueSongIds = Array.from(new Set(song_ids))
+
   const { data: album, error: albumError } = await supabase
     .from('albums')
     .select('*')
@@ -49,7 +51,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     .from('songs')
     .select('id')
     .eq('user_id', user.id)
-    .in('id', song_ids)
+    .in('id', uniqueSongIds)
 
   if (songsError) {
     return NextResponse.json(
@@ -58,10 +60,30 @@ export async function POST(request: Request, { params }: { params: { id: string 
     )
   }
 
-  if (!ownedSongs || ownedSongs.length !== song_ids.length) {
+  if (!ownedSongs || ownedSongs.length !== uniqueSongIds.length) {
     return NextResponse.json(
       { error: { code: 'FORBIDDEN', message: 'Some songs are not owned by you' } },
       { status: 403 }
+    )
+  }
+
+  const { data: existingAlbumSongs, error: existingError } = await supabase
+    .from('album_songs')
+    .select('song_id')
+    .eq('album_id', params.id)
+    .in('song_id', uniqueSongIds)
+
+  if (existingError) {
+    return NextResponse.json(
+      { error: { code: 'INTERNAL_ERROR', message: existingError.message } },
+      { status: 500 }
+    )
+  }
+
+  if (existingAlbumSongs && existingAlbumSongs.length > 0) {
+    return NextResponse.json(
+      { error: { code: 'VALIDATION_ERROR', message: 'Some songs are already in this album' } },
+      { status: 400 }
     )
   }
 
@@ -81,7 +103,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
   const maxOrderIndex = maxRows?.[0]?.order_index ?? -1
 
-  const albumSongs = song_ids.map((songId, index) => ({
+  const albumSongs = uniqueSongIds.map((songId, index) => ({
     album_id: params.id,
     song_id: songId,
     order_index: maxOrderIndex + 1 + index,
@@ -98,5 +120,5 @@ export async function POST(request: Request, { params }: { params: { id: string 
     )
   }
 
-  return NextResponse.json({ added: song_ids.length })
+  return NextResponse.json({ added: uniqueSongIds.length })
 }
