@@ -11,9 +11,11 @@ interface Song {
 interface SongSelectorProps {
   selectedIds: string[]
   onChange: (selectedIds: string[]) => void
+  excludeIds?: string[]
+  emptyMessage?: string
 }
 
-export function SongSelector({ selectedIds, onChange }: SongSelectorProps) {
+export function SongSelector({ selectedIds, onChange, excludeIds, emptyMessage }: SongSelectorProps) {
   const [songs, setSongs] = useState<Song[]>([])
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
@@ -27,9 +29,9 @@ export function SongSelector({ selectedIds, onChange }: SongSelectorProps) {
       })
   }, [])
 
-  const filteredSongs = songs.filter((s) =>
-    s.title.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredSongs = songs
+    .filter((s) => s.title.toLowerCase().includes(search.toLowerCase()))
+    .filter((s) => !excludeIds?.includes(s.id))
 
   function toggleSong(id: string, selected: boolean) {
     if (selected) {
@@ -60,7 +62,9 @@ export function SongSelector({ selectedIds, onChange }: SongSelectorProps) {
           />
         ))}
         {filteredSongs.length === 0 && (
-          <p className="text-sm text-muted-foreground">没有找到匹配的歌曲</p>
+          <p className="text-sm text-muted-foreground">
+            {emptyMessage ?? '没有找到匹配的歌曲'}
+          </p>
         )}
       </div>
       <p className="text-xs text-muted-foreground">已选择 {selectedIds.length} 首歌曲</p>

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { DraggableSongList } from '../_components/DraggableSongList'
 import { CoverSection } from './_components/CoverSection'
+import { AddSongsDialog } from './_components/AddSongsDialog'
 
 interface AlbumDetailPageProps {
   params: Promise<{ id: string }>
@@ -61,7 +62,10 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
 
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">歌曲列表</h2>
-        <span className="text-sm text-muted-foreground">{songs.length} 首歌曲</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">{songs.length} 首歌曲</span>
+          <AddSongsDialog albumId={id} excludeIds={songs.map((s: any) => s.id)} />
+        </div>
       </div>
 
       {songs.length > 0 ? (
