@@ -153,27 +153,62 @@ export type Database = {
       }
       songs: {
         Row: {
+          ai_prompt: string | null
+          audio_url: string | null
+          cover_url: string | null
           created_at: string | null
+          duration: number | null
+          genre: string | null
           id: string
+          lyric_id: string | null
+          mood: string | null
+          source: string
+          status: string
           title: string
           updated_at: string | null
           user_id: string
         }
         Insert: {
+          ai_prompt?: string | null
+          audio_url?: string | null
+          cover_url?: string | null
           created_at?: string | null
+          duration?: number | null
+          genre?: string | null
           id?: string
+          lyric_id?: string | null
+          mood?: string | null
+          source?: string
+          status?: string
           title: string
           updated_at?: string | null
           user_id: string
         }
         Update: {
+          ai_prompt?: string | null
+          audio_url?: string | null
+          cover_url?: string | null
           created_at?: string | null
+          duration?: number | null
+          genre?: string | null
           id?: string
+          lyric_id?: string | null
+          mood?: string | null
+          source?: string
+          status?: string
           title?: string
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "songs_lyric_id_fkey"
+            columns: ["lyric_id"]
+            isOneToOne: false
+            referencedRelation: "lyrics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       waitlist: {
         Row: {
