@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { cn } from '../lib/utils'
 import { SongStatusBadge } from './song-status-badge'
 import { Music2, Clock } from 'lucide-react'
@@ -10,9 +9,10 @@ interface SongCardProps {
   duration?: number | null
   lyricTitle?: string | null
   coverUrl?: string | null
+  href?: string
 }
 
-export function SongCard({ id, title, status, duration, lyricTitle, coverUrl }: SongCardProps) {
+export function SongCard({ id, title, status, duration, lyricTitle, coverUrl, href }: SongCardProps) {
   const formatDuration = (seconds?: number | null) => {
     if (!seconds) return null
     const mins = Math.floor(seconds / 60)
@@ -20,9 +20,8 @@ export function SongCard({ id, title, status, duration, lyricTitle, coverUrl }: 
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  return (
-    <Link href={`/songs/${id}`}>
-      <div className="group rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
+  const card = (
+    <div className="group rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
         <div className="mb-3 aspect-video overflow-hidden rounded-md bg-muted">
           {coverUrl ? (
             <img
@@ -55,6 +54,11 @@ export function SongCard({ id, title, status, duration, lyricTitle, coverUrl }: 
           </span>
         </div>
       </div>
-    </Link>
   )
+
+  if (href) {
+    return <a href={href}>{card}</a>
+  }
+
+  return card
 }

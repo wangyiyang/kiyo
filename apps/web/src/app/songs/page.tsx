@@ -41,6 +41,7 @@ export default async function SongsPage() {
               duration={song.duration}
               lyricTitle={song.lyrics?.title ?? null}
               coverUrl={song.cover_url}
+              href={`/songs/${song.id}`}
             />
           ))}
         </div>
