@@ -1,7 +1,7 @@
 import { createServerClient } from '@kiyo/supabase'
 import Link from 'next/link'
 import { AudioPlayer, Button, SongStatusBadge } from '@kiyo/ui'
-import { ArrowLeft, Pencil, Play, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Pencil, Play, AlertCircle, Mic2 } from 'lucide-react'
 import { notFound } from 'next/navigation'
 
 export default async function SongDetailPage({
@@ -18,7 +18,7 @@ export default async function SongDetailPage({
 
   const { data: song } = await supabase
     .from('songs')
-    .select('*, lyrics(*)')
+    .select('*, lyrics(*), original_song:original_song_id(*)')
     .eq('id', params.id)
     .eq('user_id', user.id)
     .single()
@@ -63,19 +63,31 @@ export default async function SongDetailPage({
               className={`rounded-full px-2 py-0.5 text-xs ${
                 song.source === 'ai_generated'
                   ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300'
-                  : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                  : song.source === 'ai_cover'
+                    ? 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300'
+                    : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
               }`}
             >
-              {song.source === 'ai_generated' ? 'AI 生成' : '手动创建'}
+              {song.source === 'ai_generated' ? 'AI 生成' : song.source === 'ai_cover' ? 'AI 翻唱' : '手动创建'}
             </span>
           </div>
         </div>
-        <Link href={`/songs/${song.id}/edit`}>
-          <Button variant="outline" size="sm">
-            <Pencil className="mr-1 h-4 w-4" />
-            编辑
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          {song.status === 'completed' && song.audio_url && (
+            <Link href={`/songs/cover?original_song_id=${song.id}`}>
+              <Button variant="outline" size="sm">
+                <Mic2 className="mr-1 h-4 w-4" />
+                AI 翻唱
+              </Button>
+            </Link>
+          )}
+          <Link href={`/songs/${song.id}/edit`}>
+            <Button variant="outline" size="sm">
+              <Pencil className="mr-1 h-4 w-4" />
+              编辑
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {(song.status === 'draft' || song.status === 'failed') && (
@@ -114,6 +126,29 @@ export default async function SongDetailPage({
         <div className="mb-6">
           <h2 className="mb-2 text-sm font-medium">音频预览</h2>
           <AudioPlayer src={song.audio_url} className="w-full" />
+        </div>
+      )}
+
+      {song.source === 'ai_cover' && song.voice_style && (
+        <div className="mb-6">
+          <h2 className="mb-1 text-sm font-medium">翻唱风格</h2>
+          <p className="text-sm text-muted-foreground">{song.voice_style}</p>
+        </div>
+      )}
+
+      {song.source === 'ai_cover' && song.original_song_id && (
+        <div className="mb-6">
+          <h2 className="mb-2 text-sm font-medium">对比原曲</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-muted-foreground">原曲</p>
+              <AudioPlayer src={(song.original_song as any)?.audio_url || ''} className="w-full" />
+            </div>
+            <div>
+              <p className="mb-1 text-xs text-muted-foreground">翻唱</p>
+              <AudioPlayer src={song.audio_url || ''} className="w-full" />
+            </div>
+          </div>
         </div>
       )}
 
