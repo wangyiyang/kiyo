@@ -8,6 +8,7 @@ import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server
 import { Toaster } from '@kiyo/ui'
 
 import { WaitlistDialog } from '@/components/waitlist-dialog'
+import { GlobalPlayer } from '@/components/global-player'
 import { defaultLocale, locales, type Locale } from '@/i18n/config'
 
 import { Providers } from '../providers'
@@ -92,6 +93,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider locale={params.locale} messages={messages}>
           <Providers>
             {children}
+            <GlobalPlayer />
             <WaitlistDialog />
             <Toaster richColors closeButton position="top-center" />
           </Providers>
