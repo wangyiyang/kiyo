@@ -3,13 +3,13 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { Music2 } from 'lucide-react'
-import { useTranslations } from 'next-intl'
 
-import { Button, cn } from '@kiyo/ui'
+import { cn } from '@kiyo/ui'
 
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { ThemeToggle } from './theme-toggle'
-import { useWaitlist } from '@/lib/waitlist-context'
+import { UserMenu } from './auth/user-menu'
+import { createBrowserClient } from '@kiyo/supabase'
 
 const navLinks = [
   { href: '/songs', key: 'songs', label: '歌曲库' },
@@ -18,15 +18,38 @@ const navLinks = [
 ] as const
 
 export function SiteHeader() {
-  const t = useTranslations('header')
-  const { show } = useWaitlist()
   const [scrolled, setScrolled] = React.useState(false)
+  const [user, setUser] = React.useState<{ email: string } | null>(null)
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  React.useEffect(() => {
+    const supabase = createBrowserClient()
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user?.email) {
+        setUser({ email: user.email })
+      }
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user?.email) {
+          setUser({ email: session.user.email })
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null)
+        }
+      }
+    )
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
   }, [])
 
   return (
@@ -64,9 +87,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ThemeToggle />
-          <Button size="sm" onClick={show}>
-            {t('cta')}
-          </Button>
+          <UserMenu user={user} />
         </div>
       </div>
     </header>
