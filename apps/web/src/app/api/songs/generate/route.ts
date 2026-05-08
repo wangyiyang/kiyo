@@ -163,6 +163,7 @@ export async function POST(request: Request) {
       .from('songs')
       .update({
         audio_url: publicUrl.publicUrl,
+        file_path: filePath,
         duration: result.duration,
         status: 'completed',
         source: 'ai_generated',

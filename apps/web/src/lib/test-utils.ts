@@ -163,6 +163,10 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
       getPublicUrl: vi.fn().mockImplementation((path: string) => ({
         data: { publicUrl: `https://mock-cdn.supabase.co/storage/v1/object/public/covers/${path}` },
       })),
+      createSignedUrl: vi.fn().mockResolvedValue({
+        data: { signedUrl: 'https://mock-cdn.supabase.co/storage/v1/object/sign/audio/mock-file.mp3?token=mock-token' },
+        error: null,
+      }),
     }),
   }
 
