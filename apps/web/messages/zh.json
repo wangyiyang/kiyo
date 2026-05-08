@@ -22,6 +22,108 @@
     "title": "页面未找到",
     "description": "您访问的页面不存在。"
   },
+  "auth": {
+    "login": {
+      "title": "登录 Kiyo",
+      "subtitle": "欢迎回来",
+      "email": {
+        "label": "邮箱",
+        "placeholder": "you@example.com"
+      },
+      "password": {
+        "label": "密码",
+        "placeholder": "输入密码"
+      },
+      "showPassword": "显示密码",
+      "rememberMe": "记住我",
+      "submit": "登录",
+      "submitting": "登录中…",
+      "magicLink": {
+        "use": "使用 Magic Link",
+        "backToPassword": "返回密码登录",
+        "title": "通过 Magic Link 登录",
+        "submit": "发送登录链接",
+        "submitting": "发送中…",
+        "success": "登录链接已发送！请查收邮件。",
+        "description": "我们会向你的邮箱发送一个安全链接，无需输入密码。"
+      },
+      "noAccount": "还没有账号？",
+      "registerLink": "去注册",
+      "forgotPassword": "忘记密码？"
+    },
+    "register": {
+      "title": "注册 Kiyo",
+      "subtitle": "创建你的账号",
+      "email": {
+        "label": "邮箱",
+        "placeholder": "you@example.com"
+      },
+      "password": {
+        "label": "密码",
+        "placeholder": "设置密码"
+      },
+      "confirmPassword": {
+        "label": "确认密码",
+        "placeholder": "再次输入密码"
+      },
+      "passwordStrength": {
+        "label": "密码强度",
+        "weak": "弱",
+        "fair": "一般",
+        "good": "良好",
+        "strong": "强"
+      },
+      "submit": "注册",
+      "submitting": "注册中…",
+      "success": "账号已创建！请查收邮件验证你的邮箱。",
+      "hasAccount": "已有账号？",
+      "loginLink": "去登录"
+    },
+    "forgotPassword": {
+      "title": "重置密码",
+      "subtitle": "我们会发送重置链接到你的邮箱",
+      "email": {
+        "label": "邮箱",
+        "placeholder": "you@example.com"
+      },
+      "submit": "发送重置链接",
+      "submitting": "发送中…",
+      "success": "如果该邮箱已注册，你将收到重置链接。",
+      "backToLogin": "返回登录"
+    },
+    "resetPassword": {
+      "title": "设置新密码",
+      "password": {
+        "label": "新密码",
+        "placeholder": "输入新密码"
+      },
+      "confirmPassword": {
+        "label": "确认新密码",
+        "placeholder": "再次输入新密码"
+      },
+      "submit": "更新密码",
+      "submitting": "更新中…",
+      "success": "密码已更新！请使用新密码登录。"
+    },
+    "userMenu": {
+      "mySongs": "我的歌曲",
+      "myAlbums": "我的专辑",
+      "myLyrics": "我的歌词",
+      "settings": "设置",
+      "logout": "退出登录",
+      "login": "登录"
+    },
+    "errors": {
+      "invalidEmail": "请输入有效的邮箱地址",
+      "emailRequired": "邮箱不能为空",
+      "passwordRequired": "密码不能为空",
+      "passwordMin": "密码至少 6 位",
+      "passwordMatch": "两次输入的密码不一致",
+      "invalidCredentials": "邮箱或密码错误",
+      "emailNotConfirmed": "请先验证邮箱",
+      "generic": "出错了，请重试"
+    }
+  },
   "header": {
     "nav": {
       "features": "能力",

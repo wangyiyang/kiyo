@@ -22,6 +22,108 @@
     "title": "Page Not Found",
     "description": "The page you are looking for does not exist."
   },
+  "auth": {
+    "login": {
+      "title": "Log in to Kiyo",
+      "subtitle": "Welcome back",
+      "email": {
+        "label": "Email",
+        "placeholder": "you@example.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password"
+      },
+      "showPassword": "Show password",
+      "rememberMe": "Remember me",
+      "submit": "Log in",
+      "submitting": "Logging in…",
+      "magicLink": {
+        "use": "Use Magic Link",
+        "backToPassword": "Back to password login",
+        "title": "Log in with Magic Link",
+        "submit": "Send login link",
+        "submitting": "Sending…",
+        "success": "Login link sent! Check your email.",
+        "description": "We'll send a secure link to your email. No password needed."
+      },
+      "noAccount": "No account?",
+      "registerLink": "Sign up",
+      "forgotPassword": "Forgot password?"
+    },
+    "register": {
+      "title": "Sign up for Kiyo",
+      "subtitle": "Create your account",
+      "email": {
+        "label": "Email",
+        "placeholder": "you@example.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Create a password"
+      },
+      "confirmPassword": {
+        "label": "Confirm password",
+        "placeholder": "Re-enter your password"
+      },
+      "passwordStrength": {
+        "label": "Password strength",
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong"
+      },
+      "submit": "Sign up",
+      "submitting": "Signing up…",
+      "success": "Account created! Please check your email to verify your account.",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log in"
+    },
+    "forgotPassword": {
+      "title": "Reset password",
+      "subtitle": "We'll send you a link to reset your password",
+      "email": {
+        "label": "Email",
+        "placeholder": "you@example.com"
+      },
+      "submit": "Send reset link",
+      "submitting": "Sending…",
+      "success": "If this email is registered, you'll receive a reset link.",
+      "backToLogin": "Back to log in"
+    },
+    "resetPassword": {
+      "title": "Set new password",
+      "password": {
+        "label": "New password",
+        "placeholder": "Enter new password"
+      },
+      "confirmPassword": {
+        "label": "Confirm new password",
+        "placeholder": "Re-enter new password"
+      },
+      "submit": "Update password",
+      "submitting": "Updating…",
+      "success": "Password updated! Please log in with your new password."
+    },
+    "userMenu": {
+      "mySongs": "My songs",
+      "myAlbums": "My albums",
+      "myLyrics": "My lyrics",
+      "settings": "Settings",
+      "logout": "Log out",
+      "login": "Log in"
+    },
+    "errors": {
+      "invalidEmail": "Please enter a valid email address",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least 6 characters",
+      "passwordMatch": "Passwords do not match",
+      "invalidCredentials": "Invalid email or password",
+      "emailNotConfirmed": "Please verify your email first",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
   "header": {
     "nav": {
       "features": "Features",
