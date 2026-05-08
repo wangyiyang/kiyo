@@ -54,6 +54,19 @@ export { SongCard } from './src/components/song-card'
 export { AudioPlayer } from './src/components/audio-player'
 export { SongStatusBadge } from './src/components/song-status-badge'
 
+export {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from './src/components/ui/avatar'
+
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from './src/components/ui/tabs'
+
 export { textToBlocks, blocksToText } from './src/lib/blocks'
 export type { Block } from './src/lib/blocks'
 export { StructuredBlockEditor } from './src/components/structured-block-editor'
