@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { POST, buildLyricsPrompt } from './route'
+import { POST } from './route'
+import { buildLyricsPrompt } from './lib'
 import { createMockSupabaseClient } from '@/lib/test-utils'
 import { MinimaxError } from '@kiyo/ai'
 
