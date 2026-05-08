@@ -50,6 +50,10 @@ export { SongRow } from './src/components/song-row'
 export { AlbumCard } from './src/components/album-card'
 export { Skeleton } from './src/components/ui/skeleton'
 
+export { SongCard } from './src/components/song-card'
+export { AudioPlayer } from './src/components/audio-player'
+export { SongStatusBadge } from './src/components/song-status-badge'
+
 export { textToBlocks, blocksToText } from './src/lib/blocks'
 export type { Block } from './src/lib/blocks'
 export { StructuredBlockEditor } from './src/components/structured-block-editor'
