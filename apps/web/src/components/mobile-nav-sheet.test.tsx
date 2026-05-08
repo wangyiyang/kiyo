@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 
 import { MobileNavSheet } from './mobile-nav-sheet'
@@ -19,6 +19,30 @@ const mockT = (key: string) => {
 
 vi.mock('next-intl', () => ({
   useTranslations: () => mockT,
+}))
+
+vi.mock('next/link', () => ({
+  default: ({
+    children,
+    href,
+    onClick,
+    ...props
+  }: {
+    children: React.ReactNode
+    href: string
+    onClick?: () => void
+  } & Record<string, unknown>) => (
+    <a
+      href={href}
+      onClick={(e) => {
+        e.preventDefault()
+        onClick?.()
+      }}
+      {...props}
+    >
+      {children}
+    </a>
+  ),
 }))
 
 vi.mock('./LocaleSwitcher', () => ({
@@ -61,6 +85,8 @@ describe('MobileNavSheet', () => {
     expect(screen.getByRole('link', { name: /Songs/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Albums/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Lyrics/i })).toBeInTheDocument()
+    expect(screen.getByTestId('locale-switcher')).toBeInTheDocument()
+    expect(screen.getByTestId('theme-toggle')).toBeInTheDocument()
   })
 
   it('closes sheet when a nav link is clicked', async () => {
@@ -85,7 +111,7 @@ describe('MobileNavSheet', () => {
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument()
     })
-    fireEvent.keyDown(document.activeElement ?? document, { key: 'Escape' })
+    fireEvent.keyDown(document.activeElement, { key: 'Escape' })
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
@@ -117,10 +143,29 @@ describe('MobileNavSheet', () => {
       expect(screen.getByRole('dialog')).toBeInTheDocument()
     })
 
-    changeHandler?.({ matches: true } as MediaQueryListEvent)
+    act(() => {
+      changeHandler?.({ matches: true } as MediaQueryListEvent)
+    })
 
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
+  })
+
+  it('removes matchMedia listener on unmount', () => {
+    const removeEventListener = vi.fn()
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation(() => ({
+        matches: false,
+        addEventListener: vi.fn(),
+        removeEventListener,
+        dispatchEvent: vi.fn(),
+      })),
+    })
+
+    const { unmount } = render(<MobileNavSheet />)
+    unmount()
+    expect(removeEventListener).toHaveBeenCalledTimes(1)
   })
 })

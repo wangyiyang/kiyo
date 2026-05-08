@@ -9,6 +9,7 @@ import {
   Button,
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetTitle,
   SheetTrigger,
   Separator,
@@ -49,9 +50,8 @@ export function MobileNavSheet() {
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-72 sm:w-80">
-        <SheetTitle>
-          <span className="sr-only">{t('menu')}</span>
-        </SheetTitle>
+        <SheetTitle className="sr-only">{t('menu')}</SheetTitle>
+        <SheetDescription className="sr-only">{t('menu')}</SheetDescription>
 
         <nav className="mt-8 flex flex-col gap-1">
           {navLinks.map((link) => (
