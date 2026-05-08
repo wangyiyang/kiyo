@@ -1,19 +1,7 @@
 import { createServerClient } from '@kiyo/supabase'
 import { generateLyrics, MinimaxError } from '@kiyo/ai'
 import { NextResponse } from 'next/server'
-
-export function buildLyricsPrompt(params: {
-  prompt: string
-  language?: string
-  style?: string
-  mood?: string
-}): string {
-  const parts = [params.prompt]
-  if (params.language) parts.push(`语言：${params.language}`)
-  if (params.style) parts.push(`风格：${params.style}`)
-  if (params.mood) parts.push(`情绪：${params.mood}`)
-  return parts.join('，')
-}
+import { buildLyricsPrompt } from './lib'
 
 export async function POST(request: Request) {
   const supabase = await createServerClient()

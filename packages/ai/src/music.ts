@@ -7,6 +7,7 @@ export interface GenerateMusicOptions {
   genre?: string
   mood?: string
   isInstrumental?: boolean
+  lyricsOptimizer?: boolean
 }
 
 export interface GenerateMusicResult {
@@ -43,6 +44,10 @@ export async function generateMusic(
 
   if (options.isInstrumental) {
     body.is_instrumental = true
+  }
+
+  if (options.lyricsOptimizer) {
+    body.lyrics_optimizer = true
   }
 
   const response = await minimaxFetch('/v1/music_generation', {

@@ -51,21 +51,26 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     },
     insert: (values: any | any[]) => {
       const arr = Array.isArray(values) ? values : [values]
-      arr.forEach((v) => dataStore[currentTable].push({ ...v, id: v.id || `mock-${Math.random().toString(36).slice(2)}` }))
+      const inserted: any[] = []
+      arr.forEach((v) => {
+        const item = { ...v, id: v.id || `mock-${Math.random().toString(36).slice(2)}` }
+        dataStore[currentTable].push(item)
+        inserted.push(item)
+      })
       return {
-        data: arr.length === 1 ? arr[0] : arr,
+        data: inserted.length === 1 ? inserted[0] : inserted,
         error: null,
         select: (columns = '*') => ({
           single: () => ({
             then: async (resolve: any) => {
-              const result = arr.length === 1 ? arr[0] : arr
+              const result = inserted.length === 1 ? inserted[0] : inserted
               reset()
               return resolve({ data: result, error: null })
             },
           }),
           then: async (resolve: any) => {
             reset()
-            return resolve({ data: arr, error: null })
+            return resolve({ data: inserted, error: null })
           },
         }),
       }

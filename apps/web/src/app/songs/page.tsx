@@ -1,7 +1,7 @@
 import { createServerClient } from '@kiyo/supabase'
 import { EmptyState, SongCard } from '@kiyo/ui'
 import Link from 'next/link'
-import { Plus } from 'lucide-react'
+import { Plus, Wand2 } from 'lucide-react'
 
 export default async function SongsPage() {
   const supabase = await createServerClient()
@@ -21,13 +21,22 @@ export default async function SongsPage() {
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">歌曲库</h1>
-        <Link
-          href="/songs/new"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-        >
-          <Plus className="h-4 w-4" />
-          新建歌曲
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/songs/generate"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+          >
+            <Wand2 className="h-4 w-4" />
+            AI 作曲
+          </Link>
+          <Link
+            href="/songs/new"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            <Plus className="h-4 w-4" />
+            新建歌曲
+          </Link>
+        </div>
       </div>
 
       {songs && songs.length > 0 ? (
