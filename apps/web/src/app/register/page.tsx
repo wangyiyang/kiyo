@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
+import { getTranslations, getLocale } from 'next-intl/server'
 
 import {
   Card,
@@ -20,7 +20,9 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const locale = await getLocale()
+
   return (
     <AuthGuard>
       <div className="container mx-auto flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
@@ -33,7 +35,7 @@ export default function RegisterPage() {
           <RegisterForm />
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Already have an account?{' '}
-            <Link href="/login" className="font-medium text-foreground hover:underline">
+            <Link href={`/${locale}/login`} className="font-medium text-foreground hover:underline">
               Log in
             </Link>
           </p>

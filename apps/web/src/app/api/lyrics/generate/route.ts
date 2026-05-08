@@ -1,4 +1,4 @@
-import { createServerClient } from '@kiyo/supabase'
+import { createServerClient } from '@kiyo/supabase/server'
 import { generateLyrics, MinimaxError } from '@kiyo/ai'
 import { NextResponse } from 'next/server'
 import { buildLyricsPrompt } from './lib'

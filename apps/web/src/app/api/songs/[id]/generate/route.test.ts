@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { POST } from './route'
 import { createMockSupabaseClient } from '@/lib/test-utils'
 
-vi.mock('@kiyo/supabase', async () => {
-  const actual = await vi.importActual('@kiyo/supabase')
+vi.mock('@kiyo/supabase/server', async () => {
+  const actual = await vi.importActual('@kiyo/supabase/server')
   return {
     ...actual,
     createServerClient: vi.fn(),
@@ -20,7 +20,7 @@ beforeEach(() => {
 
 describe('POST /api/songs/:id/generate', () => {
   it('generates music and updates song (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const { generateMusic } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
@@ -57,7 +57,7 @@ describe('POST /api/songs/:id/generate', () => {
   })
 
   it('returns 400 when song has no lyric_id', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       { id: 's1', title: 'Song 1', user_id: 'user-1', status: 'draft', lyric_id: null },
@@ -71,7 +71,7 @@ describe('POST /api/songs/:id/generate', () => {
   })
 
   it('returns 404 for non-existent song', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -82,7 +82,7 @@ describe('POST /api/songs/:id/generate', () => {
   })
 
   it('returns 401 when not authenticated', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 

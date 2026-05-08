@@ -21,10 +21,11 @@ export async function generateLyrics(
     }),
   })
 
-  const data = response as { text?: string }
-  if (!data.text) {
+  const data = response as { lyrics?: string; text?: string }
+  const lyricsText = data.lyrics ?? data.text
+  if (!lyricsText) {
     throw new MinimaxError('Invalid response from lyrics generation API', 'api_error')
   }
 
-  return { text: data.text }
+  return { text: lyricsText }
 }

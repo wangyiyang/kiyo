@@ -1,14 +1,17 @@
-import { createServerClient } from '@kiyo/supabase'
-import Link from 'next/link'
+import { createServerClient } from '@kiyo/supabase/server'
+import { Link } from '@/i18n/navigation'
+import { redirect } from 'next/navigation'
 import { EmptyState } from '@kiyo/ui'
 import { Plus, Sparkles } from 'lucide-react'
+import { getLocale } from '@/i18n/server'
 
 export default async function LyricsPage() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return <div className="container mx-auto py-8">请先登录</div>
+    const locale = await getLocale()
+    redirect(`/${locale}/login`)
   }
 
   const { data: lyrics } = await supabase
@@ -17,20 +20,22 @@ export default async function LyricsPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
+  const locale = await getLocale()
+
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">我的歌词</h1>
         <div className="flex gap-3">
           <Link
-            href="/lyrics/generate"
+            href={`/${locale}/lyrics/generate`}
             className="inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
             <Sparkles className="h-4 w-4" />
             AI 生成歌词
           </Link>
           <Link
-            href="/lyrics/new"
+            href={`/${locale}/lyrics/new`}
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
@@ -42,7 +47,7 @@ export default async function LyricsPage() {
       {lyrics && lyrics.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {lyrics.map((lyric) => (
-            <Link key={lyric.id} href={`/lyrics/${lyric.id}`}>
+            <Link key={lyric.id} href={`/${locale}/lyrics/${lyric.id}`}>
               <div className="rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
                 <div className="mb-2 flex items-center gap-2">
                   <h3 className="font-semibold">{lyric.title}</h3>

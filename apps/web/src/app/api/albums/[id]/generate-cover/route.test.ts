@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { POST } from './route'
 import { createMockSupabaseClient } from '@/lib/test-utils'
 
-vi.mock('@kiyo/supabase', async () => {
-  const actual = await vi.importActual('@kiyo/supabase')
+vi.mock('@kiyo/supabase/server', async () => {
+  const actual = await vi.importActual('@kiyo/supabase/server')
   return {
     ...actual,
     createServerClient: vi.fn(),
@@ -20,7 +20,7 @@ beforeEach(() => {
 
 describe('POST /api/albums/[id]/generate-cover', () => {
   it('returns 401 when not authenticated', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -32,7 +32,7 @@ describe('POST /api/albums/[id]/generate-cover', () => {
   })
 
   it('returns 404 when album not found', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -44,7 +44,7 @@ describe('POST /api/albums/[id]/generate-cover', () => {
   })
 
   it('returns 403 when album belongs to another user', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
       { id: 'a1', title: 'Album 1', user_id: 'user-2', cover_status: 'none' },
@@ -59,7 +59,7 @@ describe('POST /api/albums/[id]/generate-cover', () => {
   })
 
   it('generates cover successfully (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
       { id: 'a1', title: 'My Album', description: 'A great album', user_id: 'user-1', cover_status: 'none' },
@@ -93,7 +93,7 @@ describe('POST /api/albums/[id]/generate-cover', () => {
   })
 
   it('returns 422 when Minimax generation fails', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
       { id: 'a1', title: 'My Album', user_id: 'user-1', cover_status: 'none' },
@@ -115,7 +115,7 @@ describe('POST /api/albums/[id]/generate-cover', () => {
   })
 
   it('returns 500 when image download fails', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
       { id: 'a1', title: 'My Album', user_id: 'user-1', cover_status: 'none' },
@@ -145,7 +145,7 @@ describe('POST /api/albums/[id]/generate-cover', () => {
   })
 
   it('returns 500 when Storage upload fails', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
       { id: 'a1', title: 'My Album', user_id: 'user-1', cover_status: 'none' },

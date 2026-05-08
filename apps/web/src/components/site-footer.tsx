@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { Github, Mail, Twitter } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 

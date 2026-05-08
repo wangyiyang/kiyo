@@ -1,6 +1,6 @@
 'use server'
 
-import { createServerClient } from '@kiyo/supabase'
+import { createServerClient } from '@kiyo/supabase/server'
 
 export type AuthResult =
   | { ok: true; message?: string }

@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { GET, PATCH, DELETE } from './route'
 import { createMockSupabaseClient } from '@/lib/test-utils'
 
-vi.mock('@kiyo/supabase', async () => {
-  const actual = await vi.importActual('@kiyo/supabase')
+vi.mock('@kiyo/supabase/server', async () => {
+  const actual = await vi.importActual('@kiyo/supabase/server')
   return {
     ...actual,
     createServerClient: vi.fn(),
@@ -16,7 +16,7 @@ beforeEach(() => {
 
 describe('GET /api/albums/[id]', () => {
   it('returns album detail with songs (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
       { id: 'a1', title: 'Album 1', user_id: 'user-1' },
@@ -42,7 +42,7 @@ describe('GET /api/albums/[id]', () => {
   })
 
   it('returns 404 when album not found', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -56,7 +56,7 @@ describe('GET /api/albums/[id]', () => {
 
 describe('PATCH /api/albums/[id]', () => {
   it('updates album and song order (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
       { id: 'a1', title: 'Album 1', user_id: 'user-1' },
@@ -91,7 +91,7 @@ describe('PATCH /api/albums/[id]', () => {
   })
 
   it('returns 403 when song_ids contain non-owned songs', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
       { id: 'a1', title: 'Album 1', user_id: 'user-1' },
@@ -116,7 +116,7 @@ describe('PATCH /api/albums/[id]', () => {
 
 describe('DELETE /api/albums/[id]', () => {
   it('deletes album successfully (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.albums = [
       { id: 'a1', title: 'Album 1', user_id: 'user-1' },
@@ -132,7 +132,7 @@ describe('DELETE /api/albums/[id]', () => {
   })
 
   it('returns 404 when album not found', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 

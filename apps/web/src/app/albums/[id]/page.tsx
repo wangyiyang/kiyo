@@ -1,7 +1,8 @@
-import { createServerClient } from '@kiyo/supabase'
+import { createServerClient } from '@kiyo/supabase/server'
 import { AudioPlayer, EmptyState } from '@kiyo/ui'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
+import { getLocale } from '@/i18n/server'
+import { Link } from '@/i18n/navigation'
 import { DraggableSongList } from '../_components/DraggableSongList'
 import { CoverSection } from './_components/CoverSection'
 import { AddSongsDialog } from './_components/AddSongsDialog'
@@ -12,11 +13,12 @@ interface AlbumDetailPageProps {
 
 export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) {
   const { id } = await params
+  const locale = await getLocale()
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return <div className="container mx-auto py-8">请先登录</div>
+    redirect(`/${locale}/login`)
   }
 
   const { data: album } = await supabase
@@ -41,7 +43,7 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center gap-4">
-        <Link href="/albums" className="text-sm text-muted-foreground hover:text-foreground">
+        <Link href={`/${locale}/albums`} className="text-sm text-muted-foreground hover:text-foreground">
           ← 返回专辑列表
         </Link>
       </div>

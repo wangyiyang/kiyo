@@ -1,14 +1,17 @@
-import { createServerClient } from '@kiyo/supabase'
+import { createServerClient } from '@kiyo/supabase/server'
 import { EmptyState, SongCard } from '@kiyo/ui'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { redirect } from 'next/navigation'
 import { Plus, Wand2 } from 'lucide-react'
+import { getLocale } from '@/i18n/server'
 
 export default async function SongsPage() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return <div className="container mx-auto py-8">请先登录</div>
+    const locale = await getLocale()
+    redirect(`/${locale}/login`)
   }
 
   const { data: songs } = await supabase
@@ -17,20 +20,22 @@ export default async function SongsPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
+  const locale = await getLocale()
+
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">歌曲库</h1>
         <div className="flex items-center gap-3">
           <Link
-            href="/songs/generate"
+            href={`/${locale}/songs/generate`}
             className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
           >
             <Wand2 className="h-4 w-4" />
             AI 作曲
           </Link>
           <Link
-            href="/songs/new"
+            href={`/${locale}/songs/new`}
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
@@ -50,7 +55,7 @@ export default async function SongsPage() {
               duration={song.duration}
               lyricTitle={song.lyrics?.title ?? null}
               coverUrl={song.cover_url}
-              href={`/songs/${song.id}`}
+              href={`/${locale}/songs/${song.id}`}
             />
           ))}
         </div>

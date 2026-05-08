@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { GET, PATCH, DELETE } from './route'
 import { createMockSupabaseClient } from '@/lib/test-utils'
 
-vi.mock('@kiyo/supabase', async () => {
-  const actual = await vi.importActual('@kiyo/supabase')
+vi.mock('@kiyo/supabase/server', async () => {
+  const actual = await vi.importActual('@kiyo/supabase/server')
   return {
     ...actual,
     createServerClient: vi.fn(),
@@ -16,7 +16,7 @@ beforeEach(() => {
 
 describe('GET /api/lyrics/:id', () => {
   it('returns lyric detail (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
       { id: 'l1', title: 'Lyric 1', user_id: 'user-1', content: 'Line 1', source: 'manual', status: 'draft' },
@@ -30,7 +30,7 @@ describe('GET /api/lyrics/:id', () => {
   })
 
   it('returns 404 for non-existent lyric', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -41,7 +41,7 @@ describe('GET /api/lyrics/:id', () => {
   })
 
   it('returns 401 when not authenticated', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -54,7 +54,7 @@ describe('GET /api/lyrics/:id', () => {
 
 describe('PATCH /api/lyrics/:id', () => {
   it('updates lyric fields (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
       { id: 'l1', title: 'Old', user_id: 'user-1', content: 'Old content', source: 'manual', status: 'draft' },
@@ -75,7 +75,7 @@ describe('PATCH /api/lyrics/:id', () => {
   })
 
   it('returns 400 for invalid JSON body', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
       { id: 'l1', title: 'Old', user_id: 'user-1', content: 'Old content', source: 'manual', status: 'draft' },
@@ -95,7 +95,7 @@ describe('PATCH /api/lyrics/:id', () => {
   })
 
   it('returns 404 for non-existent lyric', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -112,7 +112,7 @@ describe('PATCH /api/lyrics/:id', () => {
   })
 
   it('returns 401 when not authenticated', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
@@ -131,7 +131,7 @@ describe('PATCH /api/lyrics/:id', () => {
 
 describe('DELETE /api/lyrics/:id', () => {
   it('deletes lyric (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
       { id: 'l1', title: 'Lyric 1', user_id: 'user-1', content: 'Line', source: 'manual', status: 'draft' },
@@ -145,7 +145,7 @@ describe('DELETE /api/lyrics/:id', () => {
   })
 
   it('returns 401 when not authenticated', async () => {
-    const { createServerClient } = await import('@kiyo/supabase')
+    const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 

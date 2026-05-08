@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@kiyo/ui'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 
 interface DeleteConfirmDialogProps {
   albumId: string
