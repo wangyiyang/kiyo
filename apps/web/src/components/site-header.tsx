@@ -10,16 +10,19 @@ import { LocaleSwitcher } from './LocaleSwitcher'
 import { ThemeToggle } from './theme-toggle'
 import { UserMenu } from './auth/user-menu'
 import { createBrowserClient } from '@kiyo/supabase'
+import { useTranslations } from 'next-intl'
+import { MobileNavSheet } from './mobile-nav-sheet'
 
 const navLinks = [
-  { href: '/songs', key: 'songs', label: '歌曲库' },
-  { href: '/albums', key: 'albums', label: '专辑' },
-  { href: '/lyrics', key: 'lyrics', label: '歌词' },
+  { href: '/songs', key: 'songs' },
+  { href: '/albums', key: 'albums' },
+  { href: '/lyrics', key: 'lyrics' },
 ] as const
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = React.useState(false)
   const [user, setUser] = React.useState<{ email: string } | null>(null)
+  const t = useTranslations('nav')
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -79,7 +82,7 @@ export function SiteHeader() {
               href={link.href}
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              {link.label}
+              {t(link.key)}
             </Link>
           ))}
         </nav>
@@ -88,6 +91,7 @@ export function SiteHeader() {
           <LocaleSwitcher />
           <ThemeToggle />
           <UserMenu user={user} />
+          <MobileNavSheet />
         </div>
       </div>
     </header>

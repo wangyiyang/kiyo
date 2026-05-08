@@ -111,7 +111,7 @@ describe('MobileNavSheet', () => {
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument()
     })
-    fireEvent.keyDown(document.activeElement, { key: 'Escape' })
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
