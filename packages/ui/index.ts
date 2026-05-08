@@ -63,7 +63,8 @@ export { AlbumCard } from './src/components/album-card'
 export { Skeleton } from './src/components/ui/skeleton'
 
 export { SongCard } from './src/components/song-card'
-export { AudioPlayer } from './src/components/audio-player'
+export { AudioPlayer, AudioEngine, MiniPlayer, PlayerControls, ProgressBar, VolumeControl, SpectrumVisualizer, PlaylistPanel } from './src/components/audio-player'
+export { usePlayerKeyboard } from './src/hooks/usePlayerKeyboard'
 export { SongStatusBadge } from './src/components/song-status-badge'
 
 export {
