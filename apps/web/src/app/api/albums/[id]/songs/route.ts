@@ -65,15 +65,21 @@ export async function POST(request: Request, { params }: { params: { id: string 
     )
   }
 
-  const { data: maxRow } = await supabase
+  const { data: maxRows, error: maxError } = await supabase
     .from('album_songs')
     .select('order_index')
     .eq('album_id', params.id)
     .order('order_index', { ascending: false })
     .limit(1)
-    .single()
 
-  const maxOrderIndex = maxRow?.order_index ?? -1
+  if (maxError) {
+    return NextResponse.json(
+      { error: { code: 'INTERNAL_ERROR', message: maxError.message } },
+      { status: 500 }
+    )
+  }
+
+  const maxOrderIndex = maxRows?.[0]?.order_index ?? -1
 
   const albumSongs = song_ids.map((songId, index) => ({
     album_id: params.id,
