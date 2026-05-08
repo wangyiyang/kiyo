@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { AudioPlayer, Button, SongStatusBadge } from '@kiyo/ui'
 import { ArrowLeft, Pencil, Play, AlertCircle, Mic2 } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import { ExportDialog } from './export-dialog'
 
 export default async function SongDetailPage({
   params,
@@ -74,12 +75,18 @@ export default async function SongDetailPage({
         </div>
         <div className="flex items-center gap-2">
           {song.status === 'completed' && song.audio_url && (
-            <Link href={`/songs/cover?original_song_id=${song.id}`}>
-              <Button variant="outline" size="sm">
-                <Mic2 className="mr-1 h-4 w-4" />
-                AI 翻唱
-              </Button>
-            </Link>
+            <>
+              <ExportDialog
+                songId={song.id}
+                songTitle={song.title}
+              />
+              <Link href={`/songs/cover?original_song_id=${song.id}`}>
+                <Button variant="outline" size="sm">
+                  <Mic2 className="mr-1 h-4 w-4" />
+                  AI 翻唱
+                </Button>
+              </Link>
+            </>
           )}
           <Link href={`/songs/${song.id}/edit`}>
             <Button variant="outline" size="sm">
