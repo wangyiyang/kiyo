@@ -1,4 +1,13 @@
 {
+  "nav": {
+    "menu": "Menu",
+    "openMenu": "Open navigation menu",
+    "songs": "Songs",
+    "albums": "Albums",
+    "lyrics": "Lyrics",
+    "language": "Language",
+    "theme": "Theme"
+  },
   "metadata": {
     "title": "Kiyo — AI Music Creation Platform",
     "description": "A multi-model AI music workflow that turns lyrics, melody, vocals, and mixing into a single creator-controlled pipeline.",
