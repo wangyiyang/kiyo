@@ -1,4 +1,13 @@
 {
+  "nav": {
+    "menu": "菜单",
+    "openMenu": "打开导航菜单",
+    "songs": "歌曲库",
+    "albums": "专辑",
+    "lyrics": "歌词",
+    "language": "语言",
+    "theme": "主题"
+  },
   "metadata": {
     "title": "Kiyo — AI 音乐创作平台",
     "description": "多模型协同的 AI 音乐工作流，把灵感、词曲、人声与混音整合到一个由创作者掌控的流程中。",
