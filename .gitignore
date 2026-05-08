@@ -41,3 +41,6 @@ supabase/.temp
 
 # Claude
 .claude/
+
+# Pi Agent
+.agents/
