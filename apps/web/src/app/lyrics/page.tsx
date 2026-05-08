@@ -13,7 +13,7 @@ export default async function LyricsPage() {
 
   const { data: lyrics } = await supabase
     .from('lyrics')
-    .select('*')
+    .select('*, songs(count)')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
@@ -46,6 +46,11 @@ export default async function LyricsPage() {
               <div className="rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
                 <div className="mb-2 flex items-center gap-2">
                   <h3 className="font-semibold">{lyric.title}</h3>
+                  {lyric.songs?.[0]?.count > 0 && (
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-900 dark:text-green-300">
+                      🎵 已作曲
+                    </span>
+                  )}
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs ${
                       lyric.source === 'ai_generated'

@@ -1,8 +1,9 @@
 import { createServerClient } from '@kiyo/supabase'
 import Link from 'next/link'
-import { StructuredBlockEditor, textToBlocks, Button } from '@kiyo/ui'
+import { StructuredBlockEditor, textToBlocks, Button, SongStatusBadge } from '@kiyo/ui'
 import { Pencil, ArrowLeft } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import { GenerateSongDialog } from './generate-song-dialog'
 
 export default async function LyricDetailPage({
   params,
@@ -26,6 +27,13 @@ export default async function LyricDetailPage({
   if (!lyric) {
     notFound()
   }
+
+  const { data: linkedSongs } = await supabase
+    .from('songs')
+    .select('id, title, status, genre, mood, created_at')
+    .eq('lyric_id', params.id)
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
 
   const blocks = textToBlocks(lyric.content)
 
@@ -59,6 +67,12 @@ export default async function LyricDetailPage({
             {lyric.mood && <span>{lyric.mood}</span>}
           </div>
         </div>
+        <GenerateSongDialog
+          lyricId={lyric.id}
+          lyricTitle={lyric.title}
+          lyricContent={lyric.content}
+          lyricLanguage={lyric.language}
+        />
         <Link href={`/lyrics/${lyric.id}/edit`}>
           <Button variant="outline" size="sm">
             <Pencil className="mr-1 h-4 w-4" />
@@ -68,6 +82,33 @@ export default async function LyricDetailPage({
       </div>
 
       <StructuredBlockEditor blocks={blocks} onChange={() => {}} readOnly />
+
+      <div className="mt-8">
+        <h2 className="mb-4 text-lg font-semibold">关联歌曲</h2>
+        {linkedSongs && linkedSongs.length > 0 ? (
+          <div className="space-y-3">
+            {linkedSongs.map((song) => (
+              <Link key={song.id} href={`/songs/${song.id}`}>
+                <div className="flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
+                  <div className="flex items-center gap-3">
+                    <span className="font-medium">{song.title}</span>
+                    <SongStatusBadge status={song.status as any} />
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    {song.genre && <span>{song.genre}</span>}
+                    {song.mood && <span>{song.mood}</span>}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-lg border border-dashed p-6 text-center">
+            <p className="text-sm text-muted-foreground">暂无关联歌曲</p>
+            <p className="mt-1 text-xs text-muted-foreground">使用上方按钮生成音乐</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
