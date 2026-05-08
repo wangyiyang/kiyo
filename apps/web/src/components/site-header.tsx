@@ -12,9 +12,9 @@ import { ThemeToggle } from './theme-toggle'
 import { useWaitlist } from '@/lib/waitlist-context'
 
 const navLinks = [
-  { href: '#features', key: 'features' },
-  { href: '#how', key: 'howItWorks' },
-  { href: '#showcase', key: 'showcase' },
+  { href: '/songs', key: 'songs', label: '歌曲库' },
+  { href: '/albums', key: 'albums', label: '专辑' },
+  { href: '/lyrics', key: 'lyrics', label: '歌词' },
 ] as const
 
 export function SiteHeader() {
@@ -51,13 +51,13 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-7 md:flex">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              {t(`nav.${link.key}`)}
-            </a>
+              {link.label}
+            </Link>
           ))}
         </nav>
 
