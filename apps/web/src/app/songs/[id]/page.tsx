@@ -1,8 +1,9 @@
-import { createServerClient } from '@kiyo/supabase'
-import Link from 'next/link'
+import { createServerClient } from '@kiyo/supabase/server'
 import { AudioPlayer, Button, SongStatusBadge } from '@kiyo/ui'
 import { ArrowLeft, Pencil, Play, AlertCircle, Mic2 } from 'lucide-react'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
+import { getLocale } from '@/i18n/server'
+import { Link } from '@/i18n/navigation'
 import { ExportDialog } from './export-dialog'
 
 export default async function SongDetailPage({
@@ -10,11 +11,12 @@ export default async function SongDetailPage({
 }: {
   params: { id: string }
 }) {
+  const locale = await getLocale()
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return <div className="container mx-auto py-8">请先登录</div>
+    redirect(`/${locale}/login`)
   }
 
   const { data: song } = await supabase
@@ -39,7 +41,7 @@ export default async function SongDetailPage({
     <div className="container mx-auto max-w-3xl py-8">
       <div className="mb-6 flex items-center gap-4">
         <Link
-          href="/songs"
+          href={`/${locale}/songs`}
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -80,7 +82,7 @@ export default async function SongDetailPage({
                 songId={song.id}
                 songTitle={song.title}
               />
-              <Link href={`/songs/cover?original_song_id=${song.id}`}>
+              <Link href={`/${locale}/songs/cover?original_song_id=${song.id}`}>
                 <Button variant="outline" size="sm">
                   <Mic2 className="mr-1 h-4 w-4" />
                   AI 翻唱
@@ -88,7 +90,7 @@ export default async function SongDetailPage({
               </Link>
             </>
           )}
-          <Link href={`/songs/${song.id}/edit`}>
+          <Link href={`/${locale}/songs/${song.id}/edit`}>
             <Button variant="outline" size="sm">
               <Pencil className="mr-1 h-4 w-4" />
               编辑
@@ -191,7 +193,7 @@ export default async function SongDetailPage({
         <div className="mb-6">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-sm font-medium">歌词</h2>
-            <Link href={`/lyrics/${song.lyrics.id}`} className="text-xs text-primary hover:underline">
+            <Link href={`/${locale}/lyrics/${song.lyrics.id}`} className="text-xs text-primary hover:underline">
               查看完整歌词
             </Link>
           </div>

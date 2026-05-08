@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@kiyo/supabase'
+import { createServerClient } from '@kiyo/supabase/server'
+import { withLocale } from '@/i18n/server'
 
 interface AuthGuardProps {
   children: React.ReactNode
@@ -16,7 +17,7 @@ export async function AuthGuard({
   } = await supabase.auth.getUser()
 
   if (user) {
-    redirect(redirectTo)
+    redirect(await withLocale(redirectTo))
   }
 
   return <>{children}</>

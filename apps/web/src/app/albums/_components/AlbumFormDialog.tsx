@@ -12,7 +12,7 @@ import {
   Textarea,
 } from '@kiyo/ui'
 import { SongSelector } from './SongSelector'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 
 interface AlbumFormDialogProps {
   mode: 'create' | 'edit'

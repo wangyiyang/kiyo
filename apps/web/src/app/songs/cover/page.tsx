@@ -1,10 +1,10 @@
 'use client'
 
 import * as React from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, Link } from '@/i18n/navigation'
+import { useSearchParams } from 'next/navigation'
 import { Button, Input, Label } from '@kiyo/ui'
 import { ArrowLeft, Mic2, Upload } from 'lucide-react'
-import Link from 'next/link'
 import { createBrowserClient } from '@kiyo/supabase'
 
 type SourceMode = 'existing' | 'upload'

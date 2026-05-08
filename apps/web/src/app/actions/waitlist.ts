@@ -2,7 +2,7 @@
 
 import { headers } from 'next/headers'
 
-import { createServerClient } from '@kiyo/supabase'
+import { createServerClient } from '@kiyo/supabase/server'
 
 import { waitlistSchema } from '@/lib/schemas/waitlist'
 

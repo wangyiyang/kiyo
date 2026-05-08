@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
+import { withLocale } from '@/i18n/server'
 
-export default function RootPage() {
-  redirect('/en')
+export default async function RootPage() {
+  redirect(await withLocale('/'))
 }

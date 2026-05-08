@@ -1,10 +1,9 @@
 'use client'
 
 import * as React from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, Link } from '@/i18n/navigation'
 import { Button, Input, Label, Textarea } from '@kiyo/ui'
 import { ArrowLeft, Sparkles, Loader2 } from 'lucide-react'
-import Link from 'next/link'
 
 const LANGUAGES = [
   { value: 'zh', label: '中文' },

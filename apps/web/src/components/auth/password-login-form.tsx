@@ -4,7 +4,8 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, Link } from '@/i18n/navigation'
+import { useSearchParams } from 'next/navigation'
 
 import {
   Button,
@@ -132,12 +133,12 @@ export function PasswordLoginForm() {
               </FormItem>
             )}
           />
-          <a
+          <Link
             href="/forgot-password"
             className="text-sm text-muted-foreground hover:text-foreground"
           >
             {t('login.forgotPassword')}
-          </a>
+          </Link>
         </div>
 
         <Button type="submit" className="w-full" disabled={pending}>

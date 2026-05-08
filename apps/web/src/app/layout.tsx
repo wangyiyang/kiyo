@@ -1,13 +1,22 @@
 import './globals.css'
 
 import type { Metadata, Viewport } from 'next'
+import { GeistMono } from 'geist/font/mono'
+import { GeistSans } from 'geist/font/sans'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
+
+import { Toaster } from '@kiyo/ui'
+
+import { defaultLocale } from '@/i18n/config'
+
+import { Providers } from './providers'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kiyo.ai'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: 'Kiyo',
-  // 站点级 metadata 的本地化版本由 [locale]/layout.tsx 中的 generateMetadata 接管
 }
 
 export const viewport: Viewport = {
@@ -19,12 +28,27 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-// 根 layout 故意保持为透明壳：实际的 <html> / <body> 由 [locale]/layout 拥有。
-// 这是 next-intl App Router + 动态 locale 路由的官方推荐结构。
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return children
+  const messages = await getMessages({ locale: defaultLocale })
+
+  return (
+    <html
+      lang={defaultLocale}
+      suppressHydrationWarning
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
+    >
+      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
+        <NextIntlClientProvider locale={defaultLocale} messages={messages}>
+          <Providers>
+            {children}
+            <Toaster richColors closeButton position="top-center" />
+          </Providers>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  )
 }

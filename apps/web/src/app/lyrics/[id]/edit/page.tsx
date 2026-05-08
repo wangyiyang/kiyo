@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, Link } from '@/i18n/navigation'
 import {
   StructuredBlockEditor,
   textToBlocks,
@@ -12,7 +12,6 @@ import {
 } from '@kiyo/ui'
 import type { Block } from '@kiyo/ui'
 import { ArrowLeft, Save } from 'lucide-react'
-import Link from 'next/link'
 
 export default function LyricEditPage({ params }: { params: { id: string } }) {
   const router = useRouter()

@@ -11,7 +11,7 @@ import {
 } from '@kiyo/ui'
 import { SongSelector } from '../../_components/SongSelector'
 import { Plus } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 
 interface AddSongsDialogProps {
   albumId: string

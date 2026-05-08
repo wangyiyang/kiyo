@@ -1,6 +1,8 @@
-import { createServerClient } from '@kiyo/supabase'
+import { createServerClient } from '@kiyo/supabase/server'
 import { EmptyState, AlbumCard } from '@kiyo/ui'
-import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { getLocale } from '@/i18n/server'
+import { Link } from '@/i18n/navigation'
 import { AlbumFormDialog } from './_components/AlbumFormDialog'
 import { DeleteConfirmDialog } from './_components/DeleteConfirmDialog'
 import { Trash2 } from 'lucide-react'
@@ -9,8 +11,10 @@ export default async function AlbumsPage() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  const locale = await getLocale()
+
   if (!user) {
-    return <div className="container mx-auto py-8">请先登录</div>
+    redirect(`/${locale}/login`)
   }
 
   const { data: albums } = await supabase
@@ -40,7 +44,7 @@ export default async function AlbumsPage() {
         <h1 className="text-2xl font-bold">我的专辑</h1>
         <div className="flex gap-4">
           <Link
-            href="/songs"
+            href={`/${locale}/songs`}
             className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
             歌曲库
@@ -60,7 +64,7 @@ export default async function AlbumsPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {albums.map((album) => (
             <div key={album.id} className="relative group">
-              <Link href={`/albums/${album.id}`}>
+              <Link href={`/${locale}/albums/${album.id}`}>
                 <AlbumCard
                   title={album.title}
                   description={album.description}

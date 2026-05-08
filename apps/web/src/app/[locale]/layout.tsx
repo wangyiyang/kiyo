@@ -1,17 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
-
-import { Toaster } from '@kiyo/ui'
 
 import { WaitlistDialog } from '@/components/waitlist-dialog'
 import { GlobalPlayer } from '@/components/global-player'
 import { defaultLocale, locales, type Locale } from '@/i18n/config'
-
-import { Providers } from '../providers'
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -84,21 +78,10 @@ export default async function LocaleLayout({
   const messages = await getMessages()
 
   return (
-    <html
-      lang={params.locale}
-      suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
-    >
-      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
-        <NextIntlClientProvider locale={params.locale} messages={messages}>
-          <Providers>
-            {children}
-            <GlobalPlayer />
-            <WaitlistDialog />
-            <Toaster richColors closeButton position="top-center" />
-          </Providers>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider locale={params.locale} messages={messages}>
+      {children}
+      <GlobalPlayer />
+      <WaitlistDialog />
+    </NextIntlClientProvider>
   )
 }
