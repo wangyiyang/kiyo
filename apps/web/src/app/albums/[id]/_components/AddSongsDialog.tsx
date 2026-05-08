@@ -24,6 +24,13 @@ export function AddSongsDialog({ albumId, excludeIds }: AddSongsDialogProps) {
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
 
+  function handleOpenChange(open: boolean) {
+    setOpen(open)
+    if (!open) {
+      setSelectedIds([])
+    }
+  }
+
   async function handleSubmit() {
     if (selectedIds.length === 0) return
 
@@ -36,7 +43,7 @@ export function AddSongsDialog({ albumId, excludeIds }: AddSongsDialogProps) {
       })
 
       if (!response.ok) {
-        const error = await response.json()
+        const error = await response.json().catch(() => ({ error: { message: '添加失败' } }))
         throw new Error(error.error?.message ?? '添加失败')
       }
 
@@ -51,12 +58,12 @@ export function AddSongsDialog({ albumId, excludeIds }: AddSongsDialogProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <button className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+        <Button className="gap-1.5">
           <Plus className="h-4 w-4" />
           添加歌曲
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
@@ -70,7 +77,7 @@ export function AddSongsDialog({ albumId, excludeIds }: AddSongsDialogProps) {
             emptyMessage="暂无可用歌曲"
           />
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               取消
             </Button>
             <Button
