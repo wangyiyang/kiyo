@@ -132,7 +132,14 @@ export default async function SongDetailPage({
       {song.status === 'completed' && song.audio_url && (
         <div className="mb-6">
           <h2 className="mb-2 text-sm font-medium">音频预览</h2>
-          <AudioPlayer src={song.audio_url} className="w-full" />
+          <AudioPlayer
+            src={song.audio_url}
+            title={song.title}
+            duration={song.duration}
+            coverUrl={song.cover_url}
+            songId={song.id}
+            className="w-full"
+          />
         </div>
       )}
 
@@ -149,11 +156,25 @@ export default async function SongDetailPage({
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <p className="mb-1 text-xs text-muted-foreground">原曲</p>
-              <AudioPlayer src={(song.original_song as any)?.audio_url || ''} className="w-full" />
+              <AudioPlayer
+                src={(song.original_song as any)?.audio_url || ''}
+                title={(song.original_song as any)?.title || '原曲'}
+                duration={(song.original_song as any)?.duration}
+                coverUrl={(song.original_song as any)?.cover_url}
+                songId={(song.original_song as any)?.id}
+                className="w-full"
+              />
             </div>
             <div>
               <p className="mb-1 text-xs text-muted-foreground">翻唱</p>
-              <AudioPlayer src={song.audio_url || ''} className="w-full" />
+              <AudioPlayer
+                src={song.audio_url || ''}
+                title={song.title}
+                duration={song.duration}
+                coverUrl={song.cover_url}
+                songId={song.id}
+                className="w-full"
+              />
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { createServerClient } from '@kiyo/supabase'
-import { EmptyState } from '@kiyo/ui'
+import { AudioPlayer, EmptyState } from '@kiyo/ui'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { DraggableSongList } from '../_components/DraggableSongList'
@@ -65,10 +65,30 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
       </div>
 
       {songs.length > 0 ? (
-        <DraggableSongList
-          songs={songs.map((s: any) => ({ id: s.id, title: s.title }))}
-          albumId={id}
-        />
+        <>
+          <div className="mb-6">
+            <AudioPlayer
+              src={songs[0]?.audio_url || ''}
+              title={songs[0]?.title}
+              album={album.title}
+              coverUrl={album.cover_url}
+              songId={songs[0]?.id}
+              playlist={songs.map((s: any) => ({
+                id: s.id,
+                title: s.title,
+                audio_url: s.audio_url || '',
+                cover_url: s.cover_url,
+                duration: s.duration,
+                album: album.title,
+              }))}
+              className="w-full"
+            />
+          </div>
+          <DraggableSongList
+            songs={songs.map((s: any) => ({ id: s.id, title: s.title }))}
+            albumId={id}
+          />
+        </>
       ) : (
         <EmptyState title="专辑暂无歌曲" description="编辑专辑添加歌曲" />
       )}
