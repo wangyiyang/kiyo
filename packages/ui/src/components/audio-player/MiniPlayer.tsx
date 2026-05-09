@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { usePlayerStore } from '../../store/usePlayerStore'
 import { Play, Pause, SkipBack, SkipForward, ChevronUp, ChevronDown, X, Music2 } from 'lucide-react'
 import { PlaylistPanel } from './PlaylistPanel'
@@ -28,10 +29,13 @@ export function MiniPlayer() {
           className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-white/5"
         >
           {currentTrack.cover_url ? (
-            <img
+            <Image
               src={currentTrack.cover_url}
               alt={currentTrack.title}
-              className="h-full w-full object-cover"
+              width={40}
+              height={40}
+              className="object-cover"
+              sizes="40px"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
