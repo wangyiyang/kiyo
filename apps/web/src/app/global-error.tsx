@@ -1,22 +1,30 @@
 'use client'
 
+import './globals.css'
+
 import { useEffect } from 'react'
 
 import { ErrorBoundaryPage } from '@/components/error-boundary-page'
 import { captureAppException } from '@/lib/monitoring'
 
-type ErrorPageProps = {
+type GlobalErrorProps = {
   error: Error & { digest?: string }
   reset: () => void
 }
 
-export default function ErrorPage({ error, reset }: ErrorPageProps) {
+export default function GlobalError({ error, reset }: GlobalErrorProps) {
   useEffect(() => {
     captureAppException(error, {
-      tags: { boundary: 'app-error' },
+      tags: { boundary: 'global-error' },
       extra: { digest: error.digest },
     })
   }, [error])
 
-  return <ErrorBoundaryPage error={error} reset={reset} homeHref="/" />
+  return (
+    <html lang="zh" suppressHydrationWarning>
+      <body>
+        <ErrorBoundaryPage error={error} reset={reset} homeHref="/" />
+      </body>
+    </html>
+  )
 }

@@ -22,6 +22,7 @@
     "@kiyo/ai": "workspace:*",
     "@kiyo/supabase": "workspace:*",
     "@kiyo/ui": "workspace:*",
+    "@sentry/nextjs": "^10.52.0",
     "framer-motion": "^11.18.2",
     "geist": "^1.7.0",
     "howler": "^2.2.4",

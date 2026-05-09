@@ -1,4 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
+import { captureAppException } from '@/lib/monitoring'
 import { generateMusic, MinimaxError } from '@kiyo/ai'
 import { NextResponse } from 'next/server'
 
@@ -84,6 +85,9 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
     return NextResponse.json({ song: updatedSong })
   } catch (err) {
+    captureAppException(err, {
+      tags: { area: 'songs', operation: 'regenerate' },
+    })
     const message = err instanceof Error ? err.message : 'Music generation failed'
 
     await supabase

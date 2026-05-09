@@ -1,4 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
+import { captureAppException } from '@/lib/monitoring'
 import { generateCover, MinimaxError } from '@kiyo/ai'
 import { NextResponse } from 'next/server'
 
@@ -134,6 +135,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ song: updatedSong })
   } catch (err) {
+    captureAppException(err, {
+      tags: { area: 'songs', operation: 'cover' },
+    })
     const message = err instanceof Error ? err.message : 'Cover generation failed'
 
     await supabase

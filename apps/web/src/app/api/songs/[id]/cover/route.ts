@@ -1,4 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
+import { captureAppException } from '@/lib/monitoring'
 import { generateImage } from '@kiyo/ai'
 import { NextResponse } from 'next/server'
 import { buildCoverPrompt, downloadImage, uploadToCovers } from '@/lib/cover'
@@ -77,6 +78,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         song: updatedSong,
       })
     } catch (error) {
+      captureAppException(error, {
+        tags: { area: 'songs', operation: 'cover' },
+      })
       await supabase
         .from('songs')
         .update({ cover_status: 'failed' })
@@ -138,6 +142,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       song: updatedSong,
     })
   } catch (error) {
+    captureAppException(error, {
+      tags: { area: 'songs', operation: 'cover' },
+    })
     const errorMessage = error instanceof Error ? error.message : 'Upload failed'
     return NextResponse.json(
       { error: { code: 'INTERNAL_ERROR', message: errorMessage } },
