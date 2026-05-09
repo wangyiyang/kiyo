@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { usePlayerStore } from '../../store/usePlayerStore'
 import { cn } from '../../lib/utils'
 import { Music2 } from 'lucide-react'
@@ -62,10 +63,13 @@ export function PlaylistPanel({ className }: PlaylistPanelProps) {
 
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-white/5">
                 {song.cover_url ? (
-                  <img
+                  <Image
                     src={song.cover_url}
                     alt={song.title}
-                    className="h-full w-full rounded object-cover"
+                    width={32}
+                    height={32}
+                    className="rounded object-cover"
+                    sizes="32px"
                   />
                 ) : (
                   <Music2 size={14} className="text-white/30" />
