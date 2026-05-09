@@ -47,3 +47,4 @@ supabase/.temp
 .agents/
 .ant-colony/
 .superpowers/
+.vercel
