@@ -19,6 +19,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface Song {
   id: string
@@ -64,6 +65,7 @@ function SortableSongRow({ song, index }: { song: Song; index: number }) {
 export function DraggableSongList({ songs: initialSongs, albumId, onReorder }: DraggableSongListProps) {
   const [songs, setSongs] = useState(initialSongs)
   const [isSaving, setIsSaving] = useState(false)
+  const t = useTranslations('albums.reorder')
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -89,13 +91,13 @@ export function DraggableSongList({ songs: initialSongs, albumId, onReorder }: D
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error?.message ?? 'Failed to update order')
+        throw new Error(error.error?.message ?? t('failed'))
       }
 
       onReorder?.(newSongs)
     } catch (err) {
       setSongs(songs)
-      alert(err instanceof Error ? err.message : '更新失败')
+      alert(err instanceof Error ? err.message : t('failed'))
     } finally {
       setIsSaving(false)
     }
@@ -104,7 +106,7 @@ export function DraggableSongList({ songs: initialSongs, albumId, onReorder }: D
   return (
     <div>
       {isSaving && (
-        <p className="mb-2 text-xs text-muted-foreground">保存中...</p>
+        <p className="mb-2 text-xs text-muted-foreground">{t('saving')}</p>
       )}
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={songs.map((s) => s.id)} strategy={verticalListSortingStrategy}>
