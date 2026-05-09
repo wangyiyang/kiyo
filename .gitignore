@@ -40,6 +40,7 @@ Thumbs.db
 supabase-local/.branches
 supabase-local/.temp
 supabase-local/supabase/
+supabase-local/functions/**/.env
 
 # Claude
 .claude/
