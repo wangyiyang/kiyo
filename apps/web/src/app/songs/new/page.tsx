@@ -82,6 +82,7 @@ export default function NewSongPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={t('placeholders.title')}
+            maxLength={200}
           />
         </div>
 
@@ -110,6 +111,7 @@ export default function NewSongPage() {
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
               placeholder={t('placeholders.genre')}
+              maxLength={100}
             />
           </div>
           <div>
@@ -119,6 +121,7 @@ export default function NewSongPage() {
               value={mood}
               onChange={(e) => setMood(e.target.value)}
               placeholder={t('placeholders.mood')}
+              maxLength={100}
             />
           </div>
         </div>
@@ -131,6 +134,7 @@ export default function NewSongPage() {
             onChange={(e) => setAiPrompt(e.target.value)}
             placeholder={t('placeholders.aiPrompt')}
             rows={3}
+            maxLength={2000}
           />
         </div>
       </div>

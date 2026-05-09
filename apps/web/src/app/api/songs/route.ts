@@ -1,6 +1,17 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
 
+const MAX_TITLE_LENGTH = 200
+const MAX_FIELD_LENGTH = 100
+const MAX_AI_PROMPT_LENGTH = 2000
+
+function validateString(value: unknown, name: string, maxLength: number): string | null {
+  if (typeof value !== 'string') return `${name} must be a string`
+  if (value.length === 0) return `${name} is required`
+  if (value.length > maxLength) return `${name} must be ${maxLength} characters or less`
+  return null
+}
+
 export async function GET() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -49,23 +60,54 @@ export async function POST(request: Request) {
     )
   }
 
-  const { title, lyric_id, genre, mood, ai_prompt } = body
-
-  if (!title || typeof title !== 'string' || title.trim() === '') {
+  const titleRaw = body.title as string | undefined
+  const titleError = validateString(titleRaw, 'Title', MAX_TITLE_LENGTH)
+  if (titleError) {
     return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Title is required' } },
+      { error: { code: 'VALIDATION_ERROR', message: titleError } },
       { status: 400 }
     )
+  }
+
+  const genreRaw = body.genre as string | undefined
+  if (genreRaw) {
+    const genreError = validateString(genreRaw, 'Genre', MAX_FIELD_LENGTH)
+    if (genreError) {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: genreError } },
+        { status: 400 }
+      )
+    }
+  }
+  const moodRaw = body.mood as string | undefined
+  if (moodRaw) {
+    const moodError = validateString(moodRaw, 'Mood', MAX_FIELD_LENGTH)
+    if (moodError) {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: moodError } },
+        { status: 400 }
+      )
+    }
+  }
+  const aiPromptRaw = body.ai_prompt as string | undefined
+  if (aiPromptRaw) {
+    const promptError = validateString(aiPromptRaw, 'AI Prompt', MAX_AI_PROMPT_LENGTH)
+    if (promptError) {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: promptError } },
+        { status: 400 }
+      )
+    }
   }
 
   const { data: song, error } = await supabase
     .from('songs')
     .insert({
-      title: title.trim(),
-      lyric_id: typeof lyric_id === 'string' ? lyric_id : null,
-      genre: typeof genre === 'string' ? genre : null,
-      mood: typeof mood === 'string' ? mood : null,
-      ai_prompt: typeof ai_prompt === 'string' ? ai_prompt : null,
+      title: titleRaw!.trim(),
+      lyric_id: typeof body.lyric_id === 'string' ? body.lyric_id : null,
+      genre: genreRaw ?? null,
+      mood: moodRaw ?? null,
+      ai_prompt: aiPromptRaw ?? null,
       status: 'draft',
       source: 'manual',
       user_id: user.id,

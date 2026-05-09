@@ -1,6 +1,17 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
 
+const MAX_TITLE_LENGTH = 200
+const MAX_CONTENT_LENGTH = 10000
+const MAX_FIELD_LENGTH = 100
+
+function validateString(value: unknown, name: string, maxLength: number): string | null {
+  if (typeof value !== 'string') return `${name} must be a string`
+  if (value.length === 0) return `${name} is required`
+  if (value.length > maxLength) return `${name} must be ${maxLength} characters or less`
+  return null
+}
+
 export async function POST(request: Request) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -22,29 +33,62 @@ export async function POST(request: Request) {
     )
   }
 
-  const { title, content, language, style, mood } = body
-
-  if (!title || typeof title !== 'string' || title.trim() === '') {
+  const titleRaw = body.title as string | undefined
+  const contentRaw = body.content as string | undefined
+  const titleError = validateString(titleRaw, 'Title', MAX_TITLE_LENGTH)
+  if (titleError) {
     return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Title is required' } },
+      { error: { code: 'VALIDATION_ERROR', message: titleError } },
       { status: 400 }
     )
   }
-  if (!content || typeof content !== 'string' || content.trim() === '') {
+  const contentError = validateString(contentRaw, 'Content', MAX_CONTENT_LENGTH)
+  if (contentError) {
     return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Content is required' } },
+      { error: { code: 'VALIDATION_ERROR', message: contentError } },
       { status: 400 }
     )
+  }
+
+  const languageRaw = body.language as string | undefined
+  if (languageRaw) {
+    const langError = validateString(languageRaw, 'Language', MAX_FIELD_LENGTH)
+    if (langError) {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: langError } },
+        { status: 400 }
+      )
+    }
+  }
+  const styleRaw = body.style as string | undefined
+  if (styleRaw) {
+    const styleError = validateString(styleRaw, 'Style', MAX_FIELD_LENGTH)
+    if (styleError) {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: styleError } },
+        { status: 400 }
+      )
+    }
+  }
+  const moodRaw = body.mood as string | undefined
+  if (moodRaw) {
+    const moodError = validateString(moodRaw, 'Mood', MAX_FIELD_LENGTH)
+    if (moodError) {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: moodError } },
+        { status: 400 }
+      )
+    }
   }
 
   const { data: lyric, error } = await supabase
     .from('lyrics')
     .insert({
-      title,
-      content,
-      language: typeof language === 'string' ? language : null,
-      style: typeof style === 'string' ? style : null,
-      mood: typeof mood === 'string' ? mood : null,
+      title: titleRaw!,
+      content: contentRaw!,
+      language: languageRaw ?? null,
+      style: styleRaw ?? null,
+      mood: moodRaw ?? null,
       source: 'manual',
       status: 'draft',
       user_id: user.id,
