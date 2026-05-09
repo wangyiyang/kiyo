@@ -83,6 +83,7 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
               placeholder={t('namePlaceholder')}
               required
+              maxLength={200}
             />
           </div>
           <div>
@@ -92,6 +93,7 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
               placeholder={t('descriptionPlaceholder')}
               rows={3}
+              maxLength={2000}
             />
           </div>
           {mode === 'create' && (

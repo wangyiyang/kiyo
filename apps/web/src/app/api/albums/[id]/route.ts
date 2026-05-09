@@ -1,6 +1,16 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
 
+const MAX_TITLE_LENGTH = 200
+const MAX_DESCRIPTION_LENGTH = 2000
+
+function validateString(value: unknown, name: string, maxLength: number): string | null {
+  if (typeof value !== 'string') return `${name} must be a string`
+  if (value.length === 0) return `${name} is required`
+  if (value.length > maxLength) return `${name} must be ${maxLength} characters or less`
+  return null
+}
+
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -123,6 +133,19 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 
   if (title !== undefined) {
+    if (typeof title !== 'string' || title.length === 0) {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: 'Title is required' } },
+        { status: 400 }
+      )
+    }
+    if (title.length > MAX_TITLE_LENGTH) {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: `Title must be ${MAX_TITLE_LENGTH} characters or less` } },
+        { status: 400 }
+      )
+    }
+
     const { data: updatedAlbum, error: updateError } = await supabase
       .from('albums')
       .update({ title })

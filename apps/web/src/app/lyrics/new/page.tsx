@@ -73,6 +73,7 @@ export default function NewLyricPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={t('placeholders.title')}
+            maxLength={200}
           />
         </div>
         <div className="grid grid-cols-3 gap-4">
@@ -83,6 +84,7 @@ export default function NewLyricPage() {
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               placeholder={t('placeholders.language')}
+              maxLength={100}
             />
           </div>
           <div>
@@ -92,6 +94,7 @@ export default function NewLyricPage() {
               value={style}
               onChange={(e) => setStyle(e.target.value)}
               placeholder={t('placeholders.style')}
+              maxLength={100}
             />
           </div>
           <div>
@@ -101,6 +104,7 @@ export default function NewLyricPage() {
               value={mood}
               onChange={(e) => setMood(e.target.value)}
               placeholder={t('placeholders.mood')}
+              maxLength={100}
             />
           </div>
         </div>
@@ -112,6 +116,7 @@ export default function NewLyricPage() {
             onChange={(e) => setContent(e.target.value)}
             placeholder={t('placeholders.content')}
             rows={12}
+            maxLength={10000}
             className="font-mono text-sm leading-relaxed"
           />
         </div>

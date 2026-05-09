@@ -1,6 +1,17 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
 
+const MAX_TITLE_LENGTH = 200
+const MAX_FIELD_LENGTH = 100
+const MAX_AI_PROMPT_LENGTH = 2000
+
+function validateString(value: unknown, name: string, maxLength: number): string | null {
+  if (typeof value !== 'string') return `${name} must be a string`
+  if (value.length === 0) return `${name} is required`
+  if (value.length > maxLength) return `${name} must be ${maxLength} characters or less`
+  return null
+}
+
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -76,9 +87,39 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   const allowed = ['title', 'lyric_id', 'genre', 'mood', 'ai_prompt', 'cover_url']
   const updates: Record<string, unknown> = {}
+
   for (const key of allowed) {
     if (key in body) {
-      updates[key] = typeof body[key] === 'string' ? body[key] : body[key] === null ? null : undefined
+      if (key === 'title') {
+        const error = validateString(body[key], 'Title', MAX_TITLE_LENGTH)
+        if (error) {
+          return NextResponse.json(
+            { error: { code: 'VALIDATION_ERROR', message: error } },
+            { status: 400 }
+          )
+        }
+        updates[key] = body[key]
+      } else if (key === 'ai_prompt') {
+        const error = validateString(body[key], 'AI Prompt', MAX_AI_PROMPT_LENGTH)
+        if (error) {
+          return NextResponse.json(
+            { error: { code: 'VALIDATION_ERROR', message: error } },
+            { status: 400 }
+          )
+        }
+        updates[key] = body[key]
+      } else if (typeof body[key] === 'string') {
+        const error = validateString(body[key], key, MAX_FIELD_LENGTH)
+        if (error) {
+          return NextResponse.json(
+            { error: { code: 'VALIDATION_ERROR', message: error } },
+            { status: 400 }
+          )
+        }
+        updates[key] = body[key]
+      } else if (body[key] === null) {
+        updates[key] = null
+      }
     }
   }
 
