@@ -144,6 +144,24 @@ describe('DELETE /api/lyrics/:id', () => {
     expect(json.success).toBe(true)
   })
 
+  it('returns 409 when lyric is linked to songs', async () => {
+    const { createServerClient } = await import('@kiyo/supabase/server')
+    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+    mockClient.dataStore.lyrics = [
+      { id: 'l1', title: 'Lyric 1', user_id: 'user-1', content: 'Line', source: 'manual', status: 'draft' },
+    ]
+    mockClient.dataStore.songs = [
+      { id: 's1', title: 'Song 1', user_id: 'user-1', lyric_id: 'l1' },
+    ]
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+
+    const response = await DELETE(new Request('http://localhost'), { params: { id: 'l1' } })
+    expect(response.status).toBe(409)
+    const json = await response.json()
+    expect(json.error.code).toBe('LYRIC_IN_USE')
+    expect(json.error.linkedSongCount).toBe(1)
+  })
+
   it('returns 401 when not authenticated', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })

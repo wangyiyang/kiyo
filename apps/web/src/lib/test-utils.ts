@@ -46,8 +46,22 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
   }
 
   const chain = {
-    select: (columns = '*') => {
+    select: (columns = '*', options?: { count?: string }) => {
       currentSelect = columns
+      if (options?.count) {
+        return {
+          eq: (column: string, value: any) => {
+            currentFilters.push((item) => item[column] === value)
+            return {
+              then: async (resolve: any) => {
+                const filtered = buildResult()
+                reset()
+                return resolve({ data: null, count: filtered.length, error: null })
+              },
+            }
+          },
+        }
+      }
       return chain
     },
     insert: (values: any | any[]) => {
