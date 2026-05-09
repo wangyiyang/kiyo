@@ -12,9 +12,14 @@ import {
 } from '@kiyo/ui'
 import type { Block } from '@kiyo/ui'
 import { ArrowLeft, Save } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export default function LyricEditPage({ params }: { params: { id: string } }) {
   const router = useRouter()
+  const t = useTranslations('lyrics.edit')
+  const tNew = useTranslations('lyrics.new')
+  const tCommon = useTranslations('common')
+
   const [loading, setLoading] = React.useState(true)
   const [saving, setSaving] = React.useState(false)
   const [title, setTitle] = React.useState('')
@@ -35,12 +40,12 @@ export default function LyricEditPage({ params }: { params: { id: string } }) {
           setMood(data.lyric.mood ?? '')
           setBlocks(textToBlocks(data.lyric.content))
         } else {
-          setError('歌词不存在')
+          setError(tCommon('errors.notFound'))
         }
         setLoading(false)
       })
       .catch(() => {
-        setError('加载失败')
+        setError(tCommon('errors.loadFailed'))
         setLoading(false)
       })
   }, [params.id])
@@ -65,10 +70,10 @@ export default function LyricEditPage({ params }: { params: { id: string } }) {
       if (res.ok) {
         router.push(`/lyrics/${params.id}`)
       } else {
-        setError(data.error?.message || '保存失败')
+        setError(data.error?.message || tCommon('errors.saveFailed'))
       }
     } catch {
-      setError('保存失败')
+      setError(tCommon('errors.network'))
     } finally {
       setSaving(false)
     }
@@ -77,7 +82,7 @@ export default function LyricEditPage({ params }: { params: { id: string } }) {
   if (loading) {
     return (
       <div className="container mx-auto max-w-3xl py-8">
-        <div className="text-center text-muted-foreground">加载中...</div>
+        <div className="text-center text-muted-foreground">{tCommon('states.loading')}</div>
       </div>
     )
   }
@@ -98,53 +103,53 @@ export default function LyricEditPage({ params }: { params: { id: string } }) {
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          返回详情
+          {t('back')}
         </Link>
       </div>
 
       <div className="mb-6 space-y-4">
         <div>
-          <Label htmlFor="title">标题</Label>
+          <Label htmlFor="title">{tNew('fields.title')}</Label>
           <Input
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="歌词标题"
+            placeholder={tNew('placeholders.title')}
           />
         </div>
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="language">语言</Label>
+            <Label htmlFor="language">{tNew('fields.language')}</Label>
             <Input
               id="language"
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              placeholder="如：zh、en"
+              placeholder={tNew('placeholders.language')}
             />
           </div>
           <div>
-            <Label htmlFor="style">风格</Label>
+            <Label htmlFor="style">{tNew('fields.style')}</Label>
             <Input
               id="style"
               value={style}
               onChange={(e) => setStyle(e.target.value)}
-              placeholder="如：流行、摇滚"
+              placeholder={tNew('placeholders.style')}
             />
           </div>
           <div>
-            <Label htmlFor="mood">情绪</Label>
+            <Label htmlFor="mood">{tNew('fields.mood')}</Label>
             <Input
               id="mood"
               value={mood}
               onChange={(e) => setMood(e.target.value)}
-              placeholder="如：励志、忧伤"
+              placeholder={tNew('placeholders.mood')}
             />
           </div>
         </div>
       </div>
 
       <div className="mb-4">
-        <Label className="mb-2 block">歌词内容</Label>
+        <Label className="mb-2 block">{t('contentLabel')}</Label>
         <StructuredBlockEditor blocks={blocks} onChange={setBlocks} />
       </div>
 
@@ -152,11 +157,11 @@ export default function LyricEditPage({ params }: { params: { id: string } }) {
 
       <div className="flex justify-end gap-3">
         <Link href={`/lyrics/${params.id}`}>
-          <Button variant="outline">取消</Button>
+          <Button variant="outline">{tCommon('actions.cancel')}</Button>
         </Link>
         <Button onClick={handleSave} disabled={saving}>
           <Save className="mr-1 h-4 w-4" />
-          {saving ? '保存中...' : '保存'}
+          {saving ? tCommon('states.saving') : tCommon('actions.save')}
         </Button>
       </div>
     </div>

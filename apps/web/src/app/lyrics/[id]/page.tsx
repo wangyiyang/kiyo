@@ -5,6 +5,7 @@ import { Pencil, ArrowLeft } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
 import { getLocale } from '@/i18n/server'
 import { GenerateSongDialog } from './generate-song-dialog'
+import { getTranslations } from 'next-intl/server'
 
 export default async function LyricDetailPage({
   params,
@@ -39,6 +40,17 @@ export default async function LyricDetailPage({
 
   const blocks = textToBlocks(lyric.content)
   const locale = await getLocale()
+  const t = await getTranslations('lyrics.detail')
+  const tCommon = await getTranslations('common')
+
+  const sourceLabel = lyric.source === 'ai_generated' ? t('source.ai') : t('source.manual')
+
+  const statusLabelMap: Record<string, string> = {
+    draft: tCommon('states.loading'),
+    generating: tCommon('states.generating'),
+    completed: t('source.manual'),
+    failed: tCommon('errors.unknown'),
+  }
 
   return (
     <div className="container mx-auto max-w-3xl py-8">
@@ -48,7 +60,7 @@ export default async function LyricDetailPage({
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          返回列表
+          {t('back')}
         </Link>
       </div>
 
@@ -63,7 +75,7 @@ export default async function LyricDetailPage({
                   : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
               }`}
             >
-              {lyric.source === 'ai_generated' ? 'AI 生成' : '手动创建'}
+              {sourceLabel}
             </span>
             {lyric.language && <span>{lyric.language}</span>}
             {lyric.style && <span>{lyric.style}</span>}
@@ -79,7 +91,7 @@ export default async function LyricDetailPage({
         <Link href={`/${locale}/lyrics/${lyric.id}/edit`}>
           <Button variant="outline" size="sm">
             <Pencil className="mr-1 h-4 w-4" />
-            编辑
+            {t('edit')}
           </Button>
         </Link>
       </div>
@@ -87,7 +99,7 @@ export default async function LyricDetailPage({
       <StructuredBlockEditor blocks={blocks} onChange={() => {}} readOnly />
 
       <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold">关联歌曲</h2>
+        <h2 className="mb-4 text-lg font-semibold">{t('linkedSongs')}</h2>
         {linkedSongs && linkedSongs.length > 0 ? (
           <div className="space-y-3">
             {linkedSongs.map((song) => (
@@ -95,7 +107,7 @@ export default async function LyricDetailPage({
                 <div className="flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
                   <div className="flex items-center gap-3">
                     <span className="font-medium">{song.title}</span>
-                    <SongStatusBadge status={song.status as any} />
+                    <SongStatusBadge status={song.status as any} label={statusLabelMap[song.status] ?? song.status} />
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     {song.genre && <span>{song.genre}</span>}
@@ -107,8 +119,8 @@ export default async function LyricDetailPage({
           </div>
         ) : (
           <div className="rounded-lg border border-dashed p-6 text-center">
-            <p className="text-sm text-muted-foreground">暂无关联歌曲</p>
-            <p className="mt-1 text-xs text-muted-foreground">使用上方按钮生成音乐</p>
+            <p className="text-sm text-muted-foreground">{t('noLinkedSongs.title')}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t('noLinkedSongs.description')}</p>
           </div>
         )}
       </div>
