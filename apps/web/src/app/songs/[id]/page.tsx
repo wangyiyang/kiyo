@@ -1,6 +1,7 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { AudioPlayer, Button, SongStatusBadge } from '@kiyo/ui'
-import { ArrowLeft, Pencil, Play, AlertCircle, Mic2 } from 'lucide-react'
+import { ArrowLeft, Pencil, Play, Mic2 } from 'lucide-react'
+import { GenerationPanel } from './generation-panel'
 import { notFound, redirect } from 'next/navigation'
 import { getLocale } from '@/i18n/server'
 import { Link } from '@/i18n/navigation'
@@ -117,37 +118,7 @@ export default async function SongDetailPage({
         </div>
       </div>
 
-      {(song.status === 'draft' || song.status === 'failed') && (
-        <div className="mb-6 rounded-lg border border-dashed p-6 text-center">
-          <div className="mb-2 flex justify-center">
-            <AlertCircle className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <p className="mb-2 text-sm text-muted-foreground">
-            {song.status === 'failed'
-              ? t('status.failed.title')
-              : t('status.draft.title')}
-          </p>
-          <form
-            action={`/api/songs/${song.id}/generate`}
-            method="POST"
-          >
-            <Button type="submit" disabled={!song.lyric_id}>
-              {song.status === 'failed' ? t('status.failed.action') : t('status.draft.action')}
-            </Button>
-          </form>
-          {!song.lyric_id && (
-            <p className="mt-2 text-xs text-muted-foreground">
-              {t('lyricRequired')}
-            </p>
-          )}
-        </div>
-      )}
-
-      {song.status === 'generating' && (
-        <div className="mb-6 rounded-lg border p-6 text-center">
-          <p className="text-sm text-muted-foreground">{t('status.generating.title')}</p>
-        </div>
-      )}
+      <GenerationPanel songId={song.id} initialStatus={song.status} />
 
       {song.status === 'completed' && song.audio_url && (
         <div className="mb-6">

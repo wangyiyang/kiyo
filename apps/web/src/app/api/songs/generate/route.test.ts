@@ -10,16 +10,6 @@ vi.mock('@kiyo/supabase/server', async () => {
   }
 })
 
-vi.mock('@kiyo/ai', () => ({
-  generateMusic: vi.fn(),
-  MinimaxError: class MinimaxError extends Error {
-    constructor(message: string, public code: string) {
-      super(message)
-      this.name = 'MinimaxError'
-    }
-  },
-}))
-
 beforeEach(() => {
   vi.resetAllMocks()
 })
@@ -32,21 +22,11 @@ function createRequest(body: Record<string, unknown>) {
   })
 }
 
-describe('POST /api/songs/generate', () => {
-  it('auto_lyrics mode success (200)', async () => {
+describe('POST /api/songs/generate (async)', () => {
+  it('auto_lyrics mode returns 202 and creates song + task', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
-    const { generateMusic } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(generateMusic).mockResolvedValue({
-      audioUrl: 'https://cdn.minimaxi.com/audio/test.mp3',
-      duration: 60,
-    })
-
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(1024)),
-    })
 
     const response = await POST(createRequest({
       prompt: 'A happy pop song',
@@ -56,33 +36,25 @@ describe('POST /api/songs/generate', () => {
       language: 'en',
     }))
 
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(202)
     const json = await response.json()
-    expect(json.song.status).toBe('completed')
-    expect(json.song.duration).toBe(60)
+    expect(json.song.status).toBe('generating')
     expect(json.song.source).toBe('ai_generated')
+    expect(json.task.status).toBe('pending')
+    expect(json.task.type).toBe('music')
+    expect(json.task.payload.mode).toBe('auto_lyrics')
+    expect(json.task.payload.prompt).toContain('英文')
 
-    expect(generateMusic).toHaveBeenCalledWith(
-      expect.objectContaining({
-        lyricsOptimizer: true,
-      })
-    )
+    const task = mockClient.dataStore.generation_tasks[0]
+    expect(task).toBeDefined()
+    expect(task.user_id).toBe('user-1')
+    expect(task.song_id).toBe(json.song.id)
   })
 
-  it('instrumental mode success (200)', async () => {
+  it('instrumental mode returns 202', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
-    const { generateMusic } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(generateMusic).mockResolvedValue({
-      audioUrl: 'https://cdn.minimaxi.com/audio/test.mp3',
-      duration: 45,
-    })
-
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(1024)),
-    })
 
     const response = await POST(createRequest({
       prompt: 'Epic orchestral background',
@@ -91,34 +63,19 @@ describe('POST /api/songs/generate', () => {
       language: 'zh',
     }))
 
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(202)
     const json = await response.json()
-    expect(json.song.status).toBe('completed')
-
-    expect(generateMusic).toHaveBeenCalledWith(
-      expect.objectContaining({
-        isInstrumental: true,
-      })
-    )
+    expect(json.song.status).toBe('generating')
+    expect(json.task.payload.mode).toBe('instrumental')
   })
 
-  it('existing_lyric mode success (200)', async () => {
+  it('existing_lyric mode returns 202', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
-    const { generateMusic } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
       { id: 'l1', title: 'Lyric 1', user_id: 'user-1', content: 'Line 1\nLine 2' },
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(generateMusic).mockResolvedValue({
-      audioUrl: 'https://cdn.minimaxi.com/audio/test.mp3',
-      duration: 90,
-    })
-
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(1024)),
-    })
 
     const response = await POST(createRequest({
       prompt: 'A rock ballad',
@@ -128,15 +85,9 @@ describe('POST /api/songs/generate', () => {
       language: 'ja',
     }))
 
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(202)
     const json = await response.json()
-    expect(json.song.status).toBe('completed')
-
-    expect(generateMusic).toHaveBeenCalledWith(
-      expect.objectContaining({
-        lyrics: 'Line 1\nLine 2',
-      })
-    )
+    expect(json.task.payload.lyric_id).toBe('l1')
   })
 
   it('invalid mode returns 400', async () => {
@@ -203,25 +154,39 @@ describe('POST /api/songs/generate', () => {
     expect(json.error.code).toBe('UNAUTHORIZED')
   })
 
-  it('Minimax failure returns 422 and updates song status to failed', async () => {
+  it('returns 500 if task creation fails', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
-    const { generateMusic, MinimaxError } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+
+    // Override generation_tasks insert to simulate failure
+    const originalFrom = mockClient.from
+    mockClient.from = (table: string) => {
+      if (table === 'generation_tasks') {
+        return {
+          ...originalFrom(table),
+          insert: () => ({
+            data: null,
+            error: null,
+            select: () => ({
+              single: () => Promise.resolve({ data: null, error: { message: 'DB error' } }),
+              then: (resolve: any) => Promise.resolve({ data: null, error: { message: 'DB error' } }).then(resolve),
+            }),
+            then: (resolve: any) => Promise.resolve({ data: null, error: { message: 'DB error' } }).then(resolve),
+          }),
+        } as any
+      }
+      return originalFrom(table)
+    }
+
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(generateMusic).mockRejectedValue(
-      new MinimaxError('Generation timeout', 'timeout')
-    )
 
     const response = await POST(createRequest({
-      prompt: 'A song that will fail',
+      prompt: 'A song',
       mode: 'auto_lyrics',
     }))
 
-    expect(response.status).toBe(422)
+    expect(response.status).toBe(500)
     const json = await response.json()
-    expect(json.error.code).toBe('GENERATION_FAILED')
-
-    const failedSong = mockClient.dataStore.songs.find((s: any) => s.status === 'failed')
-    expect(failedSong).toBeDefined()
+    expect(json.error.code).toBe('INTERNAL_ERROR')
   })
 })

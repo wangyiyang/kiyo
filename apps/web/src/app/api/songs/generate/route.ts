@@ -1,5 +1,4 @@
 import { createServerClient } from '@kiyo/supabase/server'
-import { generateMusic, MinimaxError } from '@kiyo/ai'
 import { NextResponse } from 'next/server'
 
 const VALID_MODES = ['instrumental', 'auto_lyrics', 'existing_lyric'] as const
@@ -88,7 +87,12 @@ export async function POST(request: Request) {
     }
   }
 
-  const fullPrompt = buildPrompt(prompt.trim(), typeof language === 'string' ? language : undefined, typeof genre === 'string' ? genre : undefined, typeof mood === 'string' ? mood : undefined)
+  const fullPrompt = buildPrompt(
+    prompt.trim(),
+    typeof language === 'string' ? language : undefined,
+    typeof genre === 'string' ? genre : undefined,
+    typeof mood === 'string' ? mood : undefined
+  )
 
   const { data: song, error: insertError } = await supabase
     .from('songs')
@@ -112,89 +116,38 @@ export async function POST(request: Request) {
     )
   }
 
-  try {
-    const generateOptions: {
-      prompt: string
-      genre?: string
-      mood?: string
-      isInstrumental?: boolean
-      lyricsOptimizer?: boolean
-      lyrics?: string
-    } = {
-      prompt: fullPrompt,
-    }
-
-    if (typeof genre === 'string') generateOptions.genre = genre
-    if (typeof mood === 'string') generateOptions.mood = mood
-
-    if (mode === 'instrumental') {
-      generateOptions.isInstrumental = true
-    } else if (mode === 'auto_lyrics') {
-      generateOptions.lyricsOptimizer = true
-    } else if (mode === 'existing_lyric') {
-      const { data: lyric } = await supabase
-        .from('lyrics')
-        .select('content')
-        .eq('id', lyric_id as string)
-        .single()
-      generateOptions.lyrics = lyric?.content ?? ''
-    }
-
-    const result = await generateMusic(generateOptions)
-
-    const audioResponse = await fetch(result.audioUrl)
-    if (!audioResponse.ok) {
-      throw new Error('Failed to download audio')
-    }
-    const audioBuffer = await audioResponse.arrayBuffer()
-
-    const filePath = `${user.id}/${song.id}/${Date.now()}.mp3`
-    const { error: uploadError } = await supabase.storage
-      .from('audio')
-      .upload(filePath, audioBuffer, { contentType: 'audio/mpeg' })
-
-    if (uploadError) {
-      throw new Error(`Storage upload failed: ${uploadError.message}`)
-    }
-
-    const { data: publicUrl } = supabase.storage.from('audio').getPublicUrl(filePath)
-
-    const { data: updatedSong, error: updateError } = await supabase
-      .from('songs')
-      .update({
-        audio_url: publicUrl.publicUrl,
-        file_path: filePath,
-        duration: result.duration,
-        status: 'completed',
-        source: 'ai_generated',
-      })
-      .eq('id', song.id)
-      .eq('user_id', user.id)
-      .select()
-      .single()
-
-    if (updateError) {
-      throw new Error(`Database update failed: ${updateError.message}`)
-    }
-
-    return NextResponse.json({ song: updatedSong })
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Music generation failed'
-
-    await supabase
-      .from('songs')
-      .update({ status: 'failed' })
-      .eq('id', song.id)
-
-    const isMinimaxError = err instanceof MinimaxError
-    return NextResponse.json(
-      {
-        error: {
-          code: isMinimaxError ? 'GENERATION_FAILED' : 'INTERNAL_ERROR',
-          message,
-        },
+  const { data: task, error: taskError } = await supabase
+    .from('generation_tasks')
+    .insert({
+      user_id: user.id,
+      song_id: song.id,
+      type: 'music',
+      status: 'pending',
+      max_retries: 3,
+      payload: {
+        prompt: fullPrompt,
+        genre: typeof genre === 'string' ? genre : null,
+        mood: typeof mood === 'string' ? mood : null,
+        mode,
+        lyric_id: mode === 'existing_lyric' && typeof lyric_id === 'string' ? lyric_id : null,
+        language: typeof language === 'string' ? language : null,
       },
-      { status: isMinimaxError ? 422 : 500 }
+    })
+    .select()
+    .single()
+
+  if (taskError || !task) {
+    return NextResponse.json(
+      { error: { code: 'INTERNAL_ERROR', message: taskError?.message ?? 'Failed to create generation task' } },
+      { status: 500 }
     )
   }
+
+  return NextResponse.json(
+    { song, task },
+    {
+      status: 202,
+      headers: { 'Retry-After': '10' },
+    }
+  )
 }
