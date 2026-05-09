@@ -14,13 +14,7 @@ import {
   Textarea,
 } from '@kiyo/ui'
 import { Music } from 'lucide-react'
-
-const LANGUAGE_OPTIONS = [
-  { value: '', label: '不限' },
-  { value: 'zh', label: '中文' },
-  { value: 'en', label: '英文' },
-  { value: 'ja', label: '日文' },
-]
+import { useTranslations } from 'next-intl'
 
 interface GenerateSongDialogProps {
   lyricId: string
@@ -36,6 +30,9 @@ export function GenerateSongDialog({
   lyricLanguage,
 }: GenerateSongDialogProps) {
   const router = useRouter()
+  const t = useTranslations('lyrics.generateSong')
+  const tCommon = useTranslations('common')
+
   const [open, setOpen] = React.useState(false)
   const [generating, setGenerating] = React.useState(false)
   const [prompt, setPrompt] = React.useState(lyricTitle)
@@ -46,9 +43,16 @@ export function GenerateSongDialog({
 
   const contentEmpty = !lyricContent || lyricContent.trim() === ''
 
+  const LANGUAGE_OPTIONS = [
+    { value: '', label: tCommon('actions.optional') },
+    { value: 'zh', label: '中文' },
+    { value: 'en', label: 'English' },
+    { value: 'ja', label: '日本語' },
+  ]
+
   const handleGenerate = async () => {
     if (!prompt.trim()) {
-      setError('主题描述不能为空')
+      setError(tCommon('errors.required'))
       return
     }
 
@@ -73,10 +77,10 @@ export function GenerateSongDialog({
         setOpen(false)
         router.push(`/songs/${data.song.id}`)
       } else {
-        setError(data.error?.message || '生成失败，请稍后重试')
+        setError(data.error?.message || tCommon('errors.unknown'))
       }
     } catch {
-      setError('生成失败，请检查网络连接')
+      setError(tCommon('errors.network'))
     } finally {
       setGenerating(false)
     }
@@ -86,60 +90,57 @@ export function GenerateSongDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <Button size="sm" onClick={() => setOpen(true)}>
         <Music className="mr-1 h-4 w-4" />
-        生成音乐
+        {t('submit')}
       </Button>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>基于此歌词生成音乐</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           {contentEmpty && (
             <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">
-              歌词内容为空，无法生成音乐
+              {t('emptyWarning')}
             </p>
           )}
 
-          {/* 主题描述 */}
           <div>
-            <Label htmlFor="prompt">主题描述 *</Label>
+            <Label htmlFor="prompt">{t('fields.prompt')} *</Label>
             <Textarea
               id="prompt"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="描述你想要的音乐"
+              placeholder={t('placeholders.prompt')}
               rows={2}
               disabled={generating || contentEmpty}
             />
           </div>
 
-          {/* 风格 + 情绪 */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="genre">风格（可选）</Label>
+              <Label htmlFor="genre">{t('fields.genre')}</Label>
               <Input
                 id="genre"
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
-                placeholder="如：流行"
+                placeholder={t('placeholders.genre')}
                 disabled={generating || contentEmpty}
               />
             </div>
             <div>
-              <Label htmlFor="mood">情绪（可选）</Label>
+              <Label htmlFor="mood">{t('fields.mood')}</Label>
               <Input
                 id="mood"
                 value={mood}
                 onChange={(e) => setMood(e.target.value)}
-                placeholder="如：欢快"
+                placeholder={t('placeholders.mood')}
                 disabled={generating || contentEmpty}
               />
             </div>
           </div>
 
-          {/* 语言 */}
           <div>
-            <Label htmlFor="language">语言（可选）</Label>
+            <Label htmlFor="language">{t('fields.language')}</Label>
             <select
               id="language"
               value={language}
@@ -155,13 +156,12 @@ export function GenerateSongDialog({
             </select>
           </div>
 
-          {/* 歌词预览 */}
           <div>
-            <Label>歌词预览</Label>
+            <Label>{t('preview')}</Label>
             <div className="mt-1 max-h-24 overflow-y-auto rounded-md border bg-muted/50 p-3 text-sm text-muted-foreground">
               {lyricContent.length > 200
                 ? lyricContent.slice(0, 200) + '...'
-                : lyricContent || '（无内容）'}
+                : lyricContent || t('noContent')}
             </div>
           </div>
 
@@ -174,10 +174,10 @@ export function GenerateSongDialog({
             onClick={() => setOpen(false)}
             disabled={generating}
           >
-            取消
+            {tCommon('actions.cancel')}
           </Button>
           <Button onClick={handleGenerate} disabled={generating || contentEmpty}>
-            {generating ? '生成中...' : '开始生成'}
+            {generating ? tCommon('states.generating') : t('submit')}
           </Button>
         </DialogFooter>
       </DialogContent>

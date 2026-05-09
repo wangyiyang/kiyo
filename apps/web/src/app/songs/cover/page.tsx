@@ -6,24 +6,16 @@ import { useSearchParams } from 'next/navigation'
 import { Button, Input, Label } from '@kiyo/ui'
 import { ArrowLeft, Mic2, Upload } from 'lucide-react'
 import { createBrowserClient } from '@kiyo/supabase'
+import { useTranslations } from 'next-intl'
 
 type SourceMode = 'existing' | 'upload'
-
-const STYLE_OPTIONS = [
-  { icon: '🎸', label: '流行摇滚版', prompt: '流行摇滚版，节奏更快，电吉他驱动' },
-  { icon: '🎷', label: '爵士钢琴版', prompt: '爵士钢琴版，慵懒萨克斯，舒缓节奏' },
-  { icon: '🎻', label: '民谣吉他版', prompt: '民谣吉他版，指弹吉他，亲密人声' },
-  { icon: '🎹', label: '电子舞曲版', prompt: '电子舞曲版，强烈节拍，合成器铺底' },
-  { icon: '🎺', label: '古典管弦版', prompt: '古典管弦版，弦乐编排，庄重氛围' },
-  { icon: '🌙', label: 'Lo-fi 放松版', prompt: 'Lo-fi 放松版，黑胶噪点，梦幻氛围' },
-  { icon: '🤘', label: '摇滚金属版', prompt: '摇滚金属版，失真吉他，强力鼓组' },
-  { icon: '🎤', label: '灵魂乐版', prompt: '灵魂乐版，情感充沛，即兴唱腔' },
-]
 
 export default function CoverSongPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createBrowserClient()
+  const t = useTranslations('songs.cover')
+  const tCommon = useTranslations('common')
 
   const prefillSongId = searchParams.get('original_song_id')
 
@@ -36,6 +28,17 @@ export default function CoverSongPage() {
   const [customTitle, setCustomTitle] = React.useState('')
   const [generating, setGenerating] = React.useState(false)
   const [error, setError] = React.useState('')
+
+  const styleOptions = [
+    { icon: '🎸', label: t('style.options.0.label'), prompt: t('style.options.0.prompt') },
+    { icon: '🎷', label: t('style.options.1.label'), prompt: t('style.options.1.prompt') },
+    { icon: '🎻', label: t('style.options.2.label'), prompt: t('style.options.2.prompt') },
+    { icon: '🎹', label: t('style.options.3.label'), prompt: t('style.options.3.prompt') },
+    { icon: '🎺', label: t('style.options.4.label'), prompt: t('style.options.4.prompt') },
+    { icon: '🌙', label: t('style.options.5.label'), prompt: t('style.options.5.prompt') },
+    { icon: '🤘', label: t('style.options.6.label'), prompt: t('style.options.6.prompt') },
+    { icon: '🎤', label: t('style.options.7.label'), prompt: t('style.options.7.prompt') },
+  ]
 
   React.useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -56,7 +59,7 @@ export default function CoverSongPage() {
     const file = e.target.files?.[0]
     if (!file) return
     if (file.size > 50 * 1024 * 1024) {
-      setError('文件大小不能超过 50MB')
+      setError(tCommon('errors.fileTooLarge'))
       return
     }
 
@@ -65,7 +68,7 @@ export default function CoverSongPage() {
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
-      setError('请先登录')
+      setError(tCommon('errors.unknown'))
       setUploading(false)
       return
     }
@@ -76,7 +79,7 @@ export default function CoverSongPage() {
     })
 
     if (uploadError) {
-      setError(`上传失败: ${uploadError.message}`)
+      setError(tCommon('errors.uploadFailed', { message: uploadError.message }))
       setUploading(false)
       return
     }
@@ -92,12 +95,12 @@ export default function CoverSongPage() {
       : uploadedUrl
 
     if (!audioUrl) {
-      setError(sourceMode === 'existing' ? '请选择一首已有歌曲' : '请上传音频文件')
+      setError(sourceMode === 'existing' ? t('error.noAudio') : t('error.noUpload'))
       return
     }
 
     if (!selectedStyle) {
-      setError('请选择翻唱风格')
+      setError(t('error.noStyle'))
       return
     }
 
@@ -120,11 +123,11 @@ export default function CoverSongPage() {
       if (res.ok && data.song) {
         router.push(`/songs/${data.song.id}`)
       } else {
-        setError(data.error?.message || '翻唱失败，请重试')
+        setError(data.error?.message || tCommon('errors.unknown'))
         setGenerating(false)
       }
     } catch {
-      setError('翻唱失败，请重试')
+      setError(tCommon('errors.network'))
       setGenerating(false)
     }
   }
@@ -137,16 +140,15 @@ export default function CoverSongPage() {
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          返回列表
+          {tCommon('actions.back')}
         </Link>
       </div>
 
-      <h1 className="mb-6 text-2xl font-bold">AI 翻唱</h1>
+      <h1 className="mb-6 text-2xl font-bold">{t('title')}</h1>
 
       <div className="mb-6 space-y-4">
-        {/* 来源选择 */}
         <div>
-          <Label>参考音频来源</Label>
+          <Label>{t('source.label')}</Label>
           <div className="mt-2 flex gap-2">
             <button
               type="button"
@@ -158,7 +160,7 @@ export default function CoverSongPage() {
               }`}
             >
               <Mic2 className="h-4 w-4" />
-              选择已有歌曲
+              {t('source.existing')}
             </button>
             <button
               type="button"
@@ -170,22 +172,21 @@ export default function CoverSongPage() {
               }`}
             >
               <Upload className="h-4 w-4" />
-              上传音频
+              {t('source.upload')}
             </button>
           </div>
         </div>
 
-        {/* 已有歌曲选择 */}
         {sourceMode === 'existing' && (
           <div>
-            <Label htmlFor="song-select">选择歌曲</Label>
+            <Label htmlFor="song-select">{t('selectSong')}</Label>
             <select
               id="song-select"
               value={selectedSongId}
               onChange={(e) => setSelectedSongId(e.target.value)}
               className="mt-1 block w-full rounded-md border bg-background px-3 py-2 text-sm"
             >
-              <option value="">请选择一首歌曲</option>
+              <option value="">{t('selectSong')}</option>
               {songs.map((song) => (
                 <option key={song.id} value={song.id}>
                   {song.title}
@@ -194,16 +195,15 @@ export default function CoverSongPage() {
             </select>
             {songs.length === 0 && (
               <p className="mt-1 text-xs text-muted-foreground">
-                暂无可用歌曲，请先创建并生成音乐
+                {t('error.noSongs')}
               </p>
             )}
           </div>
         )}
 
-        {/* 文件上传 */}
         {sourceMode === 'upload' && (
           <div>
-            <Label htmlFor="audio-upload">上传音频</Label>
+            <Label htmlFor="audio-upload">{t('upload.label')}</Label>
             <input
               id="audio-upload"
               type="file"
@@ -213,19 +213,18 @@ export default function CoverSongPage() {
               className="mt-1 block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-primary-foreground"
             />
             {uploadedUrl && (
-              <p className="mt-1 text-xs text-green-600">音频已上传</p>
+              <p className="mt-1 text-xs text-green-600">{t('upload.success')}</p>
             )}
             <p className="mt-1 text-xs text-muted-foreground">
-              支持 MP3、WAV、FLAC，最大 50MB
+              {t('upload.formats')}
             </p>
           </div>
         )}
 
-        {/* 风格选择 */}
         <div>
-          <Label>翻唱风格 *</Label>
+          <Label>{t('style.label')} *</Label>
           <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {STYLE_OPTIONS.map((style) => (
+            {styleOptions.map((style) => (
               <button
                 key={style.prompt}
                 type="button"
@@ -243,14 +242,13 @@ export default function CoverSongPage() {
           </div>
         </div>
 
-        {/* 自定义标题 */}
         <div>
-          <Label htmlFor="title">作品标题（可选）</Label>
+          <Label htmlFor="title">{t('titleLabel')}</Label>
           <Input
             id="title"
             value={customTitle}
             onChange={(e) => setCustomTitle(e.target.value)}
-            placeholder="留空将自动生成标题"
+            placeholder={t('titlePlaceholder')}
           />
         </div>
       </div>
@@ -259,10 +257,10 @@ export default function CoverSongPage() {
 
       <div className="flex justify-end gap-3">
         <Link href="/songs">
-          <Button variant="outline" disabled={generating}>取消</Button>
+          <Button variant="outline" disabled={generating}>{tCommon('actions.cancel')}</Button>
         </Link>
         <Button onClick={handleGenerate} disabled={generating || uploading}>
-          {generating ? '翻唱中...' : '开始翻唱'}
+          {generating ? tCommon('states.generating') : t('submit')}
         </Button>
       </div>
     </div>

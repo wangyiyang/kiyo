@@ -5,6 +5,7 @@ import { notFound, redirect } from 'next/navigation'
 import { getLocale } from '@/i18n/server'
 import { Link } from '@/i18n/navigation'
 import { ExportDialog } from './export-dialog'
+import { getTranslations } from 'next-intl/server'
 
 export default async function SongDetailPage({
   params,
@@ -30,11 +31,28 @@ export default async function SongDetailPage({
     notFound()
   }
 
+  const t = await getTranslations('songs.detail')
+  const tCommon = await getTranslations('common')
+
   const formatDuration = (seconds?: number | null) => {
     if (!seconds) return null
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  const sourceLabel =
+    song.source === 'ai_generated'
+      ? t('source.ai_generated')
+      : song.source === 'ai_cover'
+        ? t('source.ai_cover')
+        : t('source.manual')
+
+  const statusLabelMap: Record<string, string> = {
+    draft: tCommon('states.loading'),
+    generating: tCommon('states.generating'),
+    completed: t('source.manual'),
+    failed: tCommon('errors.unknown'),
   }
 
   return (
@@ -45,7 +63,7 @@ export default async function SongDetailPage({
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          返回列表
+          {t('back')}
         </Link>
       </div>
 
@@ -53,7 +71,7 @@ export default async function SongDetailPage({
         <div>
           <h1 className="text-2xl font-bold">{song.title}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <SongStatusBadge status={song.status} />
+            <SongStatusBadge status={song.status} label={statusLabelMap[song.status] ?? song.status} />
             {song.genre && <span>{song.genre}</span>}
             {song.mood && <span>{song.mood}</span>}
             {song.duration && (
@@ -71,7 +89,7 @@ export default async function SongDetailPage({
                     : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
               }`}
             >
-              {song.source === 'ai_generated' ? 'AI 生成' : song.source === 'ai_cover' ? 'AI 翻唱' : '手动创建'}
+              {sourceLabel}
             </span>
           </div>
         </div>
@@ -85,7 +103,7 @@ export default async function SongDetailPage({
               <Link href={`/${locale}/songs/cover?original_song_id=${song.id}`}>
                 <Button variant="outline" size="sm">
                   <Mic2 className="mr-1 h-4 w-4" />
-                  AI 翻唱
+                  {t('aiCover')}
                 </Button>
               </Link>
             </>
@@ -93,7 +111,7 @@ export default async function SongDetailPage({
           <Link href={`/${locale}/songs/${song.id}/edit`}>
             <Button variant="outline" size="sm">
               <Pencil className="mr-1 h-4 w-4" />
-              编辑
+              {t('edit')}
             </Button>
           </Link>
         </div>
@@ -106,20 +124,20 @@ export default async function SongDetailPage({
           </div>
           <p className="mb-2 text-sm text-muted-foreground">
             {song.status === 'failed'
-              ? '音乐生成失败，请检查后重试'
-              : '歌曲尚未生成音乐'}
+              ? t('status.failed.title')
+              : t('status.draft.title')}
           </p>
           <form
             action={`/api/songs/${song.id}/generate`}
             method="POST"
           >
             <Button type="submit" disabled={!song.lyric_id}>
-              {song.status === 'failed' ? '重新生成' : '生成音乐'}
+              {song.status === 'failed' ? t('status.failed.action') : t('status.draft.action')}
             </Button>
           </form>
           {!song.lyric_id && (
             <p className="mt-2 text-xs text-muted-foreground">
-              需要关联歌词后才能生成音乐
+              {t('lyricRequired')}
             </p>
           )}
         </div>
@@ -127,13 +145,13 @@ export default async function SongDetailPage({
 
       {song.status === 'generating' && (
         <div className="mb-6 rounded-lg border p-6 text-center">
-          <p className="text-sm text-muted-foreground">音乐生成中，请稍候...</p>
+          <p className="text-sm text-muted-foreground">{t('status.generating.title')}</p>
         </div>
       )}
 
       {song.status === 'completed' && song.audio_url && (
         <div className="mb-6">
-          <h2 className="mb-2 text-sm font-medium">音频预览</h2>
+          <h2 className="mb-2 text-sm font-medium">{t('audioPreview')}</h2>
           <AudioPlayer
             src={song.audio_url}
             title={song.title}
@@ -147,20 +165,20 @@ export default async function SongDetailPage({
 
       {song.source === 'ai_cover' && song.voice_style && (
         <div className="mb-6">
-          <h2 className="mb-1 text-sm font-medium">翻唱风格</h2>
+          <h2 className="mb-1 text-sm font-medium">{t('coverStyle')}</h2>
           <p className="text-sm text-muted-foreground">{song.voice_style}</p>
         </div>
       )}
 
       {song.source === 'ai_cover' && song.original_song_id && (
         <div className="mb-6">
-          <h2 className="mb-2 text-sm font-medium">对比原曲</h2>
+          <h2 className="mb-2 text-sm font-medium">{t('compareOriginal')}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-muted-foreground">原曲</p>
+              <p className="mb-1 text-xs text-muted-foreground">{t('original')}</p>
               <AudioPlayer
                 src={(song.original_song as any)?.audio_url || ''}
-                title={(song.original_song as any)?.title || '原曲'}
+                title={(song.original_song as any)?.title || t('original')}
                 duration={(song.original_song as any)?.duration}
                 coverUrl={(song.original_song as any)?.cover_url}
                 songId={(song.original_song as any)?.id}
@@ -168,7 +186,7 @@ export default async function SongDetailPage({
               />
             </div>
             <div>
-              <p className="mb-1 text-xs text-muted-foreground">翻唱</p>
+              <p className="mb-1 text-xs text-muted-foreground">{t('cover')}</p>
               <AudioPlayer
                 src={song.audio_url || ''}
                 title={song.title}
@@ -184,7 +202,7 @@ export default async function SongDetailPage({
 
       {song.ai_prompt && (
         <div className="mb-6">
-          <h2 className="mb-1 text-sm font-medium">生成描述</h2>
+          <h2 className="mb-1 text-sm font-medium">{t('aiPrompt')}</h2>
           <p className="text-sm text-muted-foreground">{song.ai_prompt}</p>
         </div>
       )}
@@ -192,9 +210,9 @@ export default async function SongDetailPage({
       {song.lyrics && (
         <div className="mb-6">
           <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-sm font-medium">歌词</h2>
+            <h2 className="text-sm font-medium">{t('lyrics')}</h2>
             <Link href={`/${locale}/lyrics/${song.lyrics.id}`} className="text-xs text-primary hover:underline">
-              查看完整歌词
+              {t('viewFullLyrics')}
             </Link>
           </div>
           <div className="rounded-lg border bg-muted/50 p-4">

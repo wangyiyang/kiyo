@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { EmptyState } from '@kiyo/ui'
 import { Plus, Sparkles } from 'lucide-react'
 import { getLocale } from '@/i18n/server'
+import { getTranslations } from 'next-intl/server'
 
 export default async function LyricsPage() {
   const supabase = await createServerClient()
@@ -21,25 +22,27 @@ export default async function LyricsPage() {
     .order('created_at', { ascending: false })
 
   const locale = await getLocale()
+  const t = await getTranslations('lyrics')
+  const tCommon = await getTranslations('common')
 
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">我的歌词</h1>
+        <h1 className="text-2xl font-bold">{t('list.title')}</h1>
         <div className="flex gap-3">
           <Link
             href={`/${locale}/lyrics/generate`}
             className="inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
             <Sparkles className="h-4 w-4" />
-            AI 生成歌词
+            {t('list.generate')}
           </Link>
           <Link
             href={`/${locale}/lyrics/new`}
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
-            新建歌词
+            {t('list.new')}
           </Link>
         </div>
       </div>
@@ -53,7 +56,7 @@ export default async function LyricsPage() {
                   <h3 className="font-semibold">{lyric.title}</h3>
                   {lyric.songs?.[0]?.count > 0 && (
                     <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-900 dark:text-green-300">
-                      🎵 已作曲
+                      🎵 {t('detail.composed')}
                     </span>
                   )}
                   <span
@@ -63,17 +66,17 @@ export default async function LyricsPage() {
                         : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
                     }`}
                   >
-                    {lyric.source === 'ai_generated' ? 'AI' : '手动'}
+                    {lyric.source === 'ai_generated' ? t('detail.source.ai') : t('detail.source.manual')}
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {lyric.content.length > 100 ? lyric.content.slice(0, 100) + '...' : lyric.content}
                 </p>
                 <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
-                  <span>{lyric.language ?? '未指定语言'}</span>
-                  <span>{lyric.style ?? '未指定风格'}</span>
+                  <span>{lyric.language ?? t('detail.noLanguage')}</span>
+                  <span>{lyric.style ?? t('detail.noStyle')}</span>
                   <span className="ml-auto">
-                    {new Date(lyric.created_at).toLocaleDateString('zh-CN')}
+                    {new Date(lyric.created_at).toLocaleDateString(locale)}
                   </span>
                 </div>
               </div>
@@ -81,7 +84,7 @@ export default async function LyricsPage() {
           ))}
         </div>
       ) : (
-        <EmptyState title="暂无歌词" description="创建你的第一首歌词吧" />
+        <EmptyState title={tCommon('empty.lyrics.title')} description={tCommon('empty.lyrics.description')} />
       )}
     </div>
   )

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Button, Skeleton } from '@kiyo/ui'
 import { Disc3 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface CoverSectionProps {
   albumId: string
@@ -17,6 +18,7 @@ export function CoverSection({ albumId, coverUrl, coverStatus, title }: CoverSec
   const [url, setUrl] = useState(coverUrl)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const t = useTranslations('albums.cover')
 
   async function handleGenerate() {
     setLoading(true)
@@ -30,14 +32,14 @@ export function CoverSection({ albumId, coverUrl, coverStatus, title }: CoverSec
       const data = await res.json()
 
       if (!res.ok) {
-        throw new Error(data.error?.message || '封面生成失败')
+        throw new Error(data.error?.message || t('error'))
       }
 
       setUrl(data.coverUrl)
       setStatus('completed')
     } catch (err) {
       setStatus('failed')
-      setError(err instanceof Error ? err.message : '生成失败，请重试')
+      setError(err instanceof Error ? err.message : t('error'))
     } finally {
       setLoading(false)
     }
@@ -45,12 +47,12 @@ export function CoverSection({ albumId, coverUrl, coverStatus, title }: CoverSec
 
   const buttonText =
     status === 'generating'
-      ? '生成中...'
+      ? t('generating')
       : status === 'completed'
-        ? '重新生成'
+        ? t('regenerate')
         : status === 'failed'
-          ? '重试'
-          : '生成封面'
+          ? t('retry')
+          : t('generate')
 
   return (
     <div className="mb-6">

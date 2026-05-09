@@ -325,5 +325,368 @@
       "invalid": "请检查邮箱格式后重试。",
       "unknown": "稍后再试一次，或邮件联系 hello@kiyo.ai。"
     }
+  },
+  "common": {
+    "actions": {
+      "save": "保存",
+      "cancel": "取消",
+      "delete": "删除",
+      "create": "创建",
+      "edit": "编辑",
+      "back": "返回列表",
+      "backToDetail": "返回详情",
+      "confirm": "确认",
+      "generate": "生成",
+      "export": "导出",
+      "add": "添加",
+      "search": "搜索...",
+      "viewFull": "查看完整",
+      "optional": "可选"
+    },
+    "states": {
+      "saving": "保存中...",
+      "loading": "加载中...",
+      "generating": "生成中...",
+      "deleting": "删除中...",
+      "submitting": "提交中...",
+      "exporting": "导出中...",
+      "uploading": "上传中...",
+      "adding": "添加中...",
+      "retry": "重试"
+    },
+    "errors": {
+      "network": "网络错误，请重试",
+      "unknown": "出了点问题",
+      "required": "此字段为必填项",
+      "notFound": "未找到",
+      "loadFailed": "加载失败",
+      "saveFailed": "保存失败",
+      "createFailed": "创建失败",
+      "deleteFailed": "删除失败",
+      "exportFailed": "导出失败，请稍后重试",
+      "uploadFailed": "上传失败：{message}",
+      "fileTooLarge": "文件大小不能超过 50MB",
+      "addFailed": "添加失败",
+      "updateFailed": "更新失败"
+    },
+    "empty": {
+      "songs": {
+        "title": "暂无歌曲",
+        "description": "创建你的第一首歌曲吧"
+      },
+      "albums": {
+        "title": "暂无专辑",
+        "description": "创建你的第一张专辑吧"
+      },
+      "lyrics": {
+        "title": "暂无歌词",
+        "description": "创建你的第一首歌词吧"
+      }
+    }
+  },
+  "songs": {
+    "list": {
+      "title": "歌曲库",
+      "new": "新建歌曲",
+      "generate": "AI 作曲"
+    },
+    "new": {
+      "title": "新建歌曲",
+      "fields": {
+        "title": "标题",
+        "lyric": "关联歌词",
+        "noLyric": "不关联歌词",
+        "genre": "风格",
+        "mood": "情绪",
+        "aiPrompt": "生成描述"
+      },
+      "placeholders": {
+        "title": "歌曲标题",
+        "genre": "如：流行、摇滚",
+        "mood": "如：励志、忧伤",
+        "aiPrompt": "描述你想要的音乐风格，如：独立民谣，忧郁，适合在咖啡馆聆听"
+      },
+      "error": {
+        "emptyTitle": "标题不能为空"
+      }
+    },
+    "detail": {
+      "back": "返回列表",
+      "edit": "编辑",
+      "aiCover": "AI 翻唱",
+      "export": "导出音频",
+      "audioPreview": "音频预览",
+      "lyrics": "歌词",
+      "viewFullLyrics": "查看完整歌词",
+      "coverStyle": "翻唱风格",
+      "compareOriginal": "对比原曲",
+      "original": "原曲",
+      "cover": "翻唱",
+      "aiPrompt": "生成描述",
+      "status": {
+        "draft": {
+          "title": "歌曲尚未生成",
+          "desc": "歌曲尚未生成音乐",
+          "action": "生成音乐"
+        },
+        "failed": {
+          "title": "音乐生成失败",
+          "desc": "请检查后重试",
+          "action": "重新生成"
+        },
+        "generating": {
+          "title": "音乐生成中，请稍候..."
+        }
+      },
+      "source": {
+        "ai_generated": "AI 生成",
+        "ai_cover": "AI 翻唱",
+        "manual": "手动创建"
+      },
+      "lyricRequired": "需要关联歌词后才能生成音乐"
+    },
+    "edit": {
+      "title": "编辑歌曲",
+      "back": "返回详情"
+    },
+    "generate": {
+      "title": "AI 作曲",
+      "fields": {
+        "prompt": "主题描述",
+        "genre": "风格（可选）",
+        "mood": "情绪（可选）",
+        "language": "语言（可选）",
+        "mode": "创作模式"
+      },
+      "placeholders": {
+        "prompt": "描述你想要的音乐，如：一首关于夏天的流行歌曲",
+        "genre": "如：流行",
+        "mood": "如：欢快"
+      },
+      "mode": {
+        "instrumental": {
+          "label": "纯音乐",
+          "desc": "仅生成伴奏，无歌词"
+        },
+        "auto_lyrics": {
+          "label": "自动写词",
+          "desc": "AI 自动生成歌词并作曲"
+        },
+        "existing_lyric": {
+          "label": "已有歌词",
+          "desc": "使用已有歌词进行作曲"
+        }
+      },
+      "languageUnlimited": "不限",
+      "selectLyric": "请选择歌词",
+      "noLyrics": "暂无可选歌词，请先创建歌词",
+      "error": {
+        "emptyPrompt": "主题描述不能为空",
+        "noLyricSelected": "请选择关联歌词"
+      },
+      "submit": "开始创作"
+    },
+    "cover": {
+      "title": "AI 翻唱",
+      "source": {
+        "label": "参考音频来源",
+        "existing": "选择已有歌曲",
+        "upload": "上传音频"
+      },
+      "selectSong": "请选择一首歌曲",
+      "upload": {
+        "label": "上传音频",
+        "success": "音频已上传",
+        "formats": "支持 MP3、WAV、FLAC，最大 50MB"
+      },
+      "style": {
+        "label": "翻唱风格",
+        "options": [
+          {
+            "label": "流行摇滚版",
+            "prompt": "流行摇滚版，节奏更快，电吉他驱动"
+          },
+          {
+            "label": "爵士钢琴版",
+            "prompt": "爵士钢琴版，慵懒萨克斯，舒缓节奏"
+          },
+          {
+            "label": "民谣吉他版",
+            "prompt": "民谣吉他版，指弹吉他，亲密人声"
+          },
+          {
+            "label": "电子舞曲版",
+            "prompt": "电子舞曲版，强烈节拍，合成器铺底"
+          },
+          {
+            "label": "古典管弦版",
+            "prompt": "古典管弦版，弦乐编排，庄重氛围"
+          },
+          {
+            "label": "Lo-fi 放松版",
+            "prompt": "Lo-fi 放松版，黑胶噪点，梦幻氛围"
+          },
+          {
+            "label": "摇滚金属版",
+            "prompt": "摇滚金属版，失真吉他，强力鼓组"
+          },
+          {
+            "label": "灵魂乐版",
+            "prompt": "灵魂乐版，情感充沛，即兴唱腔"
+          }
+        ]
+      },
+      "titleLabel": "作品标题（可选）",
+      "titlePlaceholder": "留空将自动生成标题",
+      "error": {
+        "noAudio": "请选择一首已有歌曲",
+        "noUpload": "请上传音频文件",
+        "noStyle": "请选择翻唱风格",
+        "noSongs": "暂无可用歌曲，请先创建并生成音乐"
+      },
+      "submit": "开始翻唱"
+    },
+    "export": {
+      "title": "导出音频",
+      "song": "歌曲",
+      "format": "格式",
+      "formatValue": "MP3",
+      "success": "已开始下载",
+      "confirm": "确认导出"
+    }
+  },
+  "albums": {
+    "list": {
+      "title": "我的专辑",
+      "new": "新建专辑",
+      "songLibrary": "歌曲库"
+    },
+    "detail": {
+      "back": "返回专辑列表",
+      "songList": "歌曲列表",
+      "songCount": "{count} 首歌曲",
+      "noSongs": {
+        "title": "专辑暂无歌曲",
+        "description": "编辑专辑添加歌曲"
+      }
+    },
+    "form": {
+      "createTitle": "新建专辑",
+      "editTitle": "编辑专辑",
+      "name": "专辑名称",
+      "namePlaceholder": "输入专辑名称",
+      "description": "描述（可选）",
+      "descriptionPlaceholder": "输入专辑描述",
+      "selectSongs": "选择歌曲",
+      "save": "保存"
+    },
+    "delete": {
+      "title": "确认删除",
+      "description": "确定要删除专辑 <strong>{title}</strong> 吗？此操作不可撤销，但不会影响专辑中的歌曲。"
+    },
+    "addSongs": {
+      "title": "添加歌曲到专辑",
+      "empty": "暂无可用歌曲",
+      "selectedCount": "添加 ({count})",
+      "noSongsHint": "暂无可用歌曲"
+    },
+    "cover": {
+      "generating": "生成中...",
+      "regenerate": "重新生成",
+      "retry": "重试",
+      "generate": "生成封面",
+      "error": "生成失败，请重试"
+    },
+    "reorder": {
+      "saving": "保存中...",
+      "failed": "更新失败"
+    }
+  },
+  "lyrics": {
+    "list": {
+      "title": "我的歌词",
+      "new": "新建歌词",
+      "generate": "AI 生成歌词"
+    },
+    "new": {
+      "title": "新建歌词",
+      "fields": {
+        "title": "标题",
+        "language": "语言",
+        "style": "风格",
+        "mood": "情绪",
+        "content": "内容"
+      },
+      "placeholders": {
+        "title": "歌词标题",
+        "language": "如：zh、en",
+        "style": "如：流行、摇滚",
+        "mood": "如：励志、忧伤",
+        "content": "在此输入歌词内容，支持 [Verse]、[Chorus] 等标签..."
+      },
+      "error": {
+        "empty": "标题和内容不能为空"
+      }
+    },
+    "detail": {
+      "back": "返回列表",
+      "edit": "编辑",
+      "generateSong": "生成音乐",
+      "linkedSongs": "关联歌曲",
+      "noLinkedSongs": {
+        "title": "暂无关联歌曲",
+        "description": "使用上方按钮生成音乐"
+      },
+      "source": {
+        "ai": "AI",
+        "manual": "手动"
+      },
+      "composed": "已作曲",
+      "noLanguage": "未指定语言",
+      "noStyle": "未指定风格"
+    },
+    "edit": {
+      "title": "编辑歌词",
+      "back": "返回详情",
+      "contentLabel": "歌词内容"
+    },
+    "generate": {
+      "title": "AI 生成歌词",
+      "subtitle": "描述你想要的歌曲主题，AI 将为你创作完整歌词",
+      "fields": {
+        "prompt": "主题描述",
+        "language": "语言",
+        "style": "风格（可选）",
+        "mood": "情绪（可选）"
+      },
+      "placeholders": {
+        "prompt": "例如：一首关于青春校园的励志歌曲",
+        "style": "流行、摇滚...",
+        "mood": "励志、忧伤..."
+      },
+      "submit": "生成歌词",
+      "error": {
+        "failed": "生成失败，请稍后重试",
+        "network": "生成失败，请检查网络"
+      }
+    },
+    "generateSong": {
+      "title": "基于此歌词生成音乐",
+      "emptyWarning": "歌词内容为空，无法生成音乐",
+      "fields": {
+        "prompt": "主题描述",
+        "genre": "风格（可选）",
+        "mood": "情绪（可选）",
+        "language": "语言（可选）"
+      },
+      "placeholders": {
+        "prompt": "描述你想要的音乐",
+        "genre": "如：流行",
+        "mood": "如：欢快"
+      },
+      "preview": "歌词预览",
+      "noContent": "（无内容）",
+      "submit": "开始生成"
+    }
   }
 }

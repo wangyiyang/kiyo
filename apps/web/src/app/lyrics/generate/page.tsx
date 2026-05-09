@@ -4,22 +4,26 @@ import * as React from 'react'
 import { useRouter, Link } from '@/i18n/navigation'
 import { Button, Input, Label, Textarea } from '@kiyo/ui'
 import { ArrowLeft, Sparkles, Loader2 } from 'lucide-react'
-
-const LANGUAGES = [
-  { value: 'zh', label: '中文' },
-  { value: 'en', label: 'English' },
-  { value: 'ja', label: '日本語' },
-  { value: 'ko', label: '한국어' },
-]
+import { useTranslations } from 'next-intl'
 
 export default function LyricGeneratePage() {
   const router = useRouter()
+  const t = useTranslations('lyrics.generate')
+  const tCommon = useTranslations('common')
+
   const [prompt, setPrompt] = React.useState('')
   const [language, setLanguage] = React.useState('zh')
   const [style, setStyle] = React.useState('')
   const [mood, setMood] = React.useState('')
   const [generating, setGenerating] = React.useState(false)
   const [error, setError] = React.useState('')
+
+  const LANGUAGES = [
+    { value: 'zh', label: '中文' },
+    { value: 'en', label: 'English' },
+    { value: 'ja', label: '日本語' },
+    { value: 'ko', label: '한국어' },
+  ]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -43,10 +47,10 @@ export default function LyricGeneratePage() {
       if (res.ok && data.lyric) {
         router.push(`/lyrics/${data.lyric.id}/edit`)
       } else {
-        setError(data.error?.message || '生成失败，请稍后重试')
+        setError(data.error?.message || t('error.failed'))
       }
     } catch {
-      setError('生成失败，请检查网络后重试')
+      setError(t('error.network'))
     } finally {
       setGenerating(false)
     }
@@ -60,25 +64,25 @@ export default function LyricGeneratePage() {
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          返回列表
+          {tCommon('actions.back')}
         </Link>
       </div>
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">AI 生成歌词</h1>
+        <h1 className="text-2xl font-bold">{t('title')}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          描述你想要的歌曲主题，AI 将为你创作完整歌词
+          {t('subtitle')}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <Label htmlFor="prompt">主题描述 *</Label>
+          <Label htmlFor="prompt">{t('fields.prompt')} *</Label>
           <Textarea
             id="prompt"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="例如：一首关于青春校园的励志歌曲"
+            placeholder={t('placeholders.prompt')}
             rows={3}
             required
           />
@@ -86,7 +90,7 @@ export default function LyricGeneratePage() {
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="language">语言</Label>
+            <Label htmlFor="language">{t('fields.language')}</Label>
             <select
               id="language"
               value={language}
@@ -101,21 +105,21 @@ export default function LyricGeneratePage() {
             </select>
           </div>
           <div>
-            <Label htmlFor="style">风格</Label>
+            <Label htmlFor="style">{t('fields.style')}</Label>
             <Input
               id="style"
               value={style}
               onChange={(e) => setStyle(e.target.value)}
-              placeholder="流行、摇滚..."
+              placeholder={t('placeholders.style')}
             />
           </div>
           <div>
-            <Label htmlFor="mood">情绪</Label>
+            <Label htmlFor="mood">{t('fields.mood')}</Label>
             <Input
               id="mood"
               value={mood}
               onChange={(e) => setMood(e.target.value)}
-              placeholder="励志、忧伤..."
+              placeholder={t('placeholders.mood')}
             />
           </div>
         </div>
@@ -129,19 +133,19 @@ export default function LyricGeneratePage() {
         <div className="flex justify-end gap-3">
           <Link href="/lyrics">
             <Button type="button" variant="outline">
-              取消
+              {tCommon('actions.cancel')}
             </Button>
           </Link>
           <Button type="submit" disabled={generating || !prompt.trim()}>
             {generating ? (
               <>
                 <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-                生成中...
+                {tCommon('states.generating')}
               </>
             ) : (
               <>
                 <Sparkles className="mr-1 h-4 w-4" />
-                生成歌词
+                {t('submit')}
               </>
             )}
           </Button>

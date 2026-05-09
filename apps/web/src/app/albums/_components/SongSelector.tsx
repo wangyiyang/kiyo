@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Input, SongRow } from '@kiyo/ui'
+import { useTranslations } from 'next-intl'
 
 interface Song {
   id: string
@@ -19,6 +20,7 @@ export function SongSelector({ selectedIds, onChange, excludeIds, emptyMessage }
   const [songs, setSongs] = useState<Song[]>([])
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
+  const tCommon = useTranslations('common')
 
   useEffect(() => {
     fetch('/api/songs')
@@ -41,12 +43,12 @@ export function SongSelector({ selectedIds, onChange, excludeIds, emptyMessage }
     }
   }
 
-  if (loading) return <p className="text-sm text-muted-foreground">加载中...</p>
+  if (loading) return <p className="text-sm text-muted-foreground">{tCommon('states.loading')}</p>
 
   return (
     <div className="space-y-3">
       <Input
-        placeholder="搜索歌曲..."
+        placeholder={tCommon('actions.search')}
         value={search}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
       />
@@ -63,11 +65,11 @@ export function SongSelector({ selectedIds, onChange, excludeIds, emptyMessage }
         ))}
         {filteredSongs.length === 0 && (
           <p className="text-sm text-muted-foreground">
-            {emptyMessage ?? '没有找到匹配的歌曲'}
+            {emptyMessage ?? tCommon('errors.notFound')}
           </p>
         )}
       </div>
-      <p className="text-xs text-muted-foreground">已选择 {selectedIds.length} 首歌曲</p>
+      <p className="text-xs text-muted-foreground">{tCommon('states.loading')}</p>
     </div>
   )
 }

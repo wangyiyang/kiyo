@@ -13,6 +13,7 @@ import {
 } from '@kiyo/ui'
 import { SongSelector } from './SongSelector'
 import { useRouter } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 interface AlbumFormDialogProps {
   mode: 'create' | 'edit'
@@ -31,6 +32,8 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
   const [selectedSongIds, setSelectedSongIds] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
+  const t = useTranslations('albums.form')
+  const tCommon = useTranslations('common')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -53,13 +56,13 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error?.message ?? '操作失败')
+        throw new Error(error.error?.message ?? tCommon('errors.unknown'))
       }
 
       setOpen(false)
       router.refresh()
     } catch (err) {
-      alert(err instanceof Error ? err.message : '操作失败')
+      alert(err instanceof Error ? err.message : tCommon('errors.unknown'))
     } finally {
       setSubmitting(false)
     }
@@ -70,39 +73,39 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>{mode === 'create' ? '新建专辑' : '编辑专辑'}</DialogTitle>
+          <DialogTitle>{mode === 'create' ? t('createTitle') : t('editTitle')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium">专辑名称</label>
+            <label className="mb-1 block text-sm font-medium">{t('name')}</label>
             <Input
               value={title}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
-              placeholder="输入专辑名称"
+              placeholder={t('namePlaceholder')}
               required
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium">描述（可选）</label>
+            <label className="mb-1 block text-sm font-medium">{t('description')}</label>
             <Textarea
               value={description}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
-              placeholder="输入专辑描述"
+              placeholder={t('descriptionPlaceholder')}
               rows={3}
             />
           </div>
           {mode === 'create' && (
             <div>
-              <label className="mb-1 block text-sm font-medium">选择歌曲</label>
+              <label className="mb-1 block text-sm font-medium">{t('selectSongs')}</label>
               <SongSelector selectedIds={selectedSongIds} onChange={setSelectedSongIds} />
             </div>
           )}
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-              取消
+              {tCommon('actions.cancel')}
             </Button>
             <Button type="submit" disabled={submitting || !title.trim()}>
-              {submitting ? '保存中...' : mode === 'create' ? '创建' : '保存'}
+              {submitting ? tCommon('states.submitting') : t('save')}
             </Button>
           </div>
         </form>

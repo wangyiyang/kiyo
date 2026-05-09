@@ -12,6 +12,7 @@ import {
 import { SongSelector } from '../../_components/SongSelector'
 import { Plus } from 'lucide-react'
 import { useRouter } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 interface AddSongsDialogProps {
   albumId: string
@@ -23,6 +24,8 @@ export function AddSongsDialog({ albumId, excludeIds }: AddSongsDialogProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
+  const t = useTranslations('albums.addSongs')
+  const tCommon = useTranslations('common')
 
   function handleOpenChange(open: boolean) {
     setOpen(open)
@@ -43,15 +46,15 @@ export function AddSongsDialog({ albumId, excludeIds }: AddSongsDialogProps) {
       })
 
       if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: { message: '添加失败' } }))
-        throw new Error(error.error?.message ?? '添加失败')
+        const error = await response.json().catch(() => ({ error: { message: tCommon('errors.addFailed') } }))
+        throw new Error(error.error?.message ?? tCommon('errors.addFailed'))
       }
 
       setOpen(false)
       setSelectedIds([])
       router.refresh()
     } catch (err) {
-      alert(err instanceof Error ? err.message : '添加失败')
+      alert(err instanceof Error ? err.message : tCommon('errors.addFailed'))
     } finally {
       setSubmitting(false)
     }
@@ -62,29 +65,29 @@ export function AddSongsDialog({ albumId, excludeIds }: AddSongsDialogProps) {
       <DialogTrigger asChild>
         <Button className="gap-1.5">
           <Plus className="h-4 w-4" />
-          添加歌曲
+          {tCommon('actions.add')}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>添加歌曲到专辑</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <SongSelector
             selectedIds={selectedIds}
             onChange={setSelectedIds}
             excludeIds={excludeIds}
-            emptyMessage="暂无可用歌曲"
+            emptyMessage={t('empty')}
           />
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-              取消
+              {tCommon('actions.cancel')}
             </Button>
             <Button
               onClick={handleSubmit}
               disabled={submitting || selectedIds.length === 0}
             >
-              {submitting ? '添加中...' : `添加 (${selectedIds.length})`}
+              {submitting ? tCommon('states.adding') : t('selectedCount', { count: selectedIds.length })}
             </Button>
           </div>
         </div>

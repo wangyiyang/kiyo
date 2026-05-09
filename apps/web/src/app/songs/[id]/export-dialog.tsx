@@ -11,6 +11,7 @@ import {
 } from '@kiyo/ui'
 import { toast } from '@kiyo/ui'
 import { Download } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface ExportDialogProps {
   songId: string
@@ -21,6 +22,8 @@ interface ExportDialogProps {
 export function ExportDialog({ songId, songTitle, disabled }: ExportDialogProps) {
   const [open, setOpen] = React.useState(false)
   const [exporting, setExporting] = React.useState(false)
+  const t = useTranslations('songs.export')
+  const tCommon = useTranslations('common')
 
   const handleExport = async () => {
     setExporting(true)
@@ -28,7 +31,6 @@ export function ExportDialog({ songId, songTitle, disabled }: ExportDialogProps)
       const res = await fetch(`/api/songs/${songId}/export`)
       const data = await res.json()
       if (res.ok && data.downloadUrl) {
-        // Create hidden anchor to trigger download with proper filename
         const link = document.createElement('a')
         link.href = data.downloadUrl
         link.download = data.filename
@@ -37,12 +39,12 @@ export function ExportDialog({ songId, songTitle, disabled }: ExportDialogProps)
         document.body.removeChild(link)
 
         setOpen(false)
-        toast.success('已开始下载')
+        toast.success(t('success'))
       } else {
-        toast.error(data.error?.message || '导出失败，请稍后重试')
+        toast.error(data.error?.message || tCommon('errors.exportFailed'))
       }
     } catch {
-      toast.error('导出失败，请检查网络连接')
+      toast.error(tCommon('errors.exportFailed'))
     } finally {
       setExporting(false)
     }
@@ -57,28 +59,28 @@ export function ExportDialog({ songId, songTitle, disabled }: ExportDialogProps)
         disabled={disabled}
       >
         <Download className="mr-1 h-4 w-4" />
-        导出
+        {tCommon('actions.export')}
       </Button>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>导出音频</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
         <div className="py-2 space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">歌曲</span>
+            <span className="text-muted-foreground">{t('song')}</span>
             <span className="font-medium">{songTitle}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">格式</span>
-            <span className="font-medium">MP3</span>
+            <span className="text-muted-foreground">{t('format')}</span>
+            <span className="font-medium">{t('formatValue')}</span>
           </div>
         </div>
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={() => setOpen(false)} disabled={exporting}>
-            取消
+            {tCommon('actions.cancel')}
           </Button>
           <Button onClick={handleExport} disabled={exporting}>
-            {exporting ? '准备中...' : '确认导出'}
+            {exporting ? tCommon('states.exporting') : t('confirm')}
           </Button>
         </DialogFooter>
       </DialogContent>

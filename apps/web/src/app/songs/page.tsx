@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation'
 import { redirect } from 'next/navigation'
 import { Plus, Wand2 } from 'lucide-react'
 import { getLocale } from '@/i18n/server'
+import { getTranslations } from 'next-intl/server'
 
 export default async function SongsPage() {
   const supabase = await createServerClient()
@@ -21,25 +22,34 @@ export default async function SongsPage() {
     .order('created_at', { ascending: false })
 
   const locale = await getLocale()
+  const t = await getTranslations('songs')
+  const tCommon = await getTranslations('common')
+
+  const statusLabelMap: Record<string, string> = {
+    draft: tCommon('states.loading'),
+    generating: tCommon('states.generating'),
+    completed: t('detail.source.manual'),
+    failed: tCommon('errors.unknown'),
+  }
 
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">歌曲库</h1>
+        <h1 className="text-2xl font-bold">{t('list.title')}</h1>
         <div className="flex items-center gap-3">
           <Link
             href={`/${locale}/songs/generate`}
             className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
           >
             <Wand2 className="h-4 w-4" />
-            AI 作曲
+            {t('list.generate')}
           </Link>
           <Link
             href={`/${locale}/songs/new`}
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
-            新建歌曲
+            {t('list.new')}
           </Link>
         </div>
       </div>
@@ -52,6 +62,7 @@ export default async function SongsPage() {
               id={song.id}
               title={song.title}
               status={song.status}
+              statusLabel={statusLabelMap[song.status] ?? song.status}
               duration={song.duration}
               lyricTitle={song.lyrics?.title ?? null}
               coverUrl={song.cover_url}
@@ -60,7 +71,7 @@ export default async function SongsPage() {
           ))}
         </div>
       ) : (
-        <EmptyState title="暂无歌曲" description="创建你的第一首歌曲吧" />
+        <EmptyState title={tCommon('empty.songs.title')} description={tCommon('empty.songs.description')} />
       )}
     </div>
   )

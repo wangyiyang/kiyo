@@ -6,6 +6,7 @@ import { Link } from '@/i18n/navigation'
 import { AlbumFormDialog } from './_components/AlbumFormDialog'
 import { DeleteConfirmDialog } from './_components/DeleteConfirmDialog'
 import { Trash2 } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 
 export default async function AlbumsPage() {
   const supabase = await createServerClient()
@@ -38,22 +39,25 @@ export default async function AlbumsPage() {
     }, {})
   }
 
+  const t = await getTranslations('albums')
+  const tCommon = await getTranslations('common')
+
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">我的专辑</h1>
+        <h1 className="text-2xl font-bold">{t('list.title')}</h1>
         <div className="flex gap-4">
           <Link
             href={`/${locale}/songs`}
             className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
-            歌曲库
+            {t('list.songLibrary')}
           </Link>
           <AlbumFormDialog
             mode="create"
             trigger={
               <button className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-                新建专辑
+                {t('list.new')}
               </button>
             }
           />
@@ -87,7 +91,7 @@ export default async function AlbumsPage() {
           ))}
         </div>
       ) : (
-        <EmptyState title="暂无专辑" description="创建你的第一张专辑吧" />
+        <EmptyState title={tCommon('empty.albums.title')} description={tCommon('empty.albums.description')} />
       )}
     </div>
   )
