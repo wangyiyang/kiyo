@@ -209,7 +209,7 @@
       },
       "controllable": {
         "title": "A controllable process",
-        "description": "Not a one-click black box. Lyrics, key, genre, AI cover styles, vocals, rhythm, and pauses are all exposed — go SUNO-loose or producer-tight, your call."
+        "description": "Not a one-click black box. Lyrics, key, genre, vocals, rhythm, and pauses are all exposed — go SUNO-loose or producer-tight, your call."
       },
       "endToEnd": {
         "title": "Spark to finished track",
@@ -235,7 +235,7 @@
       "refine": {
         "step": "03",
         "title": "Refine and voice",
-        "description": "Adjust tempo, modulate keys, swap timbres, layer AI covers and vocals — male, female, articulation style, all directable."
+        "description": "Adjust tempo, modulate keys, swap timbres, layer AI vocals — male, female, articulation style, all directable."
       },
       "release": {
         "step": "04",
@@ -388,9 +388,7 @@
     "list": {
       "title": "Songs",
       "new": "New Song",
-      "generate": "AI Compose",
-      "cover": "AI Cover",
-      "coverShort": "Cover"
+      "generate": "AI Compose"
     },
     "new": {
       "title": "New Song",
