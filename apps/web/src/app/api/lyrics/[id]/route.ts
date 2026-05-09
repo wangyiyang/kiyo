@@ -168,6 +168,25 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     )
   }
 
+  // 检查是否有歌曲关联该歌词
+  const { count: linkedCount } = await supabase
+    .from('songs')
+    .select('id', { count: 'exact' })
+    .eq('lyric_id', params.id)
+
+  if (linkedCount && linkedCount > 0) {
+    return NextResponse.json(
+      {
+        error: {
+          code: 'LYRIC_IN_USE',
+          message: `该歌词已被 ${linkedCount} 首歌曲使用，请先解除关联或删除相关歌曲。`,
+          linkedSongCount: linkedCount
+        }
+      },
+      { status: 409 }
+    )
+  }
+
   const { error } = await supabase
     .from('lyrics')
     .delete()
