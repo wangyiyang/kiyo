@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { usePlayerStore } from '../../store/usePlayerStore'
 import { cn } from '../../lib/utils'
 import { Play, Pause, ListMusic, Music2 } from 'lucide-react'
@@ -82,7 +83,14 @@ export function AudioPlayer({
       <div className="mb-6 flex items-center gap-4">
         <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-white/5">
           {coverUrl ? (
-            <img src={coverUrl} alt={title} className="h-full w-full object-cover" />
+            <Image
+            src={coverUrl}
+            alt={title || '未知歌曲'}
+            width={80}
+            height={80}
+            className="object-cover"
+            sizes="80px"
+          />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
               <Music2 size={28} className="text-white/30" />
