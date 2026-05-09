@@ -50,3 +50,4 @@ supabase-local/functions/**/.env
 .ant-colony/
 .superpowers/
 .vercel
+.worktrees/
