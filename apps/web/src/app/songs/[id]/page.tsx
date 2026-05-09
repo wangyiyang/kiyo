@@ -6,6 +6,7 @@ import { notFound, redirect } from 'next/navigation'
 import { getLocale } from '@/i18n/server'
 import { Link } from '@/i18n/navigation'
 import { ExportDialog } from './export-dialog'
+import { CoverSection } from '@/components/CoverSection'
 import { getTranslations } from 'next-intl/server'
 
 export default async function SongDetailPage({
@@ -67,6 +68,16 @@ export default async function SongDetailPage({
           {t('back')}
         </Link>
       </div>
+
+      <CoverSection
+        entityId={song.id}
+        entityType="song"
+        coverUrl={song.cover_url}
+        coverStatus={song.cover_status ?? 'none'}
+        title={song.title}
+        genre={song.genre}
+        mood={song.mood}
+      />
 
       <div className="mb-6 flex items-start justify-between">
         <div>
