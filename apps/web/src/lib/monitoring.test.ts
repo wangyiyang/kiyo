@@ -39,4 +39,26 @@ describe('captureAppException', () => {
     expect(capturedError.message).toBe('plain failure')
     expect(context).toEqual({ tags: { area: 'waitlist' } })
   })
+
+  it('preserves plain object error message and code', async () => {
+    const { captureAppException } = await import('./monitoring')
+    const error = { code: 'PGRST500', message: 'database unavailable' }
+
+    captureAppException(error, {
+      tags: { area: 'waitlist', operation: 'insert' },
+      extra: { email: 'listener@example.com' },
+    })
+
+    expect(captureException).toHaveBeenCalledTimes(1)
+    const [capturedError, context] = captureException.mock.calls[0]
+    expect(capturedError).toBeInstanceOf(Error)
+    expect(capturedError.message).toBe('PGRST500: database unavailable')
+    expect(context).toEqual({
+      tags: { area: 'waitlist', operation: 'insert' },
+      extra: {
+        email: 'listener@example.com',
+        originalError: error,
+      },
+    })
+  })
 })
