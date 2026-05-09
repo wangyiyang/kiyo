@@ -2,7 +2,7 @@ import { createServerClient } from '@kiyo/supabase/server'
 import { EmptyState, SongCard } from '@kiyo/ui'
 import { Link } from '@/i18n/navigation'
 import { redirect } from 'next/navigation'
-import { Plus, Wand2 } from 'lucide-react'
+import { Plus, Wand2, Mic2 } from 'lucide-react'
 import { getLocale } from '@/i18n/server'
 import { getTranslations } from 'next-intl/server'
 
@@ -45,6 +45,13 @@ export default async function SongsPage() {
             {t('list.generate')}
           </Link>
           <Link
+            href={`/${locale}/songs/cover`}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+          >
+            <Mic2 className="h-4 w-4" />
+            {t('list.cover')}
+          </Link>
+          <Link
             href={`/${locale}/songs/new`}
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
@@ -67,6 +74,8 @@ export default async function SongsPage() {
               lyricTitle={song.lyrics?.title ?? null}
               coverUrl={song.cover_url}
               href={`/${locale}/songs/${song.id}`}
+              coverHref={song.status === 'completed' && song.audio_url ? `/${locale}/songs/cover?original_song_id=${song.id}` : undefined}
+              coverLabel={t('list.coverShort')}
             />
           ))}
         </div>
