@@ -1,3 +1,4 @@
+import NextLink from 'next/link'
 import { SongStatusBadge } from './song-status-badge'
 import { Music2, Clock } from 'lucide-react'
 
@@ -57,7 +58,7 @@ export function SongCard({ title, status, statusLabel, duration, lyricTitle, cov
   )
 
   if (href) {
-    return <a href={href}>{card}</a>
+    return <NextLink href={href} className="block">{card}</NextLink>
   }
 
   return card
