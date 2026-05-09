@@ -6,6 +6,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     albums: [],
     album_songs: [],
     lyrics: [],
+    generation_tasks: [],
   }
 
   let currentTable = ''
@@ -170,5 +171,21 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     }),
   }
 
-  return { from, auth, dataStore, chain, storage, uploadedFiles }
+  const rpc = (fn: string, params?: Record<string, unknown>) => {
+    if (fn === 'claim_pending_task') {
+      const type = params?.task_type as string
+      const pending = dataStore.generation_tasks
+        .filter((t) => t.status === 'pending' && t.type === type)
+        .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      const task = pending[0] ?? null
+      if (task) {
+        task.status = 'processing'
+        task.started_at = new Date().toISOString()
+      }
+      return Promise.resolve({ data: task, error: null })
+    }
+    return Promise.resolve({ data: null, error: null })
+  }
+
+  return { from, auth, dataStore, chain, storage, uploadedFiles, rpc }
 }
