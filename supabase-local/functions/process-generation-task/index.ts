@@ -6,13 +6,12 @@ interface MinimaxResponse {
 }
 
 Deno.serve(async (_req) => {
-  const supabaseUrl = Deno.env.get('SUPABASE_URL')
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-  const minimaxApiKey = Deno.env.get('MINIMAX_API_KEY')
+  const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? 'http://host.docker.internal:54321'
+  const serviceRoleKey = Deno.env.get('SERVICE_ROLE_KEY')
 
-  if (!supabaseUrl || !serviceRoleKey || !minimaxApiKey) {
+  if (!serviceRoleKey) {
     return new Response(
-      JSON.stringify({ error: 'Missing environment variables' }),
+      JSON.stringify({ error: 'Missing SERVICE_ROLE_KEY' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }
@@ -23,10 +22,18 @@ Deno.serve(async (_req) => {
   const { data: task, error: claimError } = await supabase
     .rpc('claim_pending_task', { task_type: 'music' })
 
-  if (claimError || !task) {
+  if (claimError || !task || !task.id) {
     return new Response(
       JSON.stringify({ processed: 0 }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
+    )
+  }
+
+  const minimaxApiKey = Deno.env.get('MINIMAX_API_KEY')
+  if (!minimaxApiKey) {
+    return new Response(
+      JSON.stringify({ error: 'Missing MINIMAX_API_KEY', task_id: task.id }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }
 

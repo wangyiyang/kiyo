@@ -19,6 +19,10 @@ begin
   )
   returning * into claimed_task;
 
+  if claimed_task.id is null then
+    return null;
+  end if;
+
   return claimed_task;
 end;
 $$ language plpgsql security definer;
