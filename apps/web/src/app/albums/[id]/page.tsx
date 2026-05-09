@@ -6,6 +6,7 @@ import { Link } from '@/i18n/navigation'
 import { DraggableSongList } from '../_components/DraggableSongList'
 import { CoverSection } from './_components/CoverSection'
 import { AddSongsDialog } from './_components/AddSongsDialog'
+import { getTranslations } from 'next-intl/server'
 
 interface AlbumDetailPageProps {
   params: Promise<{ id: string }>
@@ -40,11 +41,14 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
 
   const songs = (albumSongs ?? []).map((as: any) => as.songs).filter(Boolean)
 
+  const t = await getTranslations('albums')
+  const tCommon = await getTranslations('common')
+
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center gap-4">
         <Link href={`/${locale}/albums`} className="text-sm text-muted-foreground hover:text-foreground">
-          ← 返回专辑列表
+          ← {t('detail.back')}
         </Link>
       </div>
 
@@ -63,9 +67,9 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
       </div>
 
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">歌曲列表</h2>
+        <h2 className="text-lg font-semibold">{t('detail.songList')}</h2>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">{songs.length} 首歌曲</span>
+          <span className="text-sm text-muted-foreground">{t('detail.songCount', { count: songs.length })}</span>
           <AddSongsDialog albumId={id} excludeIds={songs.map((s: any) => s.id)} />
         </div>
       </div>
@@ -96,7 +100,7 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
           />
         </>
       ) : (
-        <EmptyState title="专辑暂无歌曲" description="编辑专辑添加歌曲" />
+        <EmptyState title={t('detail.noSongs.title')} description={t('detail.noSongs.description')} />
       )}
     </div>
   )
