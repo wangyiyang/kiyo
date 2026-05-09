@@ -94,7 +94,7 @@
 
 ### TypeScript 类型生成
 
-- 命令：`npx supabase gen types typescript --local > packages/supabase/src/database.types.ts`
+- 命令：`pnpm supabase:gen:types`
 - 导出：`packages/supabase/src/index.ts` 统一导出 `Database` 类型
 - 消费：`apps/web` 通过 `@kiyo/supabase` 引用表行/插入/枚举类型
 
@@ -108,7 +108,7 @@
 
 ## 验收标准
 
-- [ ] `npx supabase db reset` 后，四张表结构正确
+- [ ] `pnpm supabase:db:reset` 后，四张表结构正确
 - [ ] 所有表均启用 RLS，策略按定义生效
 - [ ] `updated_at` 触发器工作正常（UPDATE 时自动更新）
 - [ ] `packages/supabase/src/database.types.ts` 生成成功，可被 `apps/web` 和 `@kiyo/supabase` 正常引用

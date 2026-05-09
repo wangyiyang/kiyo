@@ -242,4 +242,4 @@ if (options.lyricsOptimizer) body.lyrics_optimizer = true  // 新增
 | `apps/web/src/app/songs/generate/page.tsx` | 新建 |
 | `apps/web/src/app/songs/page.tsx` | 增加「AI 作曲」入口 |
 | `apps/web/src/app/api/songs/[id]/generate/route.ts` | 无改动（复用逻辑） |
-| `supabase/migrations/` | 无改动（表结构已覆盖） |
+| `supabase-local/migrations/` | 无改动（表结构已覆盖） |

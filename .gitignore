@@ -37,8 +37,8 @@ Thumbs.db
 .mcp.json
 
 # Supabase
-supabase/.branches
-supabase/.temp
+supabase-local/.branches
+supabase-local/.temp
 
 # Claude
 .claude/

@@ -18,7 +18,7 @@ kiyo/
 │   ├── supabase/            # Supabase client 封装、schema 类型
 │   ├── eslint-config/       # 共享 ESLint 配置
 │   └── typescript-config/   # 共享 TypeScript 配置
-├── supabase/
+├── supabase-local/
 │   └── migrations/          # 数据库迁移文件
 ├── package.json             # workspace root 配置
 ├── pnpm-workspace.yaml      # pnpm workspace 定义
@@ -98,24 +98,24 @@ npx shadcn add button
 
 ```bash
 # 启动本地 Supabase 栈
-npx supabase start
+pnpm supabase:start
 
 # 查看本地服务状态
-npx supabase status
+pnpm supabase:status
 
 # 创建新的数据库迁移
-npx supabase db diff -f <migration-name>
+npx supabase --workdir supabase-local db diff -f <migration-name>
 
 # 应用迁移到本地
-npx supabase db reset
+pnpm supabase:db:reset
 
 # 生成 TypeScript 类型（基于本地 schema）
-npx supabase gen types typescript --local > packages/supabase/src/database.types.ts
+pnpm supabase:gen:types
 ```
 
 ### 数据库迁移规范
 
-- 所有 schema 变更必须通过迁移文件（`supabase/migrations/`）管理
+- 所有 schema 变更必须通过迁移文件（`supabase-local/migrations/`）管理
 - 本地开发完成后，使用 `supabase db diff` 生成迁移
 - 迁移文件命名规范：`YYYYMMDDHHMMSS_description.sql`
 - 合并到 `main` 前确保迁移可以干净地运行在最新 schema 上

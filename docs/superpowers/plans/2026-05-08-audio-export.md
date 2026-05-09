@@ -14,7 +14,7 @@
 
 | File | Action | Responsibility |
 |------|--------|---------------|
-| `supabase/migrations/20260508150001_add_songs_file_path.sql` | Create | 新增 `file_path` 字段 + 数据回填 |
+| `supabase-local/migrations/20260508150001_add_songs_file_path.sql` | Create | 新增 `file_path` 字段 + 数据回填 |
 | `apps/web/src/app/api/songs/generate/route.ts` | Modify | AI 生成时同时写入 `file_path` |
 | `apps/web/src/app/api/songs/[id]/export/route.ts` | Create | 导出签名链接 API |
 | `apps/web/src/app/api/songs/[id]/export/route.test.ts` | Create | 导出 API 测试 |
@@ -26,7 +26,7 @@
 ### Task 1: 数据库迁移 — 新增 `file_path` 字段
 
 **Files:**
-- Create: `supabase/migrations/20260508150001_add_songs_file_path.sql`
+- Create: `supabase-local/migrations/20260508150001_add_songs_file_path.sql`
 
 - [ ] **Step 1: 编写迁移文件**
 
@@ -48,7 +48,7 @@ where audio_url is not null and file_path is null;
 - [ ] **Step 2: Commit**
 
 ```bash
-git add supabase/migrations/20260508150001_add_songs_file_path.sql
+git add supabase-local/migrations/20260508150001_add_songs_file_path.sql
 git commit -m "feat(db): add file_path column to songs table"
 ```
 

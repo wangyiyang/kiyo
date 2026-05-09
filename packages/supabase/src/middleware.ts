@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { getSupabaseClientConfig } from './env'
 
 /**
  * 刷新 Supabase session。可选地把 cookie 写入上游 response（例如 next-intl
@@ -11,17 +12,16 @@ export async function updateSession(
   request: NextRequest,
   upstream?: NextResponse,
 ): Promise<NextResponse> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const { supabaseUrl, supabasePublishableKey } = getSupabaseClientConfig()
 
   const response =
     upstream ?? NextResponse.next({ request: { headers: request.headers } })
 
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!supabaseUrl || !supabasePublishableKey) {
     return response
   }
 
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+  const supabase = createServerClient(supabaseUrl, supabasePublishableKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll()

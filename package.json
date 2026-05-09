@@ -12,7 +12,11 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "supabase:start": "npx supabase --workdir supabase-local start",
+    "supabase:status": "npx supabase --workdir supabase-local status",
+    "supabase:db:reset": "npx supabase --workdir supabase-local db reset",
+    "supabase:gen:types": "npx supabase --workdir supabase-local gen types typescript --local > packages/supabase/src/database.types.ts"
   },
   "devDependencies": {
     "turbo": "^2.5.2"

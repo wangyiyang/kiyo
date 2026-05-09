@@ -21,8 +21,8 @@ vi.mock('next-intl', () => ({
   useTranslations: () => mockT,
 }))
 
-vi.mock('next/link', () => ({
-  default: ({
+vi.mock('@/i18n/navigation', () => ({
+  Link: ({
     children,
     href,
     onClick,

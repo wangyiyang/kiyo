@@ -27,7 +27,7 @@ apps/web/
 ├── middleware.ts         # 调用 packages/supabase 的 updateSession
 └── .env.local.example    # 环境变量模板
 
-supabase/
+supabase-local/
 └── config.toml           # 本地开发配置，project_id = cgqorvwsnuiqtoxzwymr
 
 .env.local.example        # 根目录，列出所有 workspace 必需变量
@@ -68,7 +68,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 ```bash
 # 启动本地 Supabase 栈（link 到 Lichun 项目）
-npx supabase start
+pnpm supabase:start
 
 # 生成类型（基于远程 schema）
 npx supabase gen types typescript --project-id cgqorvwsnuiqtoxzwymr > packages/supabase/src/database.types.ts
@@ -82,6 +82,6 @@ npx supabase gen types typescript --project-id cgqorvwsnuiqtoxzwymr > packages/s
 
 ## 验收标准
 
-- [ ] `npx supabase start` 可启动本地 Supabase 栈
+- [ ] `pnpm supabase:start` 可启动本地 Supabase 栈
 - [ ] `packages/supabase` 可导出类型安全的 client
 - [ ] middleware 可正常刷新 session 且不影响页面加载性能

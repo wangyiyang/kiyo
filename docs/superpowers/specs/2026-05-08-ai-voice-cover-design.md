@@ -309,4 +309,4 @@ alter table songs add constraint songs_source_check
 | `apps/web/src/app/api/songs/cover/route.test.ts` | 新建 |
 | `apps/web/src/app/songs/cover/page.tsx` | 新建 |
 | `apps/web/src/app/songs/[id]/page.tsx` | 增加翻唱按钮、标签、对比播放器 |
-| `supabase/migrations/` | 新增迁移 |
+| `supabase-local/migrations/` | 新增迁移 |
