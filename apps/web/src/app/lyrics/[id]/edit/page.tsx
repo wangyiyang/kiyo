@@ -48,7 +48,7 @@ export default function LyricEditPage({ params }: { params: { id: string } }) {
         setError(tCommon('errors.loadFailed'))
         setLoading(false)
       })
-  }, [params.id])
+  }, [params.id, tCommon])
 
   const handleSave = async () => {
     setSaving(true)

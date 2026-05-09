@@ -1,4 +1,3 @@
-import { cn } from '../lib/utils'
 import { SongStatusBadge } from './song-status-badge'
 import { Music2, Clock } from 'lucide-react'
 
@@ -6,13 +5,14 @@ interface SongCardProps {
   id: string
   title: string
   status: 'draft' | 'generating' | 'completed' | 'failed'
+  statusLabel: string
   duration?: number | null
   lyricTitle?: string | null
   coverUrl?: string | null
   href?: string
 }
 
-export function SongCard({ id, title, status, duration, lyricTitle, coverUrl, href }: SongCardProps) {
+export function SongCard({ title, status, statusLabel, duration, lyricTitle, coverUrl, href }: SongCardProps) {
   const formatDuration = (seconds?: number | null) => {
     if (!seconds) return null
     const mins = Math.floor(seconds / 60)
@@ -38,7 +38,7 @@ export function SongCard({ id, title, status, duration, lyricTitle, coverUrl, hr
 
         <div className="mb-2 flex items-center gap-2">
           <h3 className="font-semibold">{title}</h3>
-          <SongStatusBadge status={status} />
+          <SongStatusBadge status={status} label={statusLabel} />
         </div>
 
         <div className="flex items-center gap-3 text-xs text-muted-foreground">

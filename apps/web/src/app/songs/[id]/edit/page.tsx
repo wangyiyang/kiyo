@@ -44,7 +44,7 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
         setError(tCommon('errors.loadFailed'))
         setLoading(false)
       })
-  }, [params.id])
+  }, [params.id, tCommon])
 
   const handleSave = async () => {
     if (!title.trim()) {

@@ -25,6 +25,13 @@ export default async function SongsPage() {
   const t = await getTranslations('songs')
   const tCommon = await getTranslations('common')
 
+  const statusLabelMap: Record<string, string> = {
+    draft: tCommon('states.loading'),
+    generating: tCommon('states.generating'),
+    completed: t('detail.source.manual'),
+    failed: tCommon('errors.unknown'),
+  }
+
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
@@ -55,6 +62,7 @@ export default async function SongsPage() {
               id={song.id}
               title={song.title}
               status={song.status}
+              statusLabel={statusLabelMap[song.status] ?? song.status}
               duration={song.duration}
               lyricTitle={song.lyrics?.title ?? null}
               coverUrl={song.cover_url}
