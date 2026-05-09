@@ -34,7 +34,7 @@ export async function uploadToCovers(
   const { error } = await supabase.storage
     .from('covers')
     .upload(filePath, buffer, { contentType: 'image/png' })
-  if (error) throw error
+  if (error) throw new Error(error.message || 'Storage upload failed')
   const { data } = supabase.storage.from('covers').getPublicUrl(filePath)
   return data.publicUrl
 }
