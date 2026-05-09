@@ -29,22 +29,22 @@ export default async function RegisterPage() {
       <SiteHeader />
       <AuthGuard>
         <div className="container mx-auto flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl">Sign up for Kiyo</CardTitle>
-          <CardDescription>Create your account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <RegisterForm />
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            Already have an account?{' '}
-            <Link href={`/${locale}/login`} className="font-medium text-foreground hover:underline">
-              Log in
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
-      </div>
+          <Card className="w-full max-w-md">
+            <CardHeader className="space-y-1 text-center">
+              <CardTitle className="text-2xl">Sign up for Kiyo</CardTitle>
+              <CardDescription>Create your account</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RegisterForm />
+              <p className="mt-4 text-center text-sm text-muted-foreground">
+                Already have an account?{' '}
+                <Link href={`/${locale}/login`} className="font-medium text-foreground hover:underline">
+                  Log in
+                </Link>
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </AuthGuard>
     </>
   )
