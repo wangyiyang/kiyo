@@ -2,6 +2,7 @@
 
 import { headers } from 'next/headers'
 
+import { captureAppException } from '@/lib/monitoring'
 import { createServerClient } from '@kiyo/supabase/server'
 
 import { waitlistSchema } from '@/lib/schemas/waitlist'
@@ -38,6 +39,9 @@ export async function joinWaitlist(input: unknown): Promise<WaitlistResult> {
       }
     }
     console.error('[waitlist] insert failed', error)
+    captureAppException(error, {
+      tags: { area: 'waitlist', operation: 'insert' },
+    })
     return { ok: false, code: 'UNKNOWN', message: '提交失败，请稍后再试' }
   }
 

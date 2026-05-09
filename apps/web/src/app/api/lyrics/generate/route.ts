@@ -1,5 +1,6 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { generateLyrics, MinimaxError } from '@kiyo/ai'
+import { captureAppException } from '@/lib/monitoring'
 import { NextResponse } from 'next/server'
 import { buildLyricsPrompt } from './lib'
 
@@ -87,6 +88,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ lyric })
   } catch (err) {
+    captureAppException(err, {
+      tags: { area: 'lyrics', operation: 'generate' },
+    })
     const isMinimaxError = err instanceof MinimaxError
     const message = err instanceof Error ? err.message : 'Lyrics generation failed'
     const statusCode = isMinimaxError ? 422 : 500
