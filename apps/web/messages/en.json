@@ -443,6 +443,15 @@
         "ai_cover": "AI Cover",
         "manual": "Manual"
       },
+      "cover": {
+        "generate": "Generate Cover",
+        "regenerate": "Regenerate",
+        "upload": "Upload Cover",
+        "replace": "Replace Cover",
+        "generating": "Generating...",
+        "retry": "Retry",
+        "error": "Generation failed, please retry"
+      },
       "lyricRequired": "Need to link a lyric before generating music"
     },
     "edit": {

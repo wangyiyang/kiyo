@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation'
 import { getLocale } from '@/i18n/server'
 import { Link } from '@/i18n/navigation'
 import { DraggableSongList } from '../_components/DraggableSongList'
-import { CoverSection } from './_components/CoverSection'
+import { CoverSection } from '@/components/CoverSection'
 import { AddSongsDialog } from './_components/AddSongsDialog'
 import { getTranslations } from 'next-intl/server'
 
@@ -53,7 +53,8 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
       </div>
 
       <CoverSection
-        albumId={id}
+        entityId={id}
+        entityType="album"
         coverUrl={album.cover_url}
         coverStatus={album.cover_status}
         title={album.title}
