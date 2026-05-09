@@ -1,4 +1,5 @@
 import NextLink from 'next/link'
+import Image from 'next/image'
 import { SongStatusBadge } from './song-status-badge'
 import { Music2, Clock } from 'lucide-react'
 
@@ -25,10 +26,12 @@ export function SongCard({ title, status, statusLabel, duration, lyricTitle, cov
     <div className="group rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
         <div className="mb-3 aspect-video overflow-hidden rounded-md bg-muted">
           {coverUrl ? (
-            <img
+            <Image
               src={coverUrl}
               alt={title}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              fill
+              className="object-cover transition-transform group-hover:scale-105"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">

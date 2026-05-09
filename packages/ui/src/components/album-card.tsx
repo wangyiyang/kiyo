@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Disc3 } from 'lucide-react'
 
 interface AlbumCardProps {
@@ -16,7 +17,13 @@ export function AlbumCard({ title, description, songCount, coverUrl, onClick }: 
     >
       <div className="mb-3 aspect-square rounded-lg bg-muted flex items-center justify-center overflow-hidden">
         {coverUrl ? (
-          <img src={coverUrl} alt={title} className="h-full w-full object-cover" />
+          <Image
+            src={coverUrl}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
+          />
         ) : (
           <Disc3 className="h-12 w-12 text-muted-foreground" />
         )}
