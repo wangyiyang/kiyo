@@ -4,9 +4,13 @@ import * as React from 'react'
 import { useRouter, Link } from '@/i18n/navigation'
 import { Button, Input, Label, Textarea } from '@kiyo/ui'
 import { ArrowLeft, Save } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export default function NewLyricPage() {
   const router = useRouter()
+  const t = useTranslations('lyrics.new')
+  const tCommon = useTranslations('common')
+
   const [saving, setSaving] = React.useState(false)
   const [title, setTitle] = React.useState('')
   const [content, setContent] = React.useState('')
@@ -17,7 +21,7 @@ export default function NewLyricPage() {
 
   const handleSave = async () => {
     if (!title.trim() || !content.trim()) {
-      setError('标题和内容不能为空')
+      setError(t('error.empty'))
       return
     }
     setSaving(true)
@@ -38,10 +42,10 @@ export default function NewLyricPage() {
       if (res.ok) {
         router.push(`/lyrics/${data.lyric.id}`)
       } else {
-        setError(data.error?.message || '创建失败')
+        setError(data.error?.message || tCommon('errors.createFailed'))
       }
     } catch {
-      setError('创建失败')
+      setError(tCommon('errors.network'))
     } finally {
       setSaving(false)
     }
@@ -55,58 +59,58 @@ export default function NewLyricPage() {
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
-          返回列表
+          {tCommon('actions.back')}
         </Link>
       </div>
 
-      <h1 className="mb-6 text-2xl font-bold">新建歌词</h1>
+      <h1 className="mb-6 text-2xl font-bold">{t('title')}</h1>
 
       <div className="mb-6 space-y-4">
         <div>
-          <Label htmlFor="title">标题 *</Label>
+          <Label htmlFor="title">{t('fields.title')} *</Label>
           <Input
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="歌词标题"
+            placeholder={t('placeholders.title')}
           />
         </div>
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="language">语言</Label>
+            <Label htmlFor="language">{t('fields.language')}</Label>
             <Input
               id="language"
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              placeholder="如：zh、en"
+              placeholder={t('placeholders.language')}
             />
           </div>
           <div>
-            <Label htmlFor="style">风格</Label>
+            <Label htmlFor="style">{t('fields.style')}</Label>
             <Input
               id="style"
               value={style}
               onChange={(e) => setStyle(e.target.value)}
-              placeholder="如：流行、摇滚"
+              placeholder={t('placeholders.style')}
             />
           </div>
           <div>
-            <Label htmlFor="mood">情绪</Label>
+            <Label htmlFor="mood">{t('fields.mood')}</Label>
             <Input
               id="mood"
               value={mood}
               onChange={(e) => setMood(e.target.value)}
-              placeholder="如：励志、忧伤"
+              placeholder={t('placeholders.mood')}
             />
           </div>
         </div>
         <div>
-          <Label htmlFor="content">内容 *</Label>
+          <Label htmlFor="content">{t('fields.content')} *</Label>
           <Textarea
             id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="在此输入歌词内容，支持 [Verse]、[Chorus] 等标签..."
+            placeholder={t('placeholders.content')}
             rows={12}
             className="font-mono text-sm leading-relaxed"
           />
@@ -117,11 +121,11 @@ export default function NewLyricPage() {
 
       <div className="flex justify-end gap-3">
         <Link href="/lyrics">
-          <Button variant="outline">取消</Button>
+          <Button variant="outline">{tCommon('actions.cancel')}</Button>
         </Link>
         <Button onClick={handleSave} disabled={saving}>
           <Save className="mr-1 h-4 w-4" />
-          {saving ? '保存中...' : '保存'}
+          {saving ? tCommon('states.saving') : tCommon('actions.save')}
         </Button>
       </div>
     </div>
