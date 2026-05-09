@@ -443,6 +443,15 @@
         "ai_cover": "AI 翻唱",
         "manual": "手动创建"
       },
+      "cover": {
+        "generate": "生成封面",
+        "regenerate": "重新生成",
+        "upload": "上传封面",
+        "replace": "更换封面",
+        "generating": "生成中...",
+        "retry": "重试",
+        "error": "生成失败，请重试"
+      },
       "lyricRequired": "需要关联歌词后才能生成音乐"
     },
     "edit": {
