@@ -4,7 +4,7 @@
 
 **Goal:** 初始化 Supabase 本地开发配置，创建 `packages/supabase` 共享 client 封装，并在 `apps/web` 中配置 session 刷新 middleware。
 
-**Architecture:** 基于 `@supabase/ssr` 提供 cookie 感知的 browser/server client 封装，middleware 层统一处理 session 刷新，本地开发通过 `supabase/config.toml` link 到远程 Lichun 项目。
+**Architecture:** 基于 `@supabase/ssr` 提供 cookie 感知的 browser/server client 封装，middleware 层统一处理 session 刷新，本地开发通过 `supabase-local/config.toml` link 到远程 Lichun 项目。
 
 **Tech Stack:** Next.js 14, pnpm, Turborepo, @supabase/supabase-js, @supabase/ssr
 
@@ -231,7 +231,7 @@ git commit -m "feat(web): add Supabase session refresh middleware"
 ### Task 5: 初始化 Supabase 本地配置
 
 **Files:**
-- Create: `supabase/config.toml`
+- Create: `supabase-local/config.toml`
 
 - [ ] **Step 1: 初始化 supabase 目录**
 
@@ -299,7 +299,7 @@ policy = "permissive"
 - [ ] **Step 3: Commit**
 
 ```bash
-git add supabase/
+git add supabase-local/
 git commit -m "feat(supabase): add local dev config for Lichun project"
 ```
 
@@ -410,7 +410,7 @@ Expected: 输出版本号（如 `2.x.x`）。如果未安装，CLI 会自动下�
 - [ ] **Step 2: 启动本地栈**
 
 ```bash
-npx supabase start
+pnpm supabase:start
 ```
 
 Expected: 本地 Supabase 服务启动成功，输出 API URL、DB URL、Studio URL 等信息。
@@ -423,7 +423,7 @@ npx supabase stop
 
 - [ ] **Step 4: Commit（如有配置文件变更）**
 
-如果 `supabase start` 生成了额外文件（如 `supabase/.temp/`），检查是否需要加入 `.gitignore`。
+如果 `supabase start` 生成了额外文件（如 `supabase-local/.temp/`），检查是否需要加入 `.gitignore`。
 
 ---
 
@@ -439,7 +439,7 @@ npx supabase stop
 | createServerClient() 供 Server Component 使用 | Task 2 |
 | middleware.ts 刷新 session | Task 3, 4 |
 | .env.local.example 列出必需变量 | Task 6 |
-| npx supabase start 可启动 | Task 8 |
+| pnpm supabase:start 可启动 | Task 8 |
 | 类型安全 | Task 1 (tsconfig), Task 7 (type-check) |
 
 ### Placeholder 扫描

@@ -14,7 +14,7 @@
 
 | 文件 | 职责 | 操作 |
 |------|------|------|
-| `supabase/migrations/20260508140001_extend_songs_for_cover.sql` | 添加 `original_song_id`、`voice_style`，扩展 `source` 约束 | 新建 |
+| `supabase-local/migrations/20260508140001_extend_songs_for_cover.sql` | 添加 `original_song_id`、`voice_style`，扩展 `source` 约束 | 新建 |
 | `packages/ai/src/cover.ts` | `generateCover` 函数，调用 Minimax music-cover | 新建 |
 | `packages/ai/src/__tests__/cover.test.ts` | `generateCover` 单元测试 | 新建 |
 | `packages/ai/index.ts` | 导出 `generateCover` | 修改 |
@@ -28,11 +28,11 @@
 ### Task 1: 数据库迁移
 
 **Files:**
-- Create: `supabase/migrations/20260508140001_extend_songs_for_cover.sql`
+- Create: `supabase-local/migrations/20260508140001_extend_songs_for_cover.sql`
 
 - [ ] **Step 1: 创建迁移文件**
 
-  创建 `supabase/migrations/20260508140001_extend_songs_for_cover.sql`：
+  创建 `supabase-local/migrations/20260508140001_extend_songs_for_cover.sql`：
 
   ```sql
   -- 添加 original_song_id 自引用外键
@@ -49,14 +49,14 @@
 
 - [ ] **Step 2: 应用迁移（本地开发环境）**
 
-  Run: `supabase db reset`
+  Run: `pnpm supabase:db:reset`
 
   Expected: 迁移成功应用，无错误
 
 - [ ] **Step 3: Commit**
 
   ```bash
-  git add supabase/migrations/20260508140001_extend_songs_for_cover.sql
+  git add supabase-local/migrations/20260508140001_extend_songs_for_cover.sql
   git commit -m "feat(db): add original_song_id and voice_style for AI cover"
   ```
 

@@ -141,7 +141,7 @@ const { data: signedUrl } = await supabase
 
 | 文件 | 操作 | 说明 |
 |------|------|------|
-| `supabase/migrations/20260508150001_add_songs_file_path.sql` | 创建 | 新增 file_path 字段 + 数据回填 |
+| `supabase-local/migrations/20260508150001_add_songs_file_path.sql` | 创建 | 新增 file_path 字段 + 数据回填 |
 | `apps/web/src/app/api/songs/generate/route.ts` | 修改 | 生成时同时写入 file_path |
 | `apps/web/src/app/api/songs/[id]/export/route.ts` | 创建 | 导出签名链接 API |
 | `apps/web/src/app/songs/[id]/export-dialog.tsx` | 创建 | 导出弹窗组件 |

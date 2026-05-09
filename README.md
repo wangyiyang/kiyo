@@ -59,7 +59,7 @@ kiyo/
 │   ├── supabase/            # Supabase client 封装、schema 类型
 │   ├── eslint-config/       # 共享 ESLint 配置
 │   └── typescript-config/   # 共享 TypeScript 配置
-├── supabase/
+├── supabase-local/
 │   └── migrations/          # 数据库迁移文件
 ├── package.json             # workspace root 配置
 ├── pnpm-workspace.yaml      # pnpm workspace 定义
@@ -101,7 +101,7 @@ kiyo/
 
 ### 数据库与存储
 
-- 所有 Schema 变更通过 `supabase/migrations/` 管理
+- 所有 Schema 变更通过 `supabase-local/migrations/` 管理
 - 音频文件、专辑封面等存储在 Supabase Storage
 - RLS（Row Level Security）策略确保用户只能访问自己的数据
 
@@ -126,16 +126,16 @@ pnpm test -- --filter=web
 
 ```bash
 # 启动本地 Supabase 栈
-npx supabase start
+pnpm supabase:start
 
 # 查看状态
-npx supabase status
+pnpm supabase:status
 
 # 生成迁移
-npx supabase db diff -f <migration-name>
+npx supabase --workdir supabase-local db diff -f <migration-name>
 
 # 应用迁移
-npx supabase db reset
+pnpm supabase:db:reset
 ```
 
 ## 部署
@@ -145,6 +145,16 @@ npx supabase db reset
 - 前端通过 Vercel 部署
 - 数据库和 Storage 使用 Supabase 云服务
 - 不同环境（Production / Preview / Development）的环境变量在 Vercel Dashboard 中分别配置
+
+Vercel 必填环境变量：
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+MINIMAX_API_KEY=
+```
+
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` 仍作为旧项目 fallback 支持；新配置优先使用 Supabase Dashboard 中的 publishable key。
 
 ## 贡献
 

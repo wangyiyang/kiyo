@@ -14,7 +14,7 @@
 
 | File | Action | Responsibility |
 |------|--------|---------------|
-| `supabase/migrations/20260508120001_extend_songs.sql` | Create | Database migration for songs table extension |
+| `supabase-local/migrations/20260508120001_extend_songs.sql` | Create | Database migration for songs table extension |
 | `packages/supabase/src/database.types.ts` | Modify | Update TypeScript types for extended songs table |
 | `apps/web/src/app/api/songs/route.ts` | Modify | Add POST handler to existing GET-only route |
 | `apps/web/src/app/api/songs/route.test.ts` | Create | Tests for POST and GET list |
@@ -38,7 +38,7 @@
 ## Task 1: Database Migration
 
 **Files:**
-- Create: `supabase/migrations/20260508120001_extend_songs.sql`
+- Create: `supabase-local/migrations/20260508120001_extend_songs.sql`
 
 - [ ] **Step 1: Write migration file**
 
@@ -65,7 +65,7 @@ alter table songs add constraint songs_source_check
 
 ```bash
 cd /home/kk/Github/kiyo
-npx supabase db reset
+pnpm supabase:db:reset
 ```
 
 Expected: Migration applies successfully, no errors.
@@ -73,7 +73,7 @@ Expected: Migration applies successfully, no errors.
 - [ ] **Step 3: Commit**
 
 ```bash
-git add supabase/migrations/20260508120001_extend_songs.sql
+git add supabase-local/migrations/20260508120001_extend_songs.sql
 git commit -m "feat(db): extend songs table with full metadata fields
 
 - Add audio_url, cover_url, lyric_id, status, duration

@@ -2,11 +2,11 @@
 
 ## Project Structure & Module Organization
 
-Kiyo is a pnpm + Turborepo monorepo for an AI music creation platform. The main app is `apps/web`, a Next.js 14 app using React, TypeScript, Tailwind CSS, `next-intl`, and Supabase. Shared packages live in `packages/`: `@kiyo/ui` for reusable UI and player state, `@kiyo/ai` for AI service wrappers, and `@kiyo/supabase` for Supabase clients and generated database types. Database migrations belong in `supabase/migrations`; architecture and planning notes live in `docs/`.
+Kiyo is a pnpm + Turborepo monorepo for an AI music creation platform. The main app is `apps/web`, a Next.js 14 app using React, TypeScript, Tailwind CSS, `next-intl`, and Supabase. Shared packages live in `packages/`: `@kiyo/ui` for reusable UI and player state, `@kiyo/ai` for AI service wrappers, and `@kiyo/supabase` for Supabase clients and generated database types. Database migrations belong in `supabase-local/migrations`; architecture and planning notes live in `docs/`.
 
 ## Build, Test, and Development Commands
 
-Install dependencies with `pnpm install`. Use `pnpm dev` to start Turbo development tasks; for the web app only, run `pnpm --filter web dev`. Use `pnpm build` for production builds, `pnpm type-check` for TypeScript validation, `pnpm lint` for ESLint, and `pnpm test` for workspace tests. Supabase local workflows use `npx supabase start`, `npx supabase status`, `npx supabase db diff -f <name>`, and `npx supabase db reset`.
+Install dependencies with `pnpm install`. Use `pnpm dev` to start Turbo development tasks; for the web app only, run `pnpm --filter web dev`. Use `pnpm build` for production builds, `pnpm type-check` for TypeScript validation, `pnpm lint`, and `pnpm test` for workspace tests. Supabase local workflows use `pnpm supabase:start`, `pnpm supabase:status`, `npx supabase --workdir supabase-local db diff -f <name>`, and `pnpm supabase:db:reset`.
 
 ## Coding Style & Naming Conventions
 
@@ -22,4 +22,4 @@ Use Conventional Commit style seen in history, for example `feat(auth): add magi
 
 ## Security & Agent-Specific Instructions
 
-Do not commit secrets. Copy `.env.local.example` for local setup and configure production or preview variables in the hosting provider. All schema changes must be migration files under `supabase/migrations`. Agent-facing communication, analysis, issue text, and PR descriptions should be written in Simplified Chinese unless an external template explicitly requires another language.
+Do not commit secrets. Copy `.env.local.example` for local setup and configure production or preview variables in the hosting provider. All schema changes must be migration files under `supabase-local/migrations`. Agent-facing communication, analysis, issue text, and PR descriptions should be written in Simplified Chinese unless an external template explicitly requires another language.

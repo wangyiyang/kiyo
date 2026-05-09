@@ -24,7 +24,7 @@
 
 ### 迁移文件
 
-`supabase/migrations/20260508120001_extend_songs.sql`
+`supabase-local/migrations/20260508120001_extend_songs.sql`
 
 ```sql
 -- 扩展 songs 表字段

@@ -4,7 +4,7 @@
 
 **Goal:** Create Supabase migration files for `songs`, `albums`, `album_songs`, `lyrics` tables with RLS policies and generate TypeScript types.
 
-**Architecture:** Three sequential migration files ordered by dependency (`songs` → `albums`+`album_songs` → `lyrics`), each containing table DDL, constraints, RLS enablement, policies, and `updated_at` triggers. Migrations applied via `supabase db reset`, types generated via `supabase gen types`.
+**Architecture:** Three sequential migration files ordered by dependency (`songs` → `albums`+`album_songs` → `lyrics`), each containing table DDL, constraints, RLS enablement, policies, and `updated_at` triggers. Migrations applied via `pnpm supabase:db:reset`, types generated via `supabase gen types`.
 
 **Tech Stack:** Supabase (PostgreSQL), Supabase CLI, TypeScript
 
@@ -13,7 +13,7 @@
 ### Task 1: Create `songs` migration
 
 **Files:**
-- Create: `supabase/migrations/20260507120001_create_songs.sql`
+- Create: `supabase-local/migrations/20260507120001_create_songs.sql`
 
 - [ ] **Step 1: Write migration file**
 
@@ -49,7 +49,7 @@ create trigger update_songs_updated_at
 - [ ] **Step 2: Commit migration file**
 
 ```bash
-git add supabase/migrations/20260507120001_create_songs.sql
+git add supabase-local/migrations/20260507120001_create_songs.sql
 git commit -m "feat(db): create songs table with RLS and updated_at trigger"
 ```
 
@@ -58,7 +58,7 @@ git commit -m "feat(db): create songs table with RLS and updated_at trigger"
 ### Task 2: Create `albums` and `album_songs` migration
 
 **Files:**
-- Create: `supabase/migrations/20260507120002_create_albums_and_album_songs.sql`
+- Create: `supabase-local/migrations/20260507120002_create_albums_and_album_songs.sql`
 
 - [ ] **Step 1: Write albums table DDL**
 
@@ -159,7 +159,7 @@ create trigger update_albums_updated_at
 - [ ] **Step 4: Commit migration file**
 
 ```bash
-git add supabase/migrations/20260507120002_create_albums_and_album_songs.sql
+git add supabase-local/migrations/20260507120002_create_albums_and_album_songs.sql
 git commit -m "feat(db): create albums and album_songs tables with RLS"
 ```
 
@@ -168,7 +168,7 @@ git commit -m "feat(db): create albums and album_songs tables with RLS"
 ### Task 3: Create `lyrics` migration
 
 **Files:**
-- Create: `supabase/migrations/20260507120003_create_lyrics.sql`
+- Create: `supabase-local/migrations/20260507120003_create_lyrics.sql`
 
 - [ ] **Step 1: Write migration file**
 
@@ -224,7 +224,7 @@ create trigger update_lyrics_updated_at
 - [ ] **Step 2: Commit migration file**
 
 ```bash
-git add supabase/migrations/20260507120003_create_lyrics.sql
+git add supabase-local/migrations/20260507120003_create_lyrics.sql
 git commit -m "feat(db): create lyrics table with RLS and updated_at trigger"
 ```
 
@@ -238,7 +238,7 @@ git commit -m "feat(db): create lyrics table with RLS and updated_at trigger"
 - [ ] **Step 1: Start local Supabase stack**
 
 ```bash
-npx supabase start
+pnpm supabase:start
 ```
 
 Expected: Containers start successfully, API URL and DB URL printed.
@@ -246,7 +246,7 @@ Expected: Containers start successfully, API URL and DB URL printed.
 - [ ] **Step 2: Reset database to apply migrations**
 
 ```bash
-npx supabase db reset
+pnpm supabase:db:reset
 ```
 
 Expected: Migrations applied successfully, database seeded (if any seeders exist).
@@ -254,7 +254,7 @@ Expected: Migrations applied successfully, database seeded (if any seeders exist
 - [ ] **Step 3: Verify table structures via psql**
 
 ```bash
-npx supabase psql -c "\dt public.*"
+npx supabase --workdir supabase-local psql -c "\dt public.*"
 ```
 
 Expected: `songs`, `albums`, `album_songs`, `lyrics` all listed.
@@ -262,7 +262,7 @@ Expected: `songs`, `albums`, `album_songs`, `lyrics` all listed.
 - [ ] **Step 4: Verify RLS is enabled**
 
 ```bash
-npx supabase psql -c "select tablename, rowsecurity from pg_tables where schemaname = 'public' and tablename in ('songs', 'albums', 'album_songs', 'lyrics');"
+npx supabase --workdir supabase-local psql -c "select tablename, rowsecurity from pg_tables where schemaname = 'public' and tablename in ('songs', 'albums', 'album_songs', 'lyrics');"
 ```
 
 Expected: All four tables show `rowsecurity = t`.
@@ -270,7 +270,7 @@ Expected: All four tables show `rowsecurity = t`.
 - [ ] **Step 5: Verify triggers exist**
 
 ```bash
-npx supabase psql -c "select trigger_name, event_object_table from information_schema.triggers where trigger_name like 'update_%_updated_at';"
+npx supabase --workdir supabase-local psql -c "select trigger_name, event_object_table from information_schema.triggers where trigger_name like 'update_%_updated_at';"
 ```
 
 Expected: Triggers for `songs`, `albums`, `lyrics` listed.
@@ -285,7 +285,7 @@ Expected: Triggers for `songs`, `albums`, `lyrics` listed.
 - [ ] **Step 1: Generate types from local schema**
 
 ```bash
-npx supabase gen types typescript --local > packages/supabase/src/database.types.ts
+pnpm supabase:gen:types
 ```
 
 - [ ] **Step 2: Verify `packages/supabase/src/index.ts` exports Database type**
