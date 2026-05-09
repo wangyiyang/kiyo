@@ -16,9 +16,13 @@
     "supabase:start": "npx supabase --workdir supabase-local start",
     "supabase:status": "npx supabase --workdir supabase-local status",
     "supabase:db:reset": "npx supabase --workdir supabase-local db reset",
-    "supabase:gen:types": "npx supabase --workdir supabase-local gen types typescript --local > packages/supabase/src/database.types.ts"
+    "supabase:gen:types": "npx supabase --workdir supabase-local gen types typescript --local > packages/supabase/src/database.types.ts",
+    "seed:showcase": "tsx scripts/seed-showcase/index.ts"
   },
   "devDependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "dotenv": "^17.4.2",
+    "tsx": "^4.21.0",
     "turbo": "^2.5.2"
   }
 }
