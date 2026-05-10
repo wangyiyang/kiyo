@@ -316,6 +316,19 @@
       }
     }
   },
+  "explore": {
+    "title": "探索歌曲",
+    "description": "发现 AI 生成的精选音乐作品",
+    "filters": {
+      "genre": "风格",
+      "mood": "情绪",
+      "all": "全部"
+    },
+    "empty": {
+      "title": "暂无歌曲",
+      "description": "当前筛选条件下没有找到歌曲，试试其他筛选条件吧"
+    }
+  },
   "finalCta": {
     "headline": {
       "prefix": "把",

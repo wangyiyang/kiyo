@@ -316,6 +316,19 @@
       }
     }
   },
+  "explore": {
+    "title": "Explore Songs",
+    "description": "Discover AI-generated music",
+    "filters": {
+      "genre": "Genre",
+      "mood": "Mood",
+      "all": "All"
+    },
+    "empty": {
+      "title": "No songs yet",
+      "description": "No songs found with the current filters. Try other filters."
+    }
+  },
   "finalCta": {
     "headline": {
       "prefix": "Turn the melody",
