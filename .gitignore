@@ -35,20 +35,26 @@ Thumbs.db
 .cache
 *.tsbuildinfo
 .mcp.json
+/explore-page.png
+/showcase-home.png
 
 # Supabase
 supabase-local/.branches
 supabase-local/.temp
 supabase-local/supabase/
 supabase-local/functions/**/.env
+/supabase/.temp/linked-project.json
 
 # Claude
 .claude/
+/.codex/
 
 # Pi Agent
 .agents/
 .ant-colony/
 .superpowers/
+/.pi/
+/.playwright-mcp/
 .vercel
 .worktrees/
 recovery/
