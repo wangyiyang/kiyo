@@ -121,7 +121,8 @@
       "myLyrics": "我的歌词",
       "settings": "设置",
       "logout": "退出登录",
-      "login": "登录"
+      "login": "登录",
+      "feedback": "反馈"
     },
     "errors": {
       "invalidEmail": "请输入有效的邮箱地址",
@@ -172,6 +173,37 @@
       }
     },
     "copyright": "© {year} Kiyo. 让旋律自由生长。"
+  },
+  "feedback": {
+    "type": {
+      "label": "反馈类型",
+      "placeholder": "选择类型",
+      "options": {
+        "bug": "Bug 报告",
+        "suggestion": "功能建议",
+        "other": "其他"
+      }
+    },
+    "description": {
+      "label": "问题描述",
+      "placeholder": "请详细描述您遇到的问题或建议..."
+    },
+    "contact": {
+      "label": "联系方式（可选）",
+      "placeholder": "邮箱或其他联系方式"
+    },
+    "submit": "提交反馈",
+    "submitting": "提交中...",
+    "success": "感谢您的反馈！",
+    "error": "提交失败，请稍后重试"
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "遇到问题或有建议？我们随时为您服务",
+    "email": "邮箱",
+    "faq": {
+      "title": "常见问题"
+    }
   },
   "hero": {
     "badge": "多模型协同 · AI 音乐工作流",
