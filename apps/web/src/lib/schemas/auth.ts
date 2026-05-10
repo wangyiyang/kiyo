@@ -19,6 +19,9 @@ export const registerSchema = z
     email: z.string().email(),
     password: z.string().min(6),
     confirmPassword: z.string().min(6),
+    termsAccepted: z.boolean().refine(val => val === true, {
+      message: 'termsRequired',
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",

@@ -49,6 +49,7 @@ export {
 } from './src/components/ui/form'
 
 export { Input } from './src/components/ui/input'
+export { Checkbox } from './src/components/ui/checkbox'
 export { Textarea } from './src/components/ui/textarea'
 export { Label } from './src/components/ui/label'
 export { Separator } from './src/components/ui/separator'

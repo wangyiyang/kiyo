@@ -165,7 +165,8 @@
         "links": {
           "team": "Team",
           "contact": "Contact",
-          "privacy": "Privacy"
+          "privacy": "Privacy Policy",
+          "terms": "Terms of Service"
         }
       }
     },
@@ -696,6 +697,140 @@
       "preview": "Lyric Preview",
       "noContent": "(No content)",
       "submit": "Start Generate"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "description": "How Kiyo collects, uses, and protects your information",
+      "lastUpdated": "Last updated: May 10, 2026",
+      "sections": {
+        "intro": {
+          "title": "Introduction",
+          "p1": "Kiyo (\"we,\" \"us,\" or \"our\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI music creation platform.",
+          "p2": "By using our service, you agree to the collection and use of information in accordance with this policy."
+        },
+        "collection": {
+          "title": "Information We Collect",
+          "p1": "We collect the following types of information:",
+          "items": {
+            "email": "Account information (email address, password) when you register",
+            "content": "User-generated content (lyrics, songs, albums) you create",
+            "usage": "Usage data (how you interact with our platform, features used)",
+            "cookies": "Cookies and similar tracking technologies"
+          }
+        },
+        "usage": {
+          "title": "How We Use Your Information",
+          "p1": "We use the information we collect for the following purposes:",
+          "items": {
+            "service": "Providing, maintaining, and improving our services",
+            "personalization": "Personalizing your experience",
+            "ai": "Processing content through AI models (Minimax) to generate music",
+            "communication": "Sending service-related notifications and updates"
+          }
+        },
+        "storage": {
+          "title": "Data Storage and Security",
+          "p1": "Your data is stored securely using Supabase (our backend infrastructure) with industry-standard encryption.",
+          "p2": "Audio files and user content are stored in secure object storage with regular backups."
+        },
+        "thirdParty": {
+          "title": "Third-Party Services",
+          "p1": "We use third-party services that may have access to your data:",
+          "items": {
+            "supabase": "Supabase - Backend database and authentication",
+            "minimax": "Minimax - AI model provider for music generation",
+            "vercel": "Vercel - Hosting and deployment platform"
+          }
+        },
+        "rights": {
+          "title": "Your Rights",
+          "p1": "You have the following rights regarding your personal data:",
+          "items": {
+            "access": "Right to access your personal data",
+            "correction": "Right to correct inaccurate data",
+            "deletion": "Right to request deletion of your data",
+            "withdraw": "Right to withdraw consent"
+          },
+          "contact": "To exercise any of these rights, please contact us at:"
+        },
+        "security": {
+          "title": "Data Security",
+          "p1": "We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction."
+        },
+        "changes": {
+          "title": "Changes to This Policy",
+          "p1": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"last updated\" date."
+        },
+        "contact": {
+          "title": "Contact Us",
+          "p1": "If you have any questions about this Privacy Policy, please contact us at:"
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "description": "Terms and conditions for using Kiyo",
+      "lastUpdated": "Last updated: May 10, 2026",
+      "sections": {
+        "intro": {
+          "title": "Agreement to Terms",
+          "p1": "These Terms of Service (\"Terms\") govern your access to and use of Kiyo, an AI-powered music creation platform operated by Kiyo (\"we,\" \"us,\" or \"our\").",
+          "p2": "By accessing or using our service, you agree to be bound by these Terms. If you disagree with any part of the terms, you may not access the service."
+        },
+        "service": {
+          "title": "Description of Service",
+          "p1": "Kiyo provides an AI-powered platform for music creation, allowing users to generate, edit, and manage music tracks using artificial intelligence models.",
+          "p2": "We reserve the right to modify, suspend, or discontinue any part of the service at any time."
+        },
+        "account": {
+          "title": "User Accounts",
+          "p1": "To access certain features, you must create an account. You agree to:",
+          "items": {
+            "register": "Provide accurate and complete registration information",
+            "accurate": "Keep your account information up to date",
+            "security": "Maintain the security of your account credentials",
+            "age": "Be at least 16 years old to create an account"
+          }
+        },
+        "content": {
+          "title": "User Content and Intellectual Property",
+          "p1": "You retain ownership of the content you create using Kiyo. By uploading or creating content, you grant us a license to use, store, and process it to provide our services.",
+          "p2": "AI-generated music using our platform can be used for personal and commercial purposes, subject to these Terms."
+        },
+        "prohibited": {
+          "title": "Prohibited Conduct",
+          "p1": "You agree not to:",
+          "items": {
+            "illegal": "Use the service for any illegal purpose",
+            "infringe": "Infringe on the intellectual property rights of others",
+            "harmful": "Upload content that is harmful, offensive, or violates others' rights",
+            "spam": "Send spam or distribute malware"
+          }
+        },
+        "changes": {
+          "title": "Modifications to Terms",
+          "p1": "We reserve the right to modify these Terms at any time. We will provide notice of significant changes by posting the updated Terms on this page."
+        },
+        "termination": {
+          "title": "Termination",
+          "p1": "We may terminate or suspend your access to the service immediately, without prior notice, for any reason, including breach of these Terms."
+        },
+        "disclaimer": {
+          "title": "Disclaimer of Warranties",
+          "p1": "THE SERVICE IS PROVIDED \"AS IS\" AND \"AS AVAILABLE\" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED.",
+          "p2": "We do not guarantee that the service will be uninterrupted, secure, or error-free."
+        },
+        "law": {
+          "title": "Governing Law",
+          "p1": "These Terms shall be governed by and construed in accordance with applicable laws, without regard to its conflict of law provisions."
+        },
+        "contact": {
+          "title": "Contact",
+          "p1": "For questions about these Terms, please contact us at:"
+        }
+      }
     }
   }
 }

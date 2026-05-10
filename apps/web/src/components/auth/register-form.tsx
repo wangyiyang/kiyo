@@ -8,6 +8,7 @@ import { useRouter } from '@/i18n/navigation'
 
 import {
   Button,
+  Checkbox,
   Input,
   Form,
   FormControl,
@@ -20,6 +21,7 @@ import {
 
 import { signUp } from '@/app/actions/auth'
 import { registerSchema, type RegisterInput } from '@/lib/schemas/auth'
+import { Link } from '@/i18n/navigation'
 
 function getPasswordStrength(password: string): number {
   let score = 0
@@ -55,7 +57,7 @@ export function RegisterForm() {
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { email: '', password: '', confirmPassword: '' },
+    defaultValues: { email: '', password: '', confirmPassword: '', termsAccepted: false },
     mode: 'onBlur',
   })
 
@@ -161,6 +163,34 @@ export function RegisterForm() {
                 />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="termsAccepted"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel className="text-sm font-normal cursor-pointer">
+                  I have read and agree to the{' '}
+                  <Link href="/privacy" className="underline hover:text-foreground">
+                    Privacy Policy
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/terms" className="underline hover:text-foreground">
+                    Terms of Service
+                  </Link>
+                </FormLabel>
+                <FormMessage />
+              </div>
             </FormItem>
           )}
         />

@@ -1,6 +1,6 @@
 import { Link } from '@/i18n/navigation'
 import { Github, Mail, Twitter } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 
 import { Separator } from '@kiyo/ui'
 
@@ -21,7 +21,8 @@ const groupLinks: Record<GroupKey, { href: string; key: string }[]> = {
   about: [
     { href: '#', key: 'team' },
     { href: '#', key: 'contact' },
-    { href: '#', key: 'privacy' },
+    { href: 'privacy', key: 'privacy' },
+    { href: 'terms', key: 'terms' },
   ],
 }
 
@@ -33,6 +34,7 @@ const social = [
 
 export function SiteFooter() {
   const t = useTranslations('footer')
+  const locale = useLocale()
   const year = new Date().getFullYear()
 
   return (
@@ -55,12 +57,12 @@ export function SiteFooter() {
               <ul className="mt-4 space-y-2.5">
                 {groupLinks[groupKey].map((link) => (
                   <li key={link.key}>
-                    <a
-                      href={link.href}
+                    <Link
+                      href={`/${locale}/${link.href}`}
                       className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {t(`groups.${groupKey}.links.${link.key}`)}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
