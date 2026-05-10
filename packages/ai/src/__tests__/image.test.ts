@@ -20,7 +20,7 @@ describe('generateImage', () => {
       status: 200,
       json: async () => ({
         data: {
-          image_url: 'https://example.com/image.png',
+          image_urls: ['https://example.com/image.png'],
         },
       }),
     } as Response)
