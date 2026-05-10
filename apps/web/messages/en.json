@@ -120,7 +120,8 @@
       "myLyrics": "My lyrics",
       "settings": "Settings",
       "logout": "Log out",
-      "login": "Log in"
+      "login": "Log in",
+      "feedback": "Feedback"
     },
     "errors": {
       "invalidEmail": "Please enter a valid email address",
@@ -170,6 +171,37 @@
       }
     },
     "copyright": "© {year} Kiyo. Let melody grow free."
+  },
+  "feedback": {
+    "type": {
+      "label": "Feedback Type",
+      "placeholder": "Select type",
+      "options": {
+        "bug": "Bug Report",
+        "suggestion": "Feature Suggestion",
+        "other": "Other"
+      }
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Please describe your issue or suggestion in detail..."
+    },
+    "contact": {
+      "label": "Contact (Optional)",
+      "placeholder": "Email or other contact info"
+    },
+    "submit": "Submit Feedback",
+    "submitting": "Submitting...",
+    "success": "Thank you for your feedback!",
+    "error": "Failed to submit. Please try again later."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have questions or suggestions? We're here to help.",
+    "email": "Email",
+    "faq": {
+      "title": "FAQ"
+    }
   },
   "hero": {
     "badge": "Multi-model · AI music workflow",
