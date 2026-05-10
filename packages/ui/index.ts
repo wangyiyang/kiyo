@@ -50,6 +50,16 @@ export {
 
 export { Input } from './src/components/ui/input'
 export { Textarea } from './src/components/ui/textarea'
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+} from './src/components/ui/select'
 export { Label } from './src/components/ui/label'
 export { Separator } from './src/components/ui/separator'
 export { Toaster } from './src/components/ui/sonner'
