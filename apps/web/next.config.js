@@ -45,7 +45,7 @@ const nextConfig = {
               "img-src 'self' data: https: blob: http://127.0.0.1:54321",
               "font-src 'self' data:",
               "connect-src 'self' https://*.supabase.co wss://*.supabase.co http://127.0.0.1:54321 https://*.sentry.io https://*.ingest.sentry.io",
-              "media-src 'self' http://127.0.0.1:54321",
+              "media-src 'self' https://*.supabase.co http://127.0.0.1:54321",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
