@@ -50,6 +50,7 @@ export {
 
 export { Input } from "./src/components/ui/input";
 export { Textarea } from "./src/components/ui/textarea";
+export { Checkbox } from "./src/components/ui/checkbox";
 export {
 	Select,
 	SelectGroup,
@@ -90,6 +91,7 @@ export {
 	PlaylistPanel,
 } from "./src/components/audio-player";
 export { usePlayerKeyboard } from "./src/hooks/usePlayerKeyboard";
+export { usePlayerStore } from "./src/store/usePlayerStore";
 export { SongStatusBadge } from "./src/components/song-status-badge";
 
 export {
