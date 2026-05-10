@@ -2,14 +2,15 @@ import { Metadata } from "next"
 import { createServerClient } from "@kiyo/supabase/server"
 import { EmptyState, cn } from "@kiyo/ui"
 import { Link } from "@/i18n/navigation"
+import { getTranslations } from "next-intl/server"
 import { ShowcaseCard } from "@/components/sections/showcase-card"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "探索歌曲",
-  description: "发现 AI 生成的精选音乐作品",
+  title: "Explore Songs",
+  description: "Discover AI-generated music",
 }
 
 interface FeaturedTrack {
@@ -38,6 +39,7 @@ export default async function ExplorePage({
   params: Promise<{ locale: string }>
   searchParams: Promise<{ genre?: string; mood?: string }>
 }) {
+  const t = await getTranslations("explore")
   const { locale } = await params
   const { genre, mood } = await searchParams
 
@@ -100,10 +102,10 @@ export default async function ExplorePage({
           <div className="container mx-auto px-4">
             <ScrollReveal>
               <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-                探索歌曲
+                {t("title")}
               </h1>
               <p className="mt-4 text-lg text-muted-foreground">
-                发现 AI 生成的精选音乐作品
+                {t("description")}
               </p>
             </ScrollReveal>
           </div>
@@ -114,7 +116,7 @@ export default async function ExplorePage({
           {/* Genre filter */}
           <ScrollReveal delay={0.1}>
             <div className="mb-6">
-              <h3 className="mb-3 text-sm font-medium text-muted-foreground">风格</h3>
+              <h3 className="mb-3 text-sm font-medium text-muted-foreground">{t("filters.genre")}</h3>
               <div className="flex flex-wrap gap-2">
                 <Link
                   href={buildUrl(undefined, mood)}
@@ -125,7 +127,7 @@ export default async function ExplorePage({
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   )}
                 >
-                  全部
+                  {t("filters.all")}
                 </Link>
                 {genres.map((g) => (
                   <Link
@@ -148,7 +150,7 @@ export default async function ExplorePage({
           {/* Mood filter */}
           <ScrollReveal delay={0.2}>
             <div className="mb-8">
-              <h3 className="mb-3 text-sm font-medium text-muted-foreground">情绪</h3>
+              <h3 className="mb-3 text-sm font-medium text-muted-foreground">{t("filters.mood")}</h3>
               <div className="flex flex-wrap gap-2">
                 <Link
                   href={buildUrl(genre, undefined)}
@@ -159,7 +161,7 @@ export default async function ExplorePage({
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   )}
                 >
-                  全部
+                  {t("filters.all")}
                 </Link>
                 {moods.map((m) => (
                   <Link
@@ -196,8 +198,8 @@ export default async function ExplorePage({
           ) : (
             <ScrollReveal>
               <EmptyState
-                title="暂无歌曲"
-                description="当前筛选条件下没有找到歌曲，试试其他筛选条件吧"
+                title={t("empty.title")}
+                description={t("empty.description")}
               />
             </ScrollReveal>
           )}
