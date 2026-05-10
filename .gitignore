@@ -58,3 +58,4 @@ supabase-local/functions/**/.env
 .vercel
 .worktrees/
 recovery/
+.env*.local

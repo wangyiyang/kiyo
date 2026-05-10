@@ -279,6 +279,7 @@
     }
   },
   "showcase": {
+    "viewAll": "View all songs",
     "eyebrow": "Showcase preview",
     "heading": "Sample tracks crafted with Kiyo",
     "description": "From Synthwave to Cinematic, Lofi to Future Funk — genre is just the starting line.",
