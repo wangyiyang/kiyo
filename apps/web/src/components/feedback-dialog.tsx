@@ -142,7 +142,7 @@ export function FeedbackDialog() {
 								onClick={() => setOpen(false)}
 								disabled={pending}
 							>
-								取消
+								{t('actions.cancel')}
 							</Button>
 							<Button type="submit" disabled={pending}>
 								{pending ? t("submitting") : t("submit")}

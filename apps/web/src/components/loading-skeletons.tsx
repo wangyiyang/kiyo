@@ -1,10 +1,12 @@
 import { Skeleton } from '@kiyo/ui'
+import { useTranslations } from 'next-intl'
 
 export function GlobalPageSkeleton() {
+  const t = useTranslations('common')
   return (
     <main
       role="status"
-      aria-label="页面加载中"
+      aria-label={t('ariaLabels.pageLoading')}
       className="container mx-auto flex min-h-screen items-center justify-center px-4"
     >
       <section className="w-full max-w-3xl space-y-6">
@@ -22,9 +24,10 @@ export function GlobalPageSkeleton() {
 }
 
 export function SongsListSkeleton() {
+  const t = useTranslations('common')
   return (
     <main className="container mx-auto py-8">
-      <section role="status" aria-label="歌曲列表加载中">
+      <section role="status" aria-label={t('ariaLabels.songsLoading')}>
         <div className="mb-6 flex items-center justify-between gap-4">
           <Skeleton className="h-8 w-32" />
           <div className="flex items-center gap-3">
@@ -58,9 +61,10 @@ export function SongsListSkeleton() {
 }
 
 export function AlbumsListSkeleton() {
+  const t = useTranslations('common')
   return (
     <main className="container mx-auto py-8">
-      <section role="status" aria-label="专辑列表加载中">
+      <section role="status" aria-label={t('ariaLabels.albumsLoading')}>
         <div className="mb-6 flex items-center justify-between gap-4">
           <Skeleton className="h-8 w-32" />
           <div className="flex items-center gap-4">

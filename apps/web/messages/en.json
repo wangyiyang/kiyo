@@ -391,6 +391,24 @@
       "viewFull": "View full",
       "optional": "optional"
     },
+    "ariaLabels": {
+      "pageLoading": "Page loading",
+      "songsLoading": "Songs list loading",
+      "albumsLoading": "Albums list loading"
+    },
+    "noAudio": "No audio available",
+    "themeToggle": {
+      "switch": "Switch theme",
+      "toDark": "Switch to dark mode",
+      "toLight": "Switch to light mode"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "description": "Sorry, an unexpected error occurred. You can retry or return to the home page.",
+      "id": "Error ID: {digest}",
+      "retry": "Retry",
+      "backToHome": "Back to home"
+    },
     "states": {
       "saving": "Saving...",
       "loading": "Loading...",

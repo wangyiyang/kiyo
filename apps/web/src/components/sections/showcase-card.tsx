@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { Play, VolumeX } from 'lucide-react'
 import { usePlayerStore, cn } from '@kiyo/ui'
+import { useTranslations } from 'next-intl'
 
 interface Track {
   id: string
@@ -30,6 +31,7 @@ function formatDuration(seconds: number | null): string {
 
 export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardProps) {
   const play = usePlayerStore((s) => s.play)
+  const t = useTranslations('common')
 
   const handlePlay = () => {
     if (!track.audio_url) return
@@ -97,7 +99,7 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-1.5 text-xs font-medium text-white/80 backdrop-blur-sm">
             <VolumeX className="h-3.5 w-3.5" />
-            <span>暂无音频</span>
+            <span>{t('noAudio')}</span>
           </div>
         </div>
       )}
