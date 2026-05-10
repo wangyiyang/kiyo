@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Link } from '@/i18n/navigation'
 import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
-import { LogOut, Settings, Music, Disc, FileText } from 'lucide-react'
+import { LogOut, Settings, Music, Disc, FileText, MessageSquare } from 'lucide-react'
 
 import {
   Avatar,
@@ -84,6 +84,12 @@ export function UserMenu({ user }: UserMenuProps) {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/contact">
+            <MessageSquare className="mr-2 h-4 w-4" />
+            {t('userMenu.feedback')}
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/settings">
             <Settings className="mr-2 h-4 w-4" />
