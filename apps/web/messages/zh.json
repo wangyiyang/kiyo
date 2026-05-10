@@ -279,6 +279,7 @@
     }
   },
   "showcase": {
+    "viewAll": "查看全部歌曲",
     "eyebrow": "作品集预览",
     "heading": "创作者用 Kiyo 做出的样片",
     "description": "从 Synthwave 到 Cinematic，从 Lofi 到 Future Funk —— 流派只是起点。",
