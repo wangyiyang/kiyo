@@ -1,7 +1,7 @@
 import { MinimaxError } from './errors'
 
 const BASE_URL = process.env.MINIMAX_BASE_URL || 'https://api.minimaxi.com'
-const TIMEOUT_MS = Number(process.env.MINIMAX_TIMEOUT_MS || '30000')
+const TIMEOUT_MS = Number(process.env.MINIMAX_TIMEOUT_MS || '300000')
 const MAX_RETRIES = Number(process.env.MINIMAX_MAX_RETRIES || '3')
 
 function delay(ms: number): Promise<void> {
