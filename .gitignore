@@ -51,3 +51,4 @@ supabase-local/functions/**/.env
 .superpowers/
 .vercel
 .worktrees/
+recovery/

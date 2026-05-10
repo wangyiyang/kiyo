@@ -14,6 +14,7 @@ import { useTranslations } from 'next-intl'
 import { MobileNavSheet } from './mobile-nav-sheet'
 
 const navLinks = [
+  { href: '/explore', key: 'explore' },
   { href: '/songs', key: 'songs' },
   { href: '/albums', key: 'albums' },
   { href: '/lyrics', key: 'lyrics' },

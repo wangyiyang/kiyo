@@ -18,16 +18,16 @@ export async function generateImage(
     prompt: options.prompt,
     width: options.width,
     height: options.height,
-    model: options.model,
+    model: options.model || 'image-01',
   }
 
-  const response = await minimaxFetch('/v1/image/generation', {
+  const response = await minimaxFetch('/v1/image_generation', {
     method: 'POST',
     body: JSON.stringify(body),
   })
 
-  const data = response as { data?: { image_url?: string } }
-  const imageUrl = data.data?.image_url
+  const data = response as { data?: { image_urls?: string[] } }
+  const imageUrl = data.data?.image_urls?.[0]
 
   if (!imageUrl) {
     throw new Error('Invalid response from image generation API')
