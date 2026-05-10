@@ -391,6 +391,24 @@
       "viewFull": "查看完整",
       "optional": "可选"
     },
+    "ariaLabels": {
+      "pageLoading": "页面加载中",
+      "songsLoading": "歌曲列表加载中",
+      "albumsLoading": "专辑列表加载中"
+    },
+    "noAudio": "暂无音频",
+    "themeToggle": {
+      "switch": "切换主题",
+      "toDark": "切换到暗色主题",
+      "toLight": "切换到亮色主题"
+    },
+    "error": {
+      "title": "出错了",
+      "description": "抱歉，页面发生了意外错误。你可以重试或返回首页。",
+      "id": "错误 ID: {digest}",
+      "retry": "重试",
+      "backToHome": "返回首页"
+    },
     "states": {
       "saving": "保存中...",
       "loading": "加载中...",
