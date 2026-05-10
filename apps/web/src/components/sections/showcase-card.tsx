@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { Play, VolumeX } from 'lucide-react'
 import { usePlayerStore, cn } from '@kiyo/ui'
 
@@ -68,9 +69,11 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
       onClick={handlePlay}
     >
       {track.cover_url ? (
-        <img
+        <Image
           src={track.cover_url}
           alt={track.title}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
       ) : (
