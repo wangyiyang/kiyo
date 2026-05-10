@@ -53,10 +53,10 @@ async function downloadAndUploadCover(userId: string, targetId: string, imageUrl
   if (!res.ok) throw new Error(`Failed to download cover: ${res.status}`)
   const buffer = await res.arrayBuffer()
 
-  const filePath = `${userId}/${targetId}/${Date.now()}.png`
+  const filePath = `${userId}/${targetId}/${Date.now()}.jpg`
   const { error } = await supabase.storage
     .from('covers')
-    .upload(filePath, buffer, { contentType: 'image/png' })
+    .upload(filePath, buffer, { contentType: 'image/jpeg' })
 
   if (error) throw new Error(`Storage upload failed: ${error.message}`)
 
@@ -189,6 +189,12 @@ export async function uploadAudioFiles(
     const dbId = dbSongIds[song.trackId]
     if (!dbId) continue
 
+    // Skip if already uploaded (storagePath exists)
+    if (progress.songResults[song.trackId]?.storagePath) {
+      console.log(`[DB] ⏭️ Audio already uploaded for track ${song.trackId}`)
+      continue
+    }
+
     try {
       const publicUrl = await downloadAndUploadAudio(userId, dbId, song.audioUrl)
       const storagePath = publicUrl.replace(/^.*\/storage\/v1\/object\/public\/audio\//, '')
@@ -232,7 +238,11 @@ export async function writeAlbumSongs(
     return
   }
 
-  const { error } = await supabase.from('album_songs').insert(relations)
+  // Upsert to avoid duplicates on re-runs
+  const { error } = await supabase.from('album_songs').upsert(relations, {
+    onConflict: 'album_id,song_id',
+    ignoreDuplicates: true,
+  })
   if (error) throw new Error(`Album songs insert failed: ${error.message}`)
 
   console.log(`[DB] ✅ ${relations.length} album_songs relations written`)

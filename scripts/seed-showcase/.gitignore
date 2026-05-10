@@ -1,3 +1,5 @@
 .env
 seed-progress.json
 *.log
+local-audio/
+tmp-audio/

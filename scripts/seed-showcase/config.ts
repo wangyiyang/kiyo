@@ -4,7 +4,7 @@ export const CONFIG = {
   // Minimax API 限流（保守设置，避免触发 429）
   rateLimits: {
     lyrics: { rpm: 3, delayMs: 20000 },      // 3 req/min = 20s间隔
-    songs: { rpm: 3, delayMs: 20000 },       // 3 req/min
+    songs: { rpm: 5, delayMs: 10000 },       // 5 req/min, 10s间隔
     covers: { rpm: 5, delayMs: 12000 },      // 5 req/min = 12s间隔
   },
 
@@ -17,7 +17,7 @@ export const CONFIG = {
   // 批次大小
   batchSize: {
     lyrics: 3,
-    songs: 3,
+    songs: 5,
     covers: 5,
   },
 
@@ -40,7 +40,7 @@ export const CONFIG = {
   seedUserId: process.env.SEED_USER_ID,
 
   // 进度文件
-  progressFile: 'scripts/seed-showcase/seed-progress.json',
+  progressFile: 'seed-progress.json',
 }
 
 // 验证必填配置

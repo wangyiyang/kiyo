@@ -1,21 +1,27 @@
-import 'dotenv/config'
-import { generateAllPrompts } from './prompts'
-import { generateAllLyrics } from './generators/lyrics'
-import { generateAllSongs } from './generators/songs'
-import { generateAlbumCovers, generateSongCovers } from './generators/covers'
-import {
-  ensureSeedUser,
-  writeAlbums,
-  writeLyrics,
-  writeSongs,
-  uploadAudioFiles,
-  writeAlbumSongs,
-  uploadCoverFiles,
-} from './writers/database'
-import { loadProgress, saveProgress } from './utils/progress'
-import { CONFIG } from './config'
+import { config as dotenvConfig } from 'dotenv'
+import { resolve, dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+dotenvConfig({ path: resolve(__dirname, '.env') })
 
 async function main() {
+  const { generateAllPrompts } = await import('./prompts')
+  const { generateAllLyrics } = await import('./generators/lyrics')
+  const { generateAllSongs } = await import('./generators/songs')
+  const { generateAlbumCovers, generateSongCovers } = await import('./generators/covers')
+  const {
+    ensureSeedUser,
+    writeAlbums,
+    writeLyrics,
+    writeSongs,
+    uploadAudioFiles,
+    writeAlbumSongs,
+    uploadCoverFiles,
+  } = await import('./writers/database')
+  const { loadProgress, saveProgress } = await import('./utils/progress')
+  const { CONFIG } = await import('./config')
+
   console.log('🎵 Kiyo Showcase Seed Generator')
   console.log(`   Target: ${CONFIG.counts.totalSongs} songs, ${CONFIG.counts.totalAlbums} albums`)
   console.log('')
