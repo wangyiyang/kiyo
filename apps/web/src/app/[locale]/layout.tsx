@@ -4,6 +4,7 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { WaitlistDialog } from '@/components/waitlist-dialog'
+import { FeedbackDialog } from '@/components/feedback-dialog'
 import { GlobalPlayer } from '@/components/global-player'
 import { defaultLocale, locales, type Locale } from '@/i18n/config'
 
@@ -82,6 +83,7 @@ export default async function LocaleLayout({
       {children}
       <GlobalPlayer />
       <WaitlistDialog />
+      <FeedbackDialog />
     </NextIntlClientProvider>
   )
 }
