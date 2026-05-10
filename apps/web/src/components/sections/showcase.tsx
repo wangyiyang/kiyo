@@ -41,14 +41,20 @@ async function getFeaturedTracks(): Promise<FeaturedTrack[]> {
     .select('id, title, genre, mood, cover_url, audio_url, duration')
     .eq('is_featured', true)
     .order('created_at', { ascending: false })
-    .limit(6)
 
   if (error) {
     console.error('Failed to fetch featured tracks:', error)
     return []
   }
 
-  return (data as FeaturedTrack[]) ?? []
+  // Sort: songs with cover first, then by created_at desc
+  const sorted = (data as FeaturedTrack[])?.sort((a, b) => {
+    const aHasCover = a.cover_url ? 1 : 0
+    const bHasCover = b.cover_url ? 1 : 0
+    return bHasCover - aHasCover
+  }) ?? []
+
+  return sorted.slice(0, 6)
 }
 
 export async function Showcase() {

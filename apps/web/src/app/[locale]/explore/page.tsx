@@ -4,6 +4,8 @@ import { EmptyState, cn } from "@kiyo/ui"
 import { Link } from "@/i18n/navigation"
 import { ShowcaseCard } from "@/components/sections/showcase-card"
 import { ScrollReveal } from "@/components/scroll-reveal"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 
 export const metadata: Metadata = {
   title: "探索歌曲",
@@ -41,11 +43,10 @@ export default async function ExplorePage({
 
   const supabase = await createServerClient()
 
-  // Query 1: Get filtered featured songs
+  // Query 1: Get all songs (with optional filters)
   let query = supabase
     .from("songs")
     .select("id, title, genre, mood, cover_url, audio_url, duration")
-    .eq("is_featured", true)
 
   if (genre) {
     query = query.eq("genre", genre)
@@ -60,18 +61,24 @@ export default async function ExplorePage({
     console.error("Error fetching songs:", error)
   }
 
-  // Query 2: Get all genre and mood options from featured songs
-  const { data: allFeatured } = await supabase
+  // Sort: songs with cover first, then by created_at desc
+  const sortedSongs = (songs ?? []).sort((a: any, b: any) => {
+    const aHasCover = a.cover_url ? 1 : 0
+    const bHasCover = b.cover_url ? 1 : 0
+    return bHasCover - aHasCover
+  })
+
+  // Query 2: Get all genre and mood options from all songs
+  const { data: allSongs } = await supabase
     .from("songs")
     .select("genre, mood")
-    .eq("is_featured", true)
 
   const genres = Array.from(
-    new Set(allFeatured?.map((s) => s.genre).filter(Boolean) as string[])
+    new Set(allSongs?.map((s) => s.genre).filter(Boolean) as string[])
   ).sort()
 
   const moods = Array.from(
-    new Set(allFeatured?.map((s) => s.mood).filter(Boolean) as string[])
+    new Set(allSongs?.map((s) => s.mood).filter(Boolean) as string[])
   ).sort()
 
   const buildUrl = (g?: string, m?: string) => {
@@ -82,117 +89,121 @@ export default async function ExplorePage({
     return `/${locale}/explore${qs ? `?${qs}` : ""}`
   }
 
-  const tracks: FeaturedTrack[] = songs || []
+  const tracks: FeaturedTrack[] = sortedSongs
 
   return (
-    <main className="min-h-screen bg-background">
-      {/* Header */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 to-background pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          <ScrollReveal>
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              探索歌曲
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              发现 AI 生成的精选音乐作品
-            </p>
-          </ScrollReveal>
-        </div>
-      </section>
+    <div className="flex min-h-screen flex-col bg-background">
+      <SiteHeader />
+      <main className="flex-1">
+        {/* Header */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 to-background pt-24 pb-16">
+          <div className="container mx-auto px-4">
+            <ScrollReveal>
+              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+                探索歌曲
+              </h1>
+              <p className="mt-4 text-lg text-muted-foreground">
+                发现 AI 生成的精选音乐作品
+              </p>
+            </ScrollReveal>
+          </div>
+        </section>
 
-      {/* Filters */}
-      <section className="container mx-auto px-4 py-8">
-        {/* Genre filter */}
-        <ScrollReveal delay={0.1}>
-          <div className="mb-6">
-            <h3 className="mb-3 text-sm font-medium text-muted-foreground">风格</h3>
-            <div className="flex flex-wrap gap-2">
-              <Link
-                href={buildUrl(undefined, mood)}
-                className={cn(
-                  "inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                  !genre
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                )}
-              >
-                全部
-              </Link>
-              {genres.map((g) => (
+        {/* Filters */}
+        <section className="container mx-auto px-4 py-8">
+          {/* Genre filter */}
+          <ScrollReveal delay={0.1}>
+            <div className="mb-6">
+              <h3 className="mb-3 text-sm font-medium text-muted-foreground">风格</h3>
+              <div className="flex flex-wrap gap-2">
                 <Link
-                  key={g}
-                  href={buildUrl(g, mood)}
+                  href={buildUrl(undefined, mood)}
                   className={cn(
                     "inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                    genre === g
+                    !genre
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   )}
                 >
-                  {g}
+                  全部
                 </Link>
-              ))}
+                {genres.map((g) => (
+                  <Link
+                    key={g}
+                    href={buildUrl(g, mood)}
+                    className={cn(
+                      "inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                      genre === g
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                    )}
+                  >
+                    {g}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        </ScrollReveal>
+          </ScrollReveal>
 
-        {/* Mood filter */}
-        <ScrollReveal delay={0.2}>
-          <div className="mb-8">
-            <h3 className="mb-3 text-sm font-medium text-muted-foreground">情绪</h3>
-            <div className="flex flex-wrap gap-2">
-              <Link
-                href={buildUrl(genre, undefined)}
-                className={cn(
-                  "inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                  !mood
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                )}
-              >
-                全部
-              </Link>
-              {moods.map((m) => (
+          {/* Mood filter */}
+          <ScrollReveal delay={0.2}>
+            <div className="mb-8">
+              <h3 className="mb-3 text-sm font-medium text-muted-foreground">情绪</h3>
+              <div className="flex flex-wrap gap-2">
                 <Link
-                  key={m}
-                  href={buildUrl(genre, m)}
+                  href={buildUrl(genre, undefined)}
                   className={cn(
                     "inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                    mood === m
+                    !mood
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   )}
                 >
-                  {m}
+                  全部
                 </Link>
+                {moods.map((m) => (
+                  <Link
+                    key={m}
+                    href={buildUrl(genre, m)}
+                    className={cn(
+                      "inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                      mood === m
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                    )}
+                  >
+                    {m}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* Songs Grid */}
+          {tracks.length > 0 ? (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {tracks.map((track, index) => (
+                <ScrollReveal key={track.id} delay={(index % 3) * 0.08}>
+                  <ShowcaseCard
+                    track={track}
+                    index={index}
+                    playlist={tracks}
+                    gradient={trackGradients[index % trackGradients.length]}
+                  />
+                </ScrollReveal>
               ))}
             </div>
-          </div>
-        </ScrollReveal>
-
-        {/* Songs Grid */}
-        {tracks.length > 0 ? (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {tracks.map((track, index) => (
-              <ScrollReveal key={track.id} delay={(index % 3) * 0.08}>
-                <ShowcaseCard
-                  track={track}
-                  index={index}
-                  playlist={tracks}
-                  gradient={trackGradients[index % trackGradients.length]}
-                />
-              </ScrollReveal>
-            ))}
-          </div>
-        ) : (
-          <ScrollReveal>
-            <EmptyState
-              title="暂无歌曲"
-              description="当前筛选条件下没有找到歌曲，试试其他筛选条件吧"
-            />
-          </ScrollReveal>
-        )}
-      </section>
-    </main>
+          ) : (
+            <ScrollReveal>
+              <EmptyState
+                title="暂无歌曲"
+                description="当前筛选条件下没有找到歌曲，试试其他筛选条件吧"
+              />
+            </ScrollReveal>
+          )}
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
   )
 }

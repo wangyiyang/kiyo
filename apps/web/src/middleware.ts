@@ -19,11 +19,15 @@ export async function middleware(request: NextRequest) {
   // 这里手动处理 /en/* 和 /zh/* 子路径的 rewrite，避免 404。
   const localePathMatch = pathname.match(/^\/(en|zh)\/(.+)$/)
   if (localePathMatch) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/' + localePathMatch[2]
-    const response = NextResponse.rewrite(url)
-    response.headers.set('X-NEXT-INTL-LOCALE', localePathMatch[1])
-    return await updateSession(request, response)
+    const localeRoute = localePathMatch[2]
+    // explore 页面在 app/[locale]/ 下，不需要 rewrite
+    if (localeRoute !== 'explore') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/' + localeRoute
+      const response = NextResponse.rewrite(url)
+      response.headers.set('X-NEXT-INTL-LOCALE', localePathMatch[1])
+      return await updateSession(request, response)
+    }
   }
 
   // 其他路径（如 /songs、/en、/zh）由 next-intl 处理

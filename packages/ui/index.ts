@@ -65,6 +65,7 @@ export { Skeleton } from './src/components/ui/skeleton'
 export { SongCard } from './src/components/song-card'
 export { AudioPlayer, AudioEngine, MiniPlayer, PlayerControls, ProgressBar, VolumeControl, SpectrumVisualizer, PlaylistPanel } from './src/components/audio-player'
 export { usePlayerKeyboard } from './src/hooks/usePlayerKeyboard'
+export { usePlayerStore } from './src/store/usePlayerStore'
 export { SongStatusBadge } from './src/components/song-status-badge'
 
 export {
