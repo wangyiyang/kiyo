@@ -121,18 +121,13 @@ export default function ContactPage() {
 				</h2>
 				<div className="rounded-lg border bg-card p-6">
 					<Form {...form}>
-						<form
-							onSubmit={form.handleSubmit(onSubmit)}
-							className="space-y-5"
-						>
+						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
 							<FormField
 								control={form.control}
 								name="type"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>
-											{feedbackT("type.label")}
-										</FormLabel>
+										<FormLabel>{feedbackT("type.label")}</FormLabel>
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
@@ -140,21 +135,14 @@ export default function ContactPage() {
 											<FormControl>
 												<SelectTrigger>
 													<SelectValue
-														placeholder={feedbackT(
-															"type.placeholder"
-														)}
+														placeholder={feedbackT("type.placeholder")}
 													/>
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
 												{typeOptions.map((type) => (
-													<SelectItem
-														key={type}
-														value={type}
-													>
-														{feedbackT(
-															`type.options.${type}`
-														)}
+													<SelectItem key={type} value={type}>
+														{feedbackT(`type.options.${type}`)}
 													</SelectItem>
 												))}
 											</SelectContent>
@@ -169,14 +157,10 @@ export default function ContactPage() {
 								name="description"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>
-											{feedbackT("description.label")}
-										</FormLabel>
+										<FormLabel>{feedbackT("description.label")}</FormLabel>
 										<FormControl>
 											<Textarea
-												placeholder={feedbackT(
-													"description.placeholder"
-												)}
+												placeholder={feedbackT("description.placeholder")}
 												rows={4}
 												disabled={pending}
 												{...field}
@@ -192,14 +176,10 @@ export default function ContactPage() {
 								name="contact"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>
-											{feedbackT("contact.label")}
-										</FormLabel>
+										<FormLabel>{feedbackT("contact.label")}</FormLabel>
 										<FormControl>
 											<Input
-												placeholder={feedbackT(
-													"contact.placeholder"
-												)}
+												placeholder={feedbackT("contact.placeholder")}
 												disabled={pending}
 												{...field}
 											/>
@@ -211,9 +191,7 @@ export default function ContactPage() {
 
 							<div className="flex justify-end">
 								<Button type="submit" disabled={pending}>
-									{pending
-										? feedbackT("submitting")
-										: feedbackT("submit")}
+									{pending ? feedbackT("submitting") : feedbackT("submit")}
 								</Button>
 							</div>
 						</form>
@@ -223,9 +201,7 @@ export default function ContactPage() {
 
 			{/* FAQ */}
 			<div className="w-full">
-				<h2 className="mb-6 text-2xl font-bold">
-					{t("faq.title")}
-				</h2>
+				<h2 className="mb-6 text-2xl font-bold">{t("faq.title")}</h2>
 				<Accordion type="single" collapsible className="w-full">
 					{staticFaqs.map((faq, index) => (
 						<AccordionItem key={index} value={`item-${index}`}>

@@ -14,13 +14,13 @@
 
 ## 方案概述
 
-| 模块 | 方案 |
-|------|------|
+| 模块     | 方案                                             |
+| -------- | ------------------------------------------------ |
 | 反馈入口 | 双入口：Footer「联系我们」+ 用户菜单「反馈」弹窗 |
-| 反馈表单 | 类型（Bug/建议/其他）+ 描述 + 联系方式（可选） |
-| 数据存储 | Supabase `feedback` 表 |
-| FAQ | 静态内容 + 数据库字段预留 |
-| 联系邮箱 | `wangyiyang.kk@gmail.com` |
+| 反馈表单 | 类型（Bug/建议/其他）+ 描述 + 联系方式（可选）   |
+| 数据存储 | Supabase `feedback` 表                           |
+| FAQ      | 静态内容 + 数据库字段预留                        |
+| 联系邮箱 | `wangyiyang.kk@gmail.com`                        |
 
 ---
 
@@ -58,6 +58,7 @@ ALTER TABLE faq ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT true;
 **路由**: `/contact`
 
 **内容**:
+
 - 页面标题：「联系我们 / Contact Us」
 - 联系邮箱：`wangyiyang.kk@gmail.com`
 - 反馈表单（完整版）
@@ -70,6 +71,7 @@ ALTER TABLE faq ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT true;
 **触发**: 用户下拉菜单 → 「反馈」
 
 **内容**:
+
 - 反馈类型选择
 - 描述文本框
 - 联系方式（可选）
@@ -81,11 +83,11 @@ ALTER TABLE faq ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT true;
 
 ## 3. 反馈表单字段
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| type | select | 是 | Bug 报告 / 功能建议 / 其他 |
-| description | textarea | 是 | 问题描述，最少 10 字符 |
-| contact | input | 否 | 邮箱或其他联系方式 |
+| 字段        | 类型     | 必填 | 说明                       |
+| ----------- | -------- | ---- | -------------------------- |
+| type        | select   | 是   | Bug 报告 / 功能建议 / 其他 |
+| description | textarea | 是   | 问题描述，最少 10 字符     |
+| contact     | input    | 否   | 邮箱或其他联系方式         |
 
 ---
 
@@ -124,13 +126,13 @@ ALTER TABLE faq ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT true;
 
 ## 5. 组件清单
 
-| 组件 | 位置 | 说明 |
-|------|------|------|
-| `SiteFooter` | 已存在，修改 | 链接 group 添加「contact」入口 |
-| `FeedbackDialog` | `apps/web/src/components/` | 反馈弹窗组件 |
-| `ContactPage` | `apps/web/src/app/[locale]/contact/page.tsx` | 联系页面 |
-| `FeedbackForm` | `apps/web/src/components/` | 反馈表单，可复用 |
-| `FaqAccordion` | `apps/web/src/components/` | FAQ 手风琴组件 |
+| 组件             | 位置                                         | 说明                           |
+| ---------------- | -------------------------------------------- | ------------------------------ |
+| `SiteFooter`     | 已存在，修改                                 | 链接 group 添加「contact」入口 |
+| `FeedbackDialog` | `apps/web/src/components/`                   | 反馈弹窗组件                   |
+| `ContactPage`    | `apps/web/src/app/[locale]/contact/page.tsx` | 联系页面                       |
+| `FeedbackForm`   | `apps/web/src/components/`                   | 反馈表单，可复用               |
+| `FaqAccordion`   | `apps/web/src/components/`                   | FAQ 手风琴组件                 |
 
 ---
 
