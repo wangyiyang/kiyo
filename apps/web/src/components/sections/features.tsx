@@ -1,19 +1,20 @@
 'use client'
 
-import { Layers, Sparkles, Wand2, type LucideIcon } from 'lucide-react'
+import { Layers, Sparkles, Wand2, Mic2, type LucideIcon } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 import { Card, CardDescription, CardHeader, CardTitle } from '@kiyo/ui'
 
 import { ScrollReveal } from '../scroll-reveal'
 
-const featureKeys = ['multiModel', 'controllable', 'endToEnd'] as const
+const featureKeys = ['multiModel', 'controllable', 'endToEnd', 'aiCover'] as const
 type FeatureKey = (typeof featureKeys)[number]
 
 const featureIcons: Record<FeatureKey, LucideIcon> = {
   multiModel: Sparkles,
   controllable: Layers,
   endToEnd: Wand2,
+  aiCover: Mic2,
 }
 
 export function Features() {
@@ -32,7 +33,7 @@ export function Features() {
           <p className="mt-4 text-muted-foreground">{t('description')}</p>
         </ScrollReveal>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {featureKeys.map((key, idx) => {
             const Icon = featureIcons[key]
             return (
