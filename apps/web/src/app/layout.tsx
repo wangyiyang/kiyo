@@ -4,29 +4,58 @@ import type { Metadata, Viewport } from "next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 
 import { Toaster } from "@kiyo/ui";
 
-import { defaultLocale } from "@/i18n/config";
+import { defaultLocale, type Locale } from "@/i18n/config";
 
 import { Providers } from "./providers";
+import { WaitlistDialog } from "@/components/waitlist-dialog";
+import { FeedbackDialog } from "@/components/feedback-dialog";
+import { GlobalPlayer } from "@/components/global-player";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kiyo.ai";
 
-export const metadata: Metadata = {
-	metadataBase: new URL(siteUrl),
-	applicationName: "Kiyo",
-	openGraph: {
-		type: "website",
-		siteName: "Kiyo",
-		images: [{ url: "/og-default.png", width: 1200, height: 630 }],
-	},
-	twitter: {
-		card: "summary_large_image",
-		site: "@kiyo",
-	},
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations({ locale: defaultLocale, namespace: "metadata" });
+
+	const ogLocaleMap: Record<Locale, string> = {
+		en: "en_US",
+		zh: "zh_CN",
+	};
+
+	return {
+		metadataBase: new URL(siteUrl),
+		title: {
+			default: t("title"),
+			template: `%s · ${t("applicationName")}`,
+		},
+		description: t("description"),
+		applicationName: t("applicationName"),
+		openGraph: {
+			type: "website",
+			title: t("title"),
+			description: t("description"),
+			siteName: t("applicationName"),
+			locale: ogLocaleMap[defaultLocale] ?? "en_US",
+			images: [{ url: "/og-default.png", width: 1200, height: 630 }],
+		},
+		twitter: {
+			card: "summary_large_image",
+			site: "@kiyo",
+			title: t("title"),
+			description: t("description"),
+		},
+		alternates: {
+			canonical: "/",
+			languages: {
+				en: "/en",
+				zh: "/zh",
+			},
+		},
+	};
+}
 
 export const viewport: Viewport = {
 	themeColor: [
@@ -54,6 +83,9 @@ export default async function RootLayout({
 				<NextIntlClientProvider locale={defaultLocale} messages={messages}>
 					<Providers>
 						{children}
+						<GlobalPlayer />
+						<WaitlistDialog />
+						<FeedbackDialog />
 						<Toaster richColors closeButton position="top-center" />
 					</Providers>
 				</NextIntlClientProvider>

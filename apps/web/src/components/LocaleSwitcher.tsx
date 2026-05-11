@@ -1,7 +1,6 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
-import { useRouter, usePathname } from '@/i18n/navigation'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,12 +17,11 @@ const locales = [
 
 export function LocaleSwitcher() {
   const locale = useLocale()
-  const router = useRouter()
-  const pathname = usePathname()
   const t = useTranslations('localeSwitcher')
 
   const handleChange = (nextLocale: string) => {
-    router.replace(pathname, { locale: nextLocale })
+    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000`
+    window.location.reload()
   }
 
   const currentLabel = locales.find((l) => l.code === locale)?.label ?? locale

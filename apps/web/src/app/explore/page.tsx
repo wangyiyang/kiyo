@@ -33,14 +33,11 @@ const trackGradients = [
 ]
 
 export default async function ExplorePage({
-  params,
   searchParams,
 }: {
-  params: Promise<{ locale: string }>
   searchParams: Promise<{ genre?: string; mood?: string }>
 }) {
   const t = await getTranslations("explore")
-  const { locale } = await params
   const { genre, mood } = await searchParams
 
   const supabase = await createServerClient()
@@ -88,7 +85,7 @@ export default async function ExplorePage({
     if (g) sp.set("genre", g)
     if (m) sp.set("mood", m)
     const qs = sp.toString()
-    return `/${locale}/explore${qs ? `?${qs}` : ""}`
+    return `/explore${qs ? `?${qs}` : ""}`
   }
 
   const tracks: FeaturedTrack[] = sortedSongs

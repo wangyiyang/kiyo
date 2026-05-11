@@ -1,7 +1,6 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { AudioPlayer, EmptyState } from '@kiyo/ui'
 import { notFound, redirect } from 'next/navigation'
-import { getLocale } from '@/i18n/server'
 import { Link } from '@/i18n/navigation'
 import { DraggableSongList } from '../_components/DraggableSongList'
 import { CoverSection } from '@/components/CoverSection'
@@ -14,12 +13,11 @@ interface AlbumDetailPageProps {
 
 export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) {
   const { id } = await params
-  const locale = await getLocale()
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect(`/${locale}/login`)
+    redirect('/login')
   }
 
   const { data: album } = await supabase
@@ -47,7 +45,7 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center gap-4">
-        <Link href={`/${locale}/albums`} className="text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/albums" className="text-sm text-muted-foreground hover:text-foreground">
           ← {t('detail.back')}
         </Link>
       </div>

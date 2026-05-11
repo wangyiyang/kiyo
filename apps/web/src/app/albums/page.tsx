@@ -1,7 +1,6 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { EmptyState, AlbumCard } from '@kiyo/ui'
 import { redirect } from 'next/navigation'
-import { getLocale } from '@/i18n/server'
 import { Link } from '@/i18n/navigation'
 import { AlbumFormDialog } from './_components/AlbumFormDialog'
 import { DeleteConfirmDialog } from './_components/DeleteConfirmDialog'
@@ -12,10 +11,8 @@ export default async function AlbumsPage() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const locale = await getLocale()
-
   if (!user) {
-    redirect(`/${locale}/login`)
+    redirect('/login')
   }
 
   const { data: albums } = await supabase
@@ -48,7 +45,7 @@ export default async function AlbumsPage() {
         <h1 className="text-2xl font-bold">{t('list.title')}</h1>
         <div className="flex gap-4">
           <Link
-            href={`/${locale}/songs`}
+            href="/songs"
             className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
             {t('list.songLibrary')}
@@ -68,7 +65,7 @@ export default async function AlbumsPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {albums.map((album) => (
             <div key={album.id} className="relative group">
-              <Link href={`/${locale}/albums/${album.id}`}>
+              <Link href={`/albums/${album.id}`}>
                 <AlbumCard
                   title={album.title}
                   description={album.description}

@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { getTranslations, getLocale } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 import { CalendarDays } from 'lucide-react'
 
 import { Separator } from '@kiyo/ui'
@@ -30,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PrivacyPage() {
 	const t = await getTranslations('legal.privacy')
-	const locale = await getLocale()
+
 
 	return (
 		<div className="container mx-auto max-w-3xl px-4 py-12">
