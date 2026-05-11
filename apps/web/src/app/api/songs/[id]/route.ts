@@ -173,17 +173,18 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     )
   }
 
-  if (existing.audio_url) {
+  const storagePath = existing.file_path || (() => {
     try {
       const url = new URL(existing.audio_url)
       const pathParts = url.pathname.split('/')
-      const filePath = pathParts.slice(pathParts.indexOf('audio') + 1).join('/')
-      if (filePath) {
-        await supabase.storage.from('audio').remove([filePath])
-      }
+      return pathParts.slice(pathParts.indexOf('audio') + 1).join('/')
     } catch {
-      // Silently ignore URL parse errors
+      return null
     }
+  })()
+
+  if (storagePath) {
+    await supabase.storage.from('audio').remove([storagePath])
   }
 
   const { error } = await supabase

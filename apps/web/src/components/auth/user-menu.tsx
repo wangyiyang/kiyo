@@ -13,6 +13,8 @@ import {
 	MessageSquare,
 } from "lucide-react";
 
+import { useFeedback } from "@/lib/feedback-context";
+
 import {
 	Avatar,
 	AvatarFallback,
@@ -35,6 +37,7 @@ interface UserMenuProps {
 export function UserMenu({ user }: UserMenuProps) {
 	const t = useTranslations("auth");
 	const router = useRouter();
+	const { show: showFeedback } = useFeedback();
 	const supabase = React.useMemo(() => createBrowserClient(), []);
 
 	const handleLogout = async () => {
@@ -91,11 +94,9 @@ export function UserMenu({ user }: UserMenuProps) {
 					</Link>
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem asChild>
-					<Link href="/contact">
-						<MessageSquare className="mr-2 h-4 w-4" />
-						{t("userMenu.feedback")}
-					</Link>
+				<DropdownMenuItem onClick={showFeedback}>
+					<MessageSquare className="mr-2 h-4 w-4" />
+					{t("userMenu.feedback")}
 				</DropdownMenuItem>
 				<DropdownMenuItem asChild>
 					<Link href="/settings">

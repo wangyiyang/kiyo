@@ -145,6 +145,47 @@ describe('DELETE /api/songs/:id', () => {
     expect(mockClient.dataStore.songs).toHaveLength(0)
   })
 
+  it('removes storage file by file_path when available', async () => {
+    const { createServerClient } = await import('@kiyo/supabase/server')
+    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+    const removeMock = vi.fn().mockResolvedValue({ data: null, error: null })
+    mockClient.storage.from = vi.fn().mockReturnValue({ remove: removeMock })
+    mockClient.dataStore.songs = [
+      { id: 's1', title: 'Song 1', user_id: 'user-1', status: 'completed', file_path: 'audio/user-1/song1.mp3', audio_url: 'https://cdn.example.com/audio/old-path.mp3' },
+    ]
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+
+    const response = await DELETE(new Request('http://localhost'), { params: { id: 's1' } })
+    expect(response.status).toBe(200)
+    expect(removeMock).toHaveBeenCalledWith(['audio/user-1/song1.mp3'])
+  })
+
+  it('falls back to parsing audio_url when file_path is absent', async () => {
+    const { createServerClient } = await import('@kiyo/supabase/server')
+    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+    const removeMock = vi.fn().mockResolvedValue({ data: null, error: null })
+    mockClient.storage.from = vi.fn().mockReturnValue({ remove: removeMock })
+    mockClient.dataStore.songs = [
+      { id: 's1', title: 'Song 1', user_id: 'user-1', status: 'completed', file_path: null, audio_url: 'https://cdn.example.com/storage/v1/object/public/audio/user-1/song1.mp3' },
+    ]
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+
+    const response = await DELETE(new Request('http://localhost'), { params: { id: 's1' } })
+    expect(response.status).toBe(200)
+    expect(removeMock).toHaveBeenCalledWith(['user-1/song1.mp3'])
+  })
+
+  it('returns 404 for non-existent song', async () => {
+    const { createServerClient } = await import('@kiyo/supabase/server')
+    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+
+    const response = await DELETE(new Request('http://localhost'), { params: { id: 'not-found' } })
+    expect(response.status).toBe(404)
+    const json = await response.json()
+    expect(json.error.code).toBe('NOT_FOUND')
+  })
+
   it('returns 401 when not authenticated', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })

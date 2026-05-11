@@ -4,6 +4,7 @@ import * as React from 'react'
 import { ThemeProvider } from 'next-themes'
 
 import { WaitlistProvider } from '@/lib/waitlist-context'
+import { FeedbackProvider } from '@/lib/feedback-context'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +14,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <WaitlistProvider>{children}</WaitlistProvider>
+      <WaitlistProvider>
+        <FeedbackProvider>{children}</FeedbackProvider>
+      </WaitlistProvider>
     </ThemeProvider>
   )
 }

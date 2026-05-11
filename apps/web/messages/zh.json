@@ -479,6 +479,9 @@
     "detail": {
       "back": "返回列表",
       "edit": "编辑",
+      "delete": "删除",
+      "deleteConfirmTitle": "确认删除歌曲",
+      "deleteConfirmDescription": "确定要删除歌曲「{title}」吗？此操作不可撤销，歌曲文件将一并清理。",
       "aiCover": "AI 翻唱",
       "export": "导出音频",
       "audioPreview": "音频预览",
