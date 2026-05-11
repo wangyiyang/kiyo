@@ -1,9 +1,8 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { captureAppException } from '@/lib/monitoring'
-import { generateImage } from '@kiyo/ai'
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
-import { buildCoverPrompt, downloadImage, uploadToCovers } from '@/lib/cover'
+import { buildCoverPrompt } from '@/lib/cover'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createServerClient()
@@ -53,53 +52,66 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       return createRateLimitResponse(rateLimit)
     }
 
-    await supabase
+    // Set cover_status to generating immediately
+    const { error: statusError } = await supabase
       .from('albums')
       .update({ cover_status: 'generating' })
       .eq('id', albumId)
 
-    try {
-      const prompt = buildCoverPrompt('album', {
-        title: album.title,
-        description: album.description,
+    if (statusError) {
+      return NextResponse.json(
+        { error: { code: 'INTERNAL_ERROR', message: statusError.message } },
+        { status: 500 }
+      )
+    }
+
+    const prompt = buildCoverPrompt('album', {
+      title: album.title,
+      description: album.description,
+    })
+
+    // Create async generation task
+    const { data: task, error: taskError } = await supabase
+      .from('generation_tasks')
+      .insert({
+        user_id: user.id,
+        album_id: albumId,
+        type: 'album_cover',
+        status: 'pending',
+        max_retries: 3,
+        payload: {
+          prompt,
+          title: album.title,
+          description: album.description,
+        },
       })
-      const { imageUrl } = await generateImage({ prompt, width: 1024, height: 1024 })
+      .select()
+      .single()
 
-      const imageBuffer = await downloadImage(imageUrl)
-      const filePath = `${user.id}/${albumId}/${Date.now()}.png`
-      const publicUrl = await uploadToCovers(supabase, filePath, imageBuffer)
-
-      const { data: updatedAlbum, error: updateError } = await supabase
-        .from('albums')
-        .update({ cover_url: publicUrl, cover_status: 'completed' })
-        .eq('id', albumId)
-        .select()
-        .single()
-
-      if (updateError) throw updateError
-
-      return NextResponse.json({
-        coverUrl: publicUrl,
-        coverStatus: 'completed',
-        album: updatedAlbum,
-      })
-    } catch (error) {
-      captureAppException(error, {
-        tags: { area: 'albums', operation: 'cover' },
-      })
+    if (taskError || !task) {
+      // Rollback cover_status on task creation failure
       await supabase
         .from('albums')
         .update({ cover_status: 'failed' })
         .eq('id', albumId)
 
-      const errorMessage = error instanceof Error ? error.message : 'Cover generation failed'
-      const statusCode = errorMessage.includes('Minimax') || errorMessage.includes('generation') ? 422 : 500
+      captureAppException(taskError ?? new Error('Failed to create generation task'), {
+        tags: { area: 'albums', operation: 'cover' },
+      })
 
       return NextResponse.json(
-        { error: { code: statusCode === 422 ? 'GENERATION_FAILED' : 'INTERNAL_ERROR', message: errorMessage }, coverStatus: 'failed' },
-        { status: statusCode }
+        { error: { code: 'INTERNAL_ERROR', message: taskError?.message ?? 'Failed to create generation task' } },
+        { status: 500 }
       )
     }
+
+    return NextResponse.json(
+      { task, coverStatus: 'generating' },
+      {
+        status: 202,
+        headers: { 'Retry-After': '10' },
+      }
+    )
   }
 
   // action === 'upload'
@@ -131,11 +143,18 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const bytes = await file.arrayBuffer()
     const ext = file.type.split('/')[1] || 'png'
     const filePath = `${user.id}/${albumId}/${Date.now()}.${ext}`
-    const publicUrl = await uploadToCovers(supabase, filePath, bytes)
+
+    const { error: uploadError } = await supabase.storage
+      .from('covers')
+      .upload(filePath, bytes, { contentType: file.type })
+
+    if (uploadError) throw new Error(uploadError.message)
+
+    const { data: publicUrl } = supabase.storage.from('covers').getPublicUrl(filePath)
 
     const { data: updatedAlbum, error: updateError } = await supabase
       .from('albums')
-      .update({ cover_url: publicUrl, cover_status: 'completed' })
+      .update({ cover_url: publicUrl.publicUrl, cover_status: 'completed' })
       .eq('id', albumId)
       .select()
       .single()
@@ -143,7 +162,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     if (updateError) throw updateError
 
     return NextResponse.json({
-      coverUrl: publicUrl,
+      coverUrl: publicUrl.publicUrl,
       coverStatus: 'completed',
       album: updatedAlbum,
     })
