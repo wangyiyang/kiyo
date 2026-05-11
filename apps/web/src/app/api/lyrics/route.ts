@@ -106,7 +106,26 @@ export async function POST(request: Request) {
   return NextResponse.json({ lyric })
 }
 
-export async function GET() {
+const DEFAULT_PAGE = 1
+const DEFAULT_LIMIT = 20
+const MAX_LIMIT = 100
+
+function parsePaginationParams(request: Request): { page: number; limit: number } {
+  const url = new URL(request.url)
+  const rawPage = url.searchParams.get('page')
+  const rawLimit = url.searchParams.get('limit')
+
+  let page = parseInt(rawPage ?? '', 10)
+  let limit = parseInt(rawLimit ?? '', 10)
+
+  if (!Number.isFinite(page) || page < 1) page = DEFAULT_PAGE
+  if (!Number.isFinite(limit) || limit < 1) limit = DEFAULT_LIMIT
+  if (limit > MAX_LIMIT) limit = MAX_LIMIT
+
+  return { page, limit }
+}
+
+export async function GET(request: Request) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -117,11 +136,16 @@ export async function GET() {
     )
   }
 
+  const { page, limit } = parsePaginationParams(request)
+  const from = (page - 1) * limit
+  const to = page * limit - 1
+
   const { data: lyrics, error } = await supabase
     .from('lyrics')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
+    .range(from, to)
 
   if (error) {
     return NextResponse.json(
@@ -130,5 +154,27 @@ export async function GET() {
     )
   }
 
-  return NextResponse.json({ lyrics: lyrics ?? [] })
+  const { count: total, error: countError } = await supabase
+    .from('lyrics')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+
+  if (countError) {
+    return NextResponse.json(
+      { error: { code: 'INTERNAL_ERROR', message: countError.message } },
+      { status: 500 }
+    )
+  }
+
+  const totalCount = total ?? 0
+
+  return NextResponse.json({
+    lyrics: lyrics ?? [],
+    pagination: {
+      page,
+      limit,
+      total: totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+    },
+  })
 }
