@@ -110,11 +110,13 @@ describe('GET /api/albums', () => {
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
-    const response = await GET()
+    const request = new Request('http://localhost/api/albums')
+    const response = await GET(request)
     expect(response.status).toBe(200)
     const json = await response.json()
     expect(json.albums).toHaveLength(2)
     expect(json.albums[0].title).toBe('Album 1')
+    expect(json.pagination).toEqual({ page: 1, limit: 20, total: 2, totalPages: 1 })
   })
 
   it('returns 401 when not authenticated', async () => {
@@ -122,9 +124,30 @@ describe('GET /api/albums', () => {
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
-    const response = await GET()
+    const request = new Request('http://localhost/api/albums')
+    const response = await GET(request)
     expect(response.status).toBe(401)
     const json = await response.json()
     expect(json.error.code).toBe('UNAUTHORIZED')
+  })
+
+  it('respects page and limit params', async () => {
+    const { createServerClient } = await import('@kiyo/supabase/server')
+    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+    mockClient.dataStore.albums = Array.from({ length: 5 }, (_, i) => ({
+      id: `a${i + 1}`,
+      title: `Album ${i + 1}`,
+      user_id: 'user-1',
+      created_at: `2024-01-0${i + 1}T00:00:00Z`,
+    }))
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+
+    const request = new Request('http://localhost/api/albums?page=2&limit=2')
+    const response = await GET(request)
+    expect(response.status).toBe(200)
+    const json = await response.json()
+    expect(json.albums).toHaveLength(2)
+    expect(json.albums[0].title).toBe('Album 3')
+    expect(json.pagination).toEqual({ page: 2, limit: 2, total: 5, totalPages: 3 })
   })
 })

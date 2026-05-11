@@ -16,6 +16,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
   let currentOrder: { column: string; ascending: boolean } | null = null
   let currentSingle = false
   let currentLimit: number | null = null
+  let currentRange: { from: number; to: number } | null = null
 
   const reset = () => {
     currentTable = ''
@@ -24,6 +25,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     currentOrder = null
     currentSingle = false
     currentLimit = null
+    currentRange = null
   }
 
   const buildResult = () => {
@@ -39,6 +41,9 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     }
     if (currentLimit) {
       result = result.slice(0, currentLimit)
+    }
+    if (currentRange) {
+      result = result.slice(currentRange.from, currentRange.to + 1)
     }
     if (currentSingle) {
       result = result[0] ?? null
@@ -167,6 +172,10 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     },
     limit: (n: number) => {
       currentLimit = n
+      return chain
+    },
+    range: (from: number, to: number) => {
+      currentRange = { from, to }
       return chain
     },
     single: () => {
