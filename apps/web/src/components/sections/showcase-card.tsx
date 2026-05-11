@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Play, VolumeX } from 'lucide-react'
 import { usePlayerStore, cn } from '@kiyo/ui'
 import { useTranslations } from 'next-intl'
+import { useState, useEffect } from 'react'
 
 interface Track {
   id: string
@@ -11,7 +12,9 @@ interface Track {
   genre: string | null
   mood: string | null
   cover_url: string | null
+  cover_file_path: string | null
   audio_url: string | null
+  file_path: string | null
   duration: number | null
 }
 
@@ -29,20 +32,46 @@ function formatDuration(seconds: number | null): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
+async function getSignedCoverUrl(filePath: string | null): Promise<string | null> {
+  if (!filePath) return null
+  try {
+    const res = await fetch('/api/storage/sign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bucket: 'covers', path: filePath }),
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.signedUrl as string
+  } catch {
+    return null
+  }
+}
+
 export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardProps) {
   const play = usePlayerStore((s) => s.play)
   const t = useTranslations('common')
+  const [coverUrl, setCoverUrl] = useState<string | null>(track.cover_url)
+
+  useEffect(() => {
+    if (track.cover_file_path) {
+      getSignedCoverUrl(track.cover_file_path).then(setCoverUrl)
+    } else {
+      setCoverUrl(track.cover_url)
+    }
+  }, [track.cover_file_path, track.cover_url])
 
   const handlePlay = () => {
-    if (!track.audio_url) return
+    if (!track.audio_url && !track.file_path) return
 
     const playerPlaylist = playlist
-      .filter((t) => t.audio_url)
+      .filter((t) => t.audio_url || t.file_path)
       .map((t) => ({
         id: t.id,
         title: t.title,
-        audio_url: t.audio_url!,
+        audio_url: t.audio_url || '',
         cover_url: t.cover_url,
+        file_path: t.file_path,
         duration: t.duration,
         album: null,
       }))
@@ -51,8 +80,9 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
       {
         id: track.id,
         title: track.title,
-        audio_url: track.audio_url,
-        cover_url: track.cover_url,
+        audio_url: track.audio_url || '',
+        cover_url: coverUrl,
+        file_path: track.file_path,
         duration: track.duration,
         album: null,
       },
@@ -60,7 +90,7 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
     )
   }
 
-  const hasAudio = !!track.audio_url
+  const hasAudio = !!(track.audio_url || track.file_path)
 
   return (
     <article
@@ -70,9 +100,9 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
       )}
       onClick={handlePlay}
     >
-      {track.cover_url ? (
+      {coverUrl ? (
         <Image
-          src={track.cover_url}
+          src={coverUrl}
           alt={track.title}
           fill
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"

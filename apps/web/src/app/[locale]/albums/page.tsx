@@ -13,6 +13,7 @@ interface Album {
   title: string
   description: string | null
   cover_url: string | null
+  cover_file_path: string | null
   created_at: string
 }
 
@@ -112,6 +113,7 @@ export default function AlbumsPage() {
                     description={album.description}
                     songCount={songCounts[album.id] ?? 0}
                     coverUrl={album.cover_url}
+                    coverFilePath={album.cover_file_path}
                   />
                 </Link>
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">

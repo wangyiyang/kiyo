@@ -19,7 +19,9 @@ interface FeaturedTrack {
   genre: string | null
   mood: string | null
   cover_url: string | null
+  cover_file_path: string | null
   audio_url: string | null
+  file_path: string | null
   duration: number | null
 }
 
@@ -45,7 +47,7 @@ export default async function ExplorePage({
   // Query 1: Get all songs (with optional filters)
   let query = supabase
     .from("songs")
-    .select("id, title, genre, mood, cover_url, audio_url, duration")
+    .select("id, title, genre, mood, cover_url, cover_file_path, audio_url, file_path, duration")
 
   if (genre) {
     query = query.eq("genre", genre)
@@ -62,8 +64,8 @@ export default async function ExplorePage({
 
   // Sort: songs with cover first, then by created_at desc
   const sortedSongs = (songs ?? []).sort((a: any, b: any) => {
-    const aHasCover = a.cover_url ? 1 : 0
-    const bHasCover = b.cover_url ? 1 : 0
+    const aHasCover = (a.cover_url || a.cover_file_path) ? 1 : 0
+    const bHasCover = (b.cover_url || b.cover_file_path) ? 1 : 0
     return bHasCover - aHasCover
   })
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { usePlayerStore } from '../../store/usePlayerStore'
 import { cn } from '../../lib/utils'
@@ -13,15 +13,18 @@ import { PlaylistPanel } from './PlaylistPanel'
 
 export interface AudioPlayerProps {
   src: string
+  filePath?: string | null
   title?: string
   album?: string
   coverUrl?: string | null
+  coverFilePath?: string | null
   duration?: number | null
   songId?: string
   playlist?: Array<{
     id: string
     title: string
     audio_url: string
+    file_path?: string | null
     cover_url?: string | null
     duration?: number | null
     album?: string | null
@@ -31,9 +34,11 @@ export interface AudioPlayerProps {
 
 export function AudioPlayer({
   src,
+  filePath,
   title,
   album,
   coverUrl,
+  coverFilePath,
   duration,
   songId,
   playlist,
@@ -41,8 +46,24 @@ export function AudioPlayer({
 }: AudioPlayerProps) {
   const store = usePlayerStore()
   const [showPlaylist, setShowPlaylist] = useState(false)
+  const [resolvedCoverUrl, setResolvedCoverUrl] = useState<string | null>(coverUrl || null)
 
-  const isCurrentTrack = store.currentTrack?.audio_url === src
+  useEffect(() => {
+    if (coverFilePath) {
+      fetch('/api/storage/sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bucket: 'covers', path: coverFilePath }),
+      })
+        .then((res) => res.json())
+        .then((data) => setResolvedCoverUrl(data.signedUrl))
+        .catch(() => setResolvedCoverUrl(coverUrl || null))
+    } else {
+      setResolvedCoverUrl(coverUrl || null)
+    }
+  }, [coverFilePath, coverUrl])
+
+  const isCurrentTrack = store.currentTrack?.audio_url === src || (filePath ? store.currentTrack?.file_path === filePath : false)
   const isPlaying = isCurrentTrack && store.isPlaying
 
   const handlePlay = () => {
@@ -55,7 +76,8 @@ export function AudioPlayer({
       id: songId || src,
       title: title || '未知歌曲',
       audio_url: src,
-      cover_url: coverUrl,
+      file_path: filePath || undefined,
+      cover_url: resolvedCoverUrl,
       duration,
       album: album || undefined,
     }
@@ -64,6 +86,7 @@ export function AudioPlayer({
       id: s.id,
       title: s.title,
       audio_url: s.audio_url,
+      file_path: s.file_path || undefined,
       cover_url: s.cover_url,
       duration: s.duration,
       album: s.album || undefined,
@@ -82,9 +105,9 @@ export function AudioPlayer({
       {/* Header: Cover + Info */}
       <div className="mb-6 flex items-center gap-4">
         <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-white/5">
-          {coverUrl ? (
+          {resolvedCoverUrl ? (
             <Image
-            src={coverUrl}
+            src={resolvedCoverUrl}
             alt={title || '未知歌曲'}
             width={80}
             height={80}

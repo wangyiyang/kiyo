@@ -23,7 +23,7 @@ export default async function SongDetailPage({
 
   const { data: song } = await supabase
     .from('songs')
-    .select('*, lyrics(*), original_song:original_song_id(*)')
+    .select('*, cover_file_path, file_path, lyrics(*), original_song:original_song_id(*)')
     .eq('id', params.id)
     .eq('user_id', user.id)
     .single()
@@ -72,6 +72,7 @@ export default async function SongDetailPage({
         entityId={song.id}
         entityType="song"
         coverUrl={song.cover_url}
+        coverFilePath={song.cover_file_path}
         coverStatus={song.cover_status ?? 'none'}
         title={song.title}
         genre={song.genre}
@@ -105,7 +106,7 @@ export default async function SongDetailPage({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {song.status === 'completed' && song.audio_url && (
+          {song.status === 'completed' && (song.audio_url || song.file_path) && (
             <>
               <ExportDialog
                 songId={song.id}
@@ -131,14 +132,16 @@ export default async function SongDetailPage({
 
       <GenerationPanel songId={song.id} initialStatus={song.status} />
 
-      {song.status === 'completed' && song.audio_url && (
+      {song.status === 'completed' && (song.audio_url || song.file_path) && (
         <div className="mb-6">
           <h2 className="mb-2 text-sm font-medium">{t('audioPreview')}</h2>
           <AudioPlayer
-            src={song.audio_url}
+            src={song.audio_url || ''}
+            filePath={song.file_path}
             title={song.title}
             duration={song.duration}
             coverUrl={song.cover_url}
+            coverFilePath={song.cover_file_path}
             songId={song.id}
             className="w-full"
           />
@@ -160,9 +163,11 @@ export default async function SongDetailPage({
               <p className="mb-1 text-xs text-muted-foreground">{t('original')}</p>
               <AudioPlayer
                 src={(song.original_song as any)?.audio_url || ''}
+                filePath={(song.original_song as any)?.file_path}
                 title={(song.original_song as any)?.title || t('original')}
                 duration={(song.original_song as any)?.duration}
                 coverUrl={(song.original_song as any)?.cover_url}
+                coverFilePath={(song.original_song as any)?.cover_file_path}
                 songId={(song.original_song as any)?.id}
                 className="w-full"
               />
@@ -171,9 +176,11 @@ export default async function SongDetailPage({
               <p className="mb-1 text-xs text-muted-foreground">{t('cover')}</p>
               <AudioPlayer
                 src={song.audio_url || ''}
+                filePath={song.file_path}
                 title={song.title}
                 duration={song.duration}
                 coverUrl={song.cover_url}
+                coverFilePath={song.cover_file_path}
                 songId={song.id}
                 className="w-full"
               />

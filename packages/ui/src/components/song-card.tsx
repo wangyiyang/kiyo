@@ -2,6 +2,7 @@
 
 import NextLink from 'next/link'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import { SongStatusBadge } from './song-status-badge'
 import { Music2, Clock, Trash2, Mic2 } from 'lucide-react'
 
@@ -13,12 +14,29 @@ interface SongCardProps {
   duration?: number | null
   lyricTitle?: string | null
   coverUrl?: string | null
+  coverFilePath?: string | null
   href?: string
   onDelete?: (id: string) => void
   onCover?: (id: string) => void
 }
 
-export function SongCard({ id, title, status, statusLabel, duration, lyricTitle, coverUrl, href, onDelete, onCover }: SongCardProps) {
+export function SongCard({ id, title, status, statusLabel, duration, lyricTitle, coverUrl, coverFilePath, href, onDelete, onCover }: SongCardProps) {
+  const [resolvedCoverUrl, setResolvedCoverUrl] = useState<string | null>(coverUrl || null)
+
+  useEffect(() => {
+    if (coverFilePath) {
+      fetch('/api/storage/sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bucket: 'covers', path: coverFilePath }),
+      })
+        .then((res) => res.json())
+        .then((data) => setResolvedCoverUrl(data.signedUrl))
+        .catch(() => setResolvedCoverUrl(coverUrl || null))
+    } else {
+      setResolvedCoverUrl(coverUrl || null)
+    }
+  }, [coverFilePath, coverUrl])
   const formatDuration = (seconds?: number | null) => {
     if (!seconds) return null
     const mins = Math.floor(seconds / 60)
@@ -59,9 +77,9 @@ export function SongCard({ id, title, status, statusLabel, duration, lyricTitle,
           </div>
         )}
         <div className="mb-3 aspect-video overflow-hidden rounded-md bg-muted">
-          {coverUrl ? (
+          {resolvedCoverUrl ? (
             <Image
-              src={coverUrl}
+              src={resolvedCoverUrl}
               alt={title}
               fill
               className="object-cover transition-transform group-hover:scale-105"

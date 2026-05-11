@@ -11,7 +11,9 @@ interface FeaturedTrack {
 	genre: string | null;
 	mood: string | null;
 	cover_url: string | null;
+	cover_file_path: string | null;
 	audio_url: string | null;
+	file_path: string | null;
 	duration: number | null;
 }
 
@@ -39,7 +41,7 @@ async function getFeaturedTracks(): Promise<FeaturedTrack[]> {
 
 	const { data, error } = await supabase
 		.from("songs")
-		.select("id, title, genre, mood, cover_url, audio_url, duration")
+		.select("id, title, genre, mood, cover_url, cover_file_path, audio_url, file_path, duration")
 		.eq("is_featured", true)
 		.order("created_at", { ascending: false });
 

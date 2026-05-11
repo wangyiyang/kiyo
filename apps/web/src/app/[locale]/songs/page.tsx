@@ -13,6 +13,7 @@ interface Song {
   duration: number | null
   lyrics?: { title: string; id: string } | null
   cover_url: string | null
+  cover_file_path: string | null
 }
 
 interface Pagination {
@@ -130,6 +131,7 @@ export default function SongsPage() {
                 duration={song.duration}
                 lyricTitle={song.lyrics?.title ?? null}
                 coverUrl={song.cover_url}
+                coverFilePath={song.cover_file_path}
                 href={`/songs/${song.id}`}
                 onDelete={(id) => setDeleteDialog({ open: true, song: songs.find((s) => s.id === id) ?? null })}
                 onCover={(id) => router.push(`/songs/cover?original_song_id=${id}`)}
