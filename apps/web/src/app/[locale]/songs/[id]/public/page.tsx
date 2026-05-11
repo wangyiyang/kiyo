@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import { createServerClient } from '@kiyo/supabase/server'
 import { AudioPlayer, Button } from '@kiyo/ui'
 import { notFound } from 'next/navigation'
@@ -73,13 +74,13 @@ export default async function SongPublicPage({ params }: SongPublicPageProps) {
   }
 
   return (
-    <div className="container mx-auto max-w-3xl py-8">
+    <main className="container mx-auto max-w-3xl py-8">
       <div className="mb-6 flex items-center gap-4">
         <Link
           href="/explore"
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           {tCommon('actions.back')}
         </Link>
       </div>
@@ -88,7 +89,13 @@ export default async function SongPublicPage({ params }: SongPublicPageProps) {
       <div className="mb-6">
         <div className="relative aspect-square max-w-md rounded-lg bg-muted flex items-center justify-center overflow-hidden">
           {song.cover_url ? (
-            <img src={song.cover_url} alt={song.title} className="h-full w-full object-cover" />
+            <Image
+              src={song.cover_url}
+              alt={song.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 400px"
+            />
           ) : (
             <div className="h-24 w-24 rounded-full bg-primary/10" />
           )}
@@ -103,7 +110,7 @@ export default async function SongPublicPage({ params }: SongPublicPageProps) {
           {song.mood && <span>{song.mood}</span>}
           {song.duration && (
             <span className="flex items-center gap-1">
-              <Play className="h-3 w-3" />
+              <Play className="h-3 w-3" aria-hidden="true" />
               {formatDuration(song.duration)}
             </span>
           )}
@@ -128,9 +135,9 @@ export default async function SongPublicPage({ params }: SongPublicPageProps) {
             <div className="relative rounded-lg border bg-muted/30 p-8">
               <div className="flex flex-col items-center gap-3">
                 <p className="text-sm text-muted-foreground">{t('loginToPlay')}</p>
-                <Link href={`/login?redirect=/songs/${id}/public`}>
-                  <Button size="sm">{t('loginToPlay')}</Button>
-                </Link>
+                <Button asChild size="sm">
+                  <Link href={`/login?redirect=/songs/${id}/public`}>{t('loginToPlay')}</Link>
+                </Button>
               </div>
             </div>
           )}
@@ -151,10 +158,10 @@ export default async function SongPublicPage({ params }: SongPublicPageProps) {
 
       {/* CTA */}
       <div className="mt-8 flex justify-center">
-        <Link href="/explore">
-          <Button variant="outline">{t('playOnKiyo')}</Button>
-        </Link>
+        <Button asChild variant="outline">
+          <Link href="/explore">{t('playOnKiyo')}</Link>
+        </Button>
       </div>
-    </div>
+    </main>
   )
 }
