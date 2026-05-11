@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { Button, Skeleton } from '@kiyo/ui'
 import { Disc3, Music2, Upload } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -22,7 +23,39 @@ export function CoverSection({ entityId, entityType, coverUrl, coverStatus, titl
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
   const t = useTranslations(entityType === 'album' ? 'albums.cover' : 'songs.detail.cover')
+
+  // Poll for cover status changes when generating
+  const pollStatus = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/${entityType}s/${entityId}`)
+      if (!res.ok) return
+      const data = await res.json()
+
+      const entity = data[entityType]
+      if (!entity) return
+
+      if (entity.cover_status !== status) {
+        setStatus(entity.cover_status)
+        if (entity.cover_url) {
+          setUrl(entity.cover_url)
+        }
+        if (entity.cover_status !== 'generating') {
+          router.refresh()
+        }
+      }
+    } catch {
+      // silently ignore polling errors
+    }
+  }, [entityId, entityType, status, router])
+
+  useEffect(() => {
+    if (status !== 'generating') return
+
+    const interval = setInterval(pollStatus, 10000)
+    return () => clearInterval(interval)
+  }, [status, pollStatus])
 
   async function handleGenerate() {
     setLoading(true)
@@ -39,8 +72,17 @@ export function CoverSection({ entityId, entityType, coverUrl, coverStatus, titl
         throw new Error(data.error?.message || t('error'))
       }
 
-      setUrl(data.coverUrl)
-      setStatus('completed')
+      // Async mode: receive 202, start polling
+      if (res.status === 202) {
+        // Already set to generating above, polling will handle the rest
+        return
+      }
+
+      // Fallback for sync mode (should not happen after migration)
+      if (data.coverUrl) {
+        setUrl(data.coverUrl)
+        setStatus('completed')
+      }
     } catch (err) {
       setStatus('failed')
       setError(err instanceof Error ? err.message : t('error'))

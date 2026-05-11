@@ -10,10 +10,6 @@ vi.mock('@kiyo/supabase/server', async () => {
   }
 })
 
-vi.mock('@kiyo/ai', () => ({
-  generateImage: vi.fn(),
-}))
-
 beforeEach(() => {
   vi.resetAllMocks()
 })
@@ -70,7 +66,7 @@ describe('POST /api/songs/[id]/cover', () => {
     expect(json.error.code).toBe('FORBIDDEN')
   })
 
-  it('generates cover successfully (200)', async () => {
+  it('creates generation task and returns 202 for async generate', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
@@ -78,116 +74,29 @@ describe('POST /api/songs/[id]/cover', () => {
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
-    const { generateImage } = await import('@kiyo/ai')
-    vi.mocked(generateImage).mockResolvedValue({ imageUrl: 'https://minimax.example.com/image.png' })
-
-    const originalFetch = globalThis.fetch
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(8)),
-    } as any)
-
     const request = new Request('http://localhost/api/songs/s1/cover?action=generate', { method: 'POST' })
     const response = await POST(request, { params: Promise.resolve({ id: 's1' }) })
 
-    globalThis.fetch = originalFetch
-
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(202)
     const json = await response.json()
-    expect(json.coverStatus).toBe('completed')
-    expect(json.coverUrl).toContain('mock-cdn.supabase.co')
+    expect(json.coverStatus).toBe('generating')
+    expect(json.task).toBeDefined()
+    expect(json.task.type).toBe('cover')
+    expect(json.task.song_id).toBe('s1')
+    expect(json.task.status).toBe('pending')
 
+    // Verify song cover_status updated
     const song = mockClient.dataStore.songs.find((s: any) => s.id === 's1')
-    expect(song.cover_status).toBe('completed')
-    expect(song.cover_url).toBe(json.coverUrl)
-    expect(mockClient.uploadedFiles).toHaveLength(1)
-    expect(mockClient.uploadedFiles[0].path).toMatch(/^user-1\/s1\/\d+\.png$/)
-  })
+    expect(song.cover_status).toBe('generating')
 
-  it('returns 422 when Minimax generation fails', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    mockClient.dataStore.songs = [
-      { id: 's1', title: 'My Song', user_id: 'user-1', cover_status: 'none' },
-    ]
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const { generateImage } = await import('@kiyo/ai')
-    vi.mocked(generateImage).mockRejectedValue(new Error('Minimax generation error'))
-
-    const request = new Request('http://localhost/api/songs/s1/cover?action=generate', { method: 'POST' })
-    const response = await POST(request, { params: Promise.resolve({ id: 's1' }) })
-
-    expect(response.status).toBe(422)
-    const json = await response.json()
-    expect(json.coverStatus).toBe('failed')
-
-    const song = mockClient.dataStore.songs.find((s: any) => s.id === 's1')
-    expect(song.cover_status).toBe('failed')
-  })
-
-  it('returns 500 when image download fails', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    mockClient.dataStore.songs = [
-      { id: 's1', title: 'My Song', user_id: 'user-1', cover_status: 'none' },
-    ]
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const { generateImage } = await import('@kiyo/ai')
-    vi.mocked(generateImage).mockResolvedValue({ imageUrl: 'https://minimax.example.com/image.png' })
-
-    const originalFetch = globalThis.fetch
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 404,
-    } as any)
-
-    const request = new Request('http://localhost/api/songs/s1/cover?action=generate', { method: 'POST' })
-    const response = await POST(request, { params: Promise.resolve({ id: 's1' }) })
-
-    globalThis.fetch = originalFetch
-
-    expect(response.status).toBe(500)
-    const json = await response.json()
-    expect(json.coverStatus).toBe('failed')
-
-    const song = mockClient.dataStore.songs.find((s: any) => s.id === 's1')
-    expect(song.cover_status).toBe('failed')
-  })
-
-  it('returns 500 when Storage upload fails', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    mockClient.dataStore.songs = [
-      { id: 's1', title: 'My Song', user_id: 'user-1', cover_status: 'none' },
-    ]
-    mockClient.storage.from = vi.fn().mockReturnValue({
-      upload: vi.fn().mockResolvedValue({ data: null, error: { message: 'Storage error' } }),
-      getPublicUrl: vi.fn().mockReturnValue({ data: { publicUrl: '' } }),
-    })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const { generateImage } = await import('@kiyo/ai')
-    vi.mocked(generateImage).mockResolvedValue({ imageUrl: 'https://minimax.example.com/image.png' })
-
-    const originalFetch = globalThis.fetch
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(8)),
-    } as any)
-
-    const request = new Request('http://localhost/api/songs/s1/cover?action=generate', { method: 'POST' })
-    const response = await POST(request, { params: Promise.resolve({ id: 's1' }) })
-
-    globalThis.fetch = originalFetch
-
-    expect(response.status).toBe(500)
-    const json = await response.json()
-    expect(json.coverStatus).toBe('failed')
-
-    const song = mockClient.dataStore.songs.find((s: any) => s.id === 's1')
-    expect(song.cover_status).toBe('failed')
+    // Verify generation task created
+    expect(mockClient.dataStore.generation_tasks).toHaveLength(1)
+    const task = mockClient.dataStore.generation_tasks[0]
+    expect(task.type).toBe('cover')
+    expect(task.song_id).toBe('s1')
+    expect(task.user_id).toBe('user-1')
+    expect(task.payload.title).toBe('My Song')
+    expect(task.payload.genre).toBe('Pop')
   })
 
   it('uploads cover successfully (200)', async () => {
