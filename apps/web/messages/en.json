@@ -905,6 +905,16 @@
       }
     }
   },
+  "notification": {
+    "title": "Notifications",
+    "markAllAsRead": "Mark all as read",
+    "empty": "No notifications",
+    "generation": {
+      "started": "⏳ Started generating song \"{songTitle}\"",
+      "completed": "🎵 Your song \"{songTitle}\" is ready! Click to listen",
+      "failed": "❌ Song \"{songTitle}\" generation failed, please retry"
+    }
+  },
   "settings": {
     "title": "Settings",
     "emailSection": {
