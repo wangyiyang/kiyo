@@ -1,12 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
+
+import { renderWithIntl } from '@/test-utils/intl'
 
 import { ErrorBoundaryPage } from './error-boundary-page'
 
 describe('ErrorBoundaryPage', () => {
   it('renders friendly copy and digest without exposing raw message', () => {
-    render(
+    renderWithIntl(
       <ErrorBoundaryPage
         error={Object.assign(new Error('database password leaked'), {
           digest: 'abc123',
@@ -24,7 +26,7 @@ describe('ErrorBoundaryPage', () => {
   it('calls reset when retry is clicked', () => {
     const reset = vi.fn()
 
-    render(
+    renderWithIntl(
       <ErrorBoundaryPage
         error={new Error('render failed')}
         reset={reset}
@@ -38,7 +40,7 @@ describe('ErrorBoundaryPage', () => {
   })
 
   it('links back to the provided home href', () => {
-    render(
+    renderWithIntl(
       <ErrorBoundaryPage
         error={new Error('render failed')}
         reset={vi.fn()}

@@ -38,6 +38,7 @@ export function FeedbackDialog() {
 	const { open, setOpen } = useFeedback();
 	const [pending, startTransition] = React.useTransition();
 	const t = useTranslations("feedback");
+	const tCommon = useTranslations("common");
 
 	const form = useForm<FeedbackInput>({
 		resolver: zodResolver(feedbackSchema),
@@ -148,7 +149,7 @@ export function FeedbackDialog() {
 								onClick={() => handleOpenChange(false)}
 								disabled={pending}
 							>
-								{t('actions.cancel')}
+								{tCommon("actions.cancel")}
 							</Button>
 							<Button type="submit" disabled={pending}>
 								{pending ? t("submitting") : t("submit")}
