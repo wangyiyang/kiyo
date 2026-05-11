@@ -65,14 +65,14 @@ export default function LyricsPage() {
         <h1 className="text-2xl font-bold">{t('list.title')}</h1>
         <div className="flex gap-3">
           <Link
-            href={`/${locale}/lyrics/generate`}
+            href="/lyrics/generate"
             className="inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
             <Sparkles className="h-4 w-4" />
             {t('list.generate')}
           </Link>
           <Link
-            href={`/${locale}/lyrics/new`}
+            href="/lyrics/new"
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
@@ -87,7 +87,7 @@ export default function LyricsPage() {
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {lyrics.map((lyric) => (
-              <Link key={lyric.id} href={`/${locale}/lyrics/${lyric.id}`}>
+              <Link key={lyric.id} href={`/lyrics/${lyric.id}`}>
                 <div className="rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
                   <div className="mb-2 flex items-center gap-2">
                     <h3 className="font-semibold">{lyric.title}</h3>

@@ -1,14 +1,31 @@
-import { headers } from 'next/headers'
-import { defaultLocale } from './config'
+import { cookies, headers } from 'next/headers'
+import { defaultLocale, locales } from './config'
+
+const COOKIE_NAME = 'NEXT_LOCALE'
 
 export async function getLocale(): Promise<string> {
+  // 1. Check cookie first
+  const cookieStore = await cookies()
+  const cookieLocale = cookieStore.get(COOKIE_NAME)?.value
+  if (cookieLocale && locales.includes(cookieLocale as any)) {
+    return cookieLocale
+  }
+
+  // 2. Fall back to Accept-Language header
   const h = await headers()
-  return h.get('X-NEXT-INTL-LOCALE') || defaultLocale
+  const acceptLang = h.get('accept-language')
+  if (acceptLang) {
+    const preferred = acceptLang.split(',')[0]?.split('-')[0]
+    if (preferred && locales.includes(preferred as any)) {
+      return preferred
+    }
+  }
+
+  // 3. Default
+  return defaultLocale
 }
 
 export async function withLocale(href: string): Promise<string> {
-  if (!href.startsWith('/') || href.startsWith('/api')) return href
-  const locale = await getLocale()
-  if (href.startsWith(`/${locale}/`)) return href
-  return `/${locale}${href}`
+  // No locale prefix in URLs anymore
+  return href
 }

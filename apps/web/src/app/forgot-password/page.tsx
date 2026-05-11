@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { Link } from '@/i18n/navigation'
-import { getTranslations, getLocale } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 
 import {
   Card,
@@ -21,8 +21,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ForgotPasswordPage() {
-  const locale = await getLocale()
-
   return (
     <AuthGuard>
       <div className="container mx-auto flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
@@ -34,7 +32,7 @@ export default async function ForgotPasswordPage() {
         <CardContent>
           <ForgotPasswordForm />
           <p className="mt-4 text-center text-sm text-muted-foreground">
-            <Link href={`/${locale}/login`} className="font-medium text-foreground hover:underline">
+            <Link href="/login" className="font-medium text-foreground hover:underline">
               Back to log in
             </Link>
           </p>

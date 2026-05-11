@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { Link } from '@/i18n/navigation'
-import { getTranslations, getLocale } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 
 import {
   Card,
@@ -22,8 +22,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RegisterPage() {
-  const locale = await getLocale()
-
   return (
     <>
       <SiteHeader />
@@ -38,7 +36,7 @@ export default async function RegisterPage() {
               <RegisterForm />
               <p className="mt-4 text-center text-sm text-muted-foreground">
                 Already have an account?{' '}
-                <Link href={`/${locale}/login`} className="font-medium text-foreground hover:underline">
+                <Link href="/login" className="font-medium text-foreground hover:underline">
                   Log in
                 </Link>
               </p>

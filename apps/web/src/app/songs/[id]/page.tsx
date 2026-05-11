@@ -3,7 +3,6 @@ import { AudioPlayer, Button, SongStatusBadge } from '@kiyo/ui'
 import { ArrowLeft, Pencil, Play, Mic2 } from 'lucide-react'
 import { GenerationPanel } from './generation-panel'
 import { notFound, redirect } from 'next/navigation'
-import { getLocale } from '@/i18n/server'
 import { Link } from '@/i18n/navigation'
 import { ExportDialog } from './export-dialog'
 import { CoverSection } from '@/components/CoverSection'
@@ -14,12 +13,11 @@ export default async function SongDetailPage({
 }: {
   params: { id: string }
 }) {
-  const locale = await getLocale()
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect(`/${locale}/login`)
+    redirect('/login')
   }
 
   const { data: song } = await supabase
@@ -61,7 +59,7 @@ export default async function SongDetailPage({
     <div className="container mx-auto max-w-3xl py-8">
       <div className="mb-6 flex items-center gap-4">
         <Link
-          href={`/${locale}/songs`}
+          href="/songs"
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -112,7 +110,7 @@ export default async function SongDetailPage({
                 songId={song.id}
                 songTitle={song.title}
               />
-              <Link href={`/${locale}/songs/cover?original_song_id=${song.id}`}>
+              <Link href={`/songs/cover?original_song_id=${song.id}`}>
                 <Button variant="outline" size="sm">
                   <Mic2 className="mr-1 h-4 w-4" />
                   {t('aiCover')}
@@ -120,7 +118,7 @@ export default async function SongDetailPage({
               </Link>
             </>
           )}
-          <Link href={`/${locale}/songs/${song.id}/edit`}>
+          <Link href={`/songs/${song.id}/edit`}>
             <Button variant="outline" size="sm">
               <Pencil className="mr-1 h-4 w-4" />
               {t('edit')}
@@ -193,7 +191,7 @@ export default async function SongDetailPage({
         <div className="mb-6">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-sm font-medium">{t('lyrics')}</h2>
-            <Link href={`/${locale}/lyrics/${song.lyrics.id}`} className="text-xs text-primary hover:underline">
+            <Link href={`/lyrics/${song.lyrics.id}`} className="text-xs text-primary hover:underline">
               {t('viewFullLyrics')}
             </Link>
           </div>

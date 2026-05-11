@@ -3,7 +3,6 @@ import { Link } from '@/i18n/navigation'
 import { StructuredBlockEditor, textToBlocks, Button, SongStatusBadge } from '@kiyo/ui'
 import { Pencil, ArrowLeft } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
-import { getLocale } from '@/i18n/server'
 import { GenerateSongDialog } from './generate-song-dialog'
 import { getTranslations } from 'next-intl/server'
 
@@ -16,8 +15,7 @@ export default async function LyricDetailPage({
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    const locale = await getLocale()
-    redirect(`/${locale}/login`)
+    redirect('/login')
   }
 
   const { data: lyric } = await supabase
@@ -39,7 +37,6 @@ export default async function LyricDetailPage({
     .order('created_at', { ascending: false })
 
   const blocks = textToBlocks(lyric.content)
-  const locale = await getLocale()
   const t = await getTranslations('lyrics.detail')
   const tCommon = await getTranslations('common')
 
@@ -56,7 +53,7 @@ export default async function LyricDetailPage({
     <div className="container mx-auto max-w-3xl py-8">
       <div className="mb-6 flex items-center gap-4">
         <Link
-          href={`/${locale}/lyrics`}
+          href="/lyrics"
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -88,7 +85,7 @@ export default async function LyricDetailPage({
           lyricContent={lyric.content}
           lyricLanguage={lyric.language}
         />
-        <Link href={`/${locale}/lyrics/${lyric.id}/edit`}>
+        <Link href={`/lyrics/${lyric.id}/edit`}>
           <Button variant="outline" size="sm">
             <Pencil className="mr-1 h-4 w-4" />
             {t('edit')}
@@ -103,7 +100,7 @@ export default async function LyricDetailPage({
         {linkedSongs && linkedSongs.length > 0 ? (
           <div className="space-y-3">
             {linkedSongs.map((song) => (
-              <Link key={song.id} href={`/${locale}/songs/${song.id}`}>
+              <Link key={song.id} href={`/songs/${song.id}`}>
                 <div className="flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
                   <div className="flex items-center gap-3">
                     <span className="font-medium">{song.title}</span>
