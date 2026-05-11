@@ -1,5 +1,14 @@
 import '@testing-library/jest-dom/vitest'
 
+// Polyfill ResizeObserver for jsdom environment (Radix UI components need it)
+if (typeof window !== 'undefined' && !window.ResizeObserver) {
+  window.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+}
+
 // Polyfill Blob.prototype.arrayBuffer for jsdom environment
 if (typeof Blob !== 'undefined' && !Blob.prototype.arrayBuffer) {
   Blob.prototype.arrayBuffer = async function (): Promise<ArrayBuffer> {
