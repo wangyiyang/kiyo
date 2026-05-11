@@ -26,6 +26,27 @@ create policy "anon_read_public_album_songs"
     and song_id in (select id from songs where is_public = true)
   );
 
+-- 允许已登录用户读取公开歌曲
+create policy "authenticated_read_public_songs"
+  on songs for select
+  to authenticated
+  using (is_public = true);
+
+-- 允许已登录用户读取公开专辑
+create policy "authenticated_read_public_albums"
+  on albums for select
+  to authenticated
+  using (is_public = true);
+
+-- 允许已登录用户读取公开专辑中的公开歌曲关联
+create policy "authenticated_read_public_album_songs"
+  on album_songs for select
+  to authenticated
+  using (
+    album_id in (select id from albums where is_public = true)
+    and song_id in (select id from songs where is_public = true)
+  );
+
 -- 为公开状态查询添加索引
 create index idx_songs_is_public on songs(is_public);
 create index idx_albums_is_public on albums(is_public);
