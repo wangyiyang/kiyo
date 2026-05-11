@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { EmptyState, SongCard, Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@kiyo/ui'
-import { Link } from '@/i18n/navigation'
-import { Plus, Wand2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Link, useRouter } from '@/i18n/navigation'
+import { Plus, Wand2, Mic2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
 interface Song {
@@ -24,6 +24,7 @@ interface Pagination {
 
 export default function SongsPage() {
   const locale = useLocale()
+  const router = useRouter()
   const t = useTranslations('songs')
   const tCommon = useTranslations('common')
 
@@ -98,6 +99,13 @@ export default function SongsPage() {
             {t('list.generate')}
           </Link>
           <Link
+            href="/songs/cover"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+          >
+            <Mic2 className="h-4 w-4" />
+            {t('list.cover')}
+          </Link>
+          <Link
             href="/songs/new"
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
@@ -124,6 +132,7 @@ export default function SongsPage() {
                 coverUrl={song.cover_url}
                 href={`/songs/${song.id}`}
                 onDelete={(id) => setDeleteDialog({ open: true, song: songs.find((s) => s.id === id) ?? null })}
+                onCover={(id) => router.push(`/songs/cover?original_song_id=${id}`)}
               />
             ))}
           </div>
