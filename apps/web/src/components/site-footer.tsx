@@ -19,7 +19,7 @@ const groupLinks: Record<GroupKey, { href: string; key: string }[]> = {
 		{ href: "#", key: "changelog" },
 	],
 	about: [
-		{ href: "#", key: "team" },
+		{ href: "https://github.com/wangyiyang", key: "team" },
 		{ href: "/contact", key: "contact" },
 		{ href: "/privacy", key: "privacy" },
 	],
