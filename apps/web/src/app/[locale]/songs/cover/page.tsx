@@ -21,7 +21,7 @@ export default function CoverSongPage() {
 
   const [sourceMode, setSourceMode] = React.useState<SourceMode>(prefillSongId ? 'existing' : 'existing')
   const [selectedSongId, setSelectedSongId] = React.useState(prefillSongId || '')
-  const [songs, setSongs] = React.useState<{ id: string; title: string; audio_url: string | null }[]>([])
+  const [songs, setSongs] = React.useState<{ id: string; title: string; audio_url: string | null; file_path: string | null }[]>([])
   const [uploadedUrl, setUploadedUrl] = React.useState('')
   const [uploading, setUploading] = React.useState(false)
   const [selectedStyle, setSelectedStyle] = React.useState('')
@@ -45,9 +45,9 @@ export default function CoverSongPage() {
       if (!user) return
       supabase
         .from('songs')
-        .select('id, title, audio_url')
+        .select('id, title, audio_url, file_path')
         .eq('user_id', user.id)
-        .not('audio_url', 'is', null)
+        .or('audio_url.not.is.null,file_path.not.is.null')
         .order('created_at', { ascending: false })
         .then(({ data }) => {
           if (data) setSongs(data)
@@ -90,9 +90,30 @@ export default function CoverSongPage() {
   }
 
   const handleGenerate = async () => {
-    const audioUrl = sourceMode === 'existing'
-      ? songs.find((s) => s.id === selectedSongId)?.audio_url || ''
-      : uploadedUrl
+    let audioUrl = ''
+    if (sourceMode === 'existing') {
+      const song = songs.find((s) => s.id === selectedSongId)
+      if (song?.file_path) {
+        try {
+          const res = await fetch('/api/storage/sign', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bucket: 'audio', path: song.file_path }),
+          })
+          if (res.ok) {
+            const data = await res.json()
+            audioUrl = data.signedUrl
+          }
+        } catch {
+          // fallback below
+        }
+      }
+      if (!audioUrl && song?.audio_url) {
+        audioUrl = song.audio_url
+      }
+    } else {
+      audioUrl = uploadedUrl
+    }
 
     if (!audioUrl) {
       setError(sourceMode === 'existing' ? t('error.noAudio') : t('error.noUpload'))
