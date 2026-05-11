@@ -120,11 +120,12 @@ describe('POST /api/songs/[id]/cover', () => {
     expect(response.status).toBe(200)
     const json = await response.json()
     expect(json.coverStatus).toBe('completed')
-    expect(json.coverUrl).toContain('mock-cdn.supabase.co')
+    expect(json.coverFilePath).toBeDefined()
 
     const song = mockClient.dataStore.songs.find((s: any) => s.id === 's1')
     expect(song.cover_status).toBe('completed')
-    expect(song.cover_url).toBe(json.coverUrl)
+    expect(song.cover_file_path).toBe(json.coverFilePath)
+    expect(song.cover_url).toBeNull()
     expect(mockClient.uploadedFiles).toHaveLength(1)
   })
 

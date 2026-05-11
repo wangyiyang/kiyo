@@ -71,12 +71,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
       throw new Error(`Storage upload failed: ${uploadError.message}`)
     }
 
-    const { data: publicUrl } = supabase.storage.from('audio').getPublicUrl(filePath)
-
     const { data: updatedSong, error: updateError } = await supabase
       .from('songs')
       .update({
-        audio_url: publicUrl.publicUrl,
+        file_path: filePath,
+        audio_url: null,
         duration: result.duration,
         status: 'completed',
         source: 'ai_generated',
