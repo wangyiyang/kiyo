@@ -33,3 +33,30 @@ export async function GET(request: Request) {
 
   return NextResponse.json({ data, count })
 }
+
+export async function PATCH() {
+  const supabase = await createServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    return NextResponse.json(
+      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
+      { status: 401 }
+    )
+  }
+
+  const { error } = await supabase
+    .from('notifications')
+    .update({ is_read: true })
+    .eq('user_id', user.id)
+    .eq('is_read', false)
+
+  if (error) {
+    return NextResponse.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    )
+  }
+
+  return new Response(null, { status: 200 })
+}

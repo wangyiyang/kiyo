@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { GET } from './route'
+import { GET, PATCH } from './route'
 import { createMockSupabaseClient } from '@/lib/test-utils'
 
 vi.mock('@kiyo/supabase/server', async () => {
@@ -65,5 +65,35 @@ describe('GET /api/notifications', () => {
     expect(response.status).toBe(401)
     const json = await response.json()
     expect(json.error.code).toBe('UNAUTHORIZED')
+  })
+})
+
+describe('PATCH /api/notifications (read-all)', () => {
+  it('marks all unread notifications as read', async () => {
+    const { createServerClient } = await import('@kiyo/supabase/server')
+    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+    mockClient.dataStore.notifications = [
+      { id: 'n1', user_id: 'user-1', is_read: false },
+      { id: 'n2', user_id: 'user-1', is_read: false },
+      { id: 'n3', user_id: 'user-1', is_read: true },
+    ]
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+
+    const response = await PATCH(new Request('http://localhost/api/notifications', { method: 'PATCH' }))
+
+    expect(response.status).toBe(200)
+    expect(mockClient.dataStore.notifications[0].is_read).toBe(true)
+    expect(mockClient.dataStore.notifications[1].is_read).toBe(true)
+    expect(mockClient.dataStore.notifications[2].is_read).toBe(true)
+  })
+
+  it('returns 401 for unauthenticated user', async () => {
+    const { createServerClient } = await import('@kiyo/supabase/server')
+    const mockClient = createMockSupabaseClient({ userId: undefined })
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+
+    const response = await PATCH(new Request('http://localhost/api/notifications', { method: 'PATCH' }))
+
+    expect(response.status).toBe(401)
   })
 })
