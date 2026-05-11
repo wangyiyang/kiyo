@@ -248,6 +248,10 @@
       "endToEnd": {
         "title": "Spark to finished track",
         "description": "One workflow: drafts, collaborative edits, version history, cover and lyric management, export and release. No more juggling ten tools."
+      },
+      "aiCover": {
+        "title": "AI Cover",
+        "description": "Transform any song in one click — pop to jazz, rock to folk. Give your music infinite possibilities."
       }
     }
   },
@@ -454,7 +458,8 @@
     "list": {
       "title": "Songs",
       "new": "New Song",
-      "generate": "AI Compose"
+      "generate": "AI Compose",
+      "cover": "AI Cover"
     },
     "new": {
       "title": "New Song",

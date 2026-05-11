@@ -3,7 +3,7 @@
 import NextLink from 'next/link'
 import Image from 'next/image'
 import { SongStatusBadge } from './song-status-badge'
-import { Music2, Clock, Trash2 } from 'lucide-react'
+import { Music2, Clock, Trash2, Mic2 } from 'lucide-react'
 
 interface SongCardProps {
   id: string
@@ -15,9 +15,10 @@ interface SongCardProps {
   coverUrl?: string | null
   href?: string
   onDelete?: (id: string) => void
+  onCover?: (id: string) => void
 }
 
-export function SongCard({ id, title, status, statusLabel, duration, lyricTitle, coverUrl, href, onDelete }: SongCardProps) {
+export function SongCard({ id, title, status, statusLabel, duration, lyricTitle, coverUrl, href, onDelete, onCover }: SongCardProps) {
   const formatDuration = (seconds?: number | null) => {
     if (!seconds) return null
     const mins = Math.floor(seconds / 60)
@@ -27,18 +28,35 @@ export function SongCard({ id, title, status, statusLabel, duration, lyricTitle,
 
   const card = (
     <div className="group relative rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
-        {onDelete && (
-          <button
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onDelete(id)
-            }}
-            className="absolute right-2 top-2 z-10 rounded-full bg-background/80 p-1.5 text-muted-foreground opacity-0 shadow-sm transition-opacity hover:text-destructive group-hover:opacity-100"
-            aria-label="删除"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
+        {(onDelete || onCover) && (
+          <div className="absolute right-2 top-2 z-10 flex gap-1.5 opacity-0 transition-opacity group-hover:opacity-100">
+            {onCover && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  onCover(id)
+                }}
+                className="rounded-full bg-background/80 p-1.5 text-muted-foreground shadow-sm transition-colors hover:text-purple-600"
+                aria-label="翻唱"
+              >
+                <Mic2 className="h-4 w-4" />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  onDelete(id)
+                }}
+                className="rounded-full bg-background/80 p-1.5 text-muted-foreground shadow-sm transition-colors hover:text-destructive"
+                aria-label="删除"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         )}
         <div className="mb-3 aspect-video overflow-hidden rounded-md bg-muted">
           {coverUrl ? (
