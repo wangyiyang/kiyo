@@ -487,7 +487,15 @@
       "coverStyle": "Cover Style",
       "compareOriginal": "Compare Original",
       "original": "Original",
-      "cover": "Cover",
+      "cover": {
+        "generate": "Generate Cover",
+        "regenerate": "Regenerate",
+        "upload": "Upload Cover",
+        "replace": "Replace Cover",
+        "generating": "Generating...",
+        "retry": "Retry",
+        "error": "Generation failed, please retry"
+      },
       "aiPrompt": "Generation Prompt",
       "status": {
         "draft": {
@@ -508,15 +516,6 @@
         "ai_generated": "AI Generated",
         "ai_cover": "AI Cover",
         "manual": "Manual"
-      },
-      "cover": {
-        "generate": "Generate Cover",
-        "regenerate": "Regenerate",
-        "upload": "Upload Cover",
-        "replace": "Replace Cover",
-        "generating": "Generating...",
-        "retry": "Retry",
-        "error": "Generation failed, please retry"
       },
       "lyricRequired": "Need to link a lyric before generating music"
     },
@@ -894,6 +893,52 @@
         "contact": {
           "title": "Contact",
           "p1": "For questions about these Terms, please contact us at:"
+        }
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "emailSection": {
+      "title": "Update Email",
+      "description": "Change your login email address",
+      "newEmail": "New Email",
+      "currentPassword": "Current Password",
+      "currentPasswordIncorrect": "Current password is incorrect",
+      "submit": "Update Email",
+      "success": "Verification email sent to your new address"
+    },
+    "passwordSection": {
+      "title": "Change Password",
+      "description": "Update your account password",
+      "currentPassword": "Current Password",
+      "currentPasswordIncorrect": "Current password is incorrect",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "submit": "Change Password",
+      "success": "Password updated"
+    },
+    "dangerZone": {
+      "title": "Danger Zone",
+      "description": "These actions are irreversible. Please proceed with caution.",
+      "deleteAccount": {
+        "title": "Delete Account",
+        "description": "Permanently delete your account and all data",
+        "button": "Delete Account",
+        "dialog": {
+          "warnTitle": "Are you sure you want to delete your account?",
+          "warnDescription": "This will permanently delete your account and all data, including songs, albums, lyrics, and uploaded audio files. This action cannot be undone.",
+          "continue": "I understand the risk, continue",
+          "verifyTitle": "Verify Password",
+          "verifyDescription": "Please enter your current password to verify your identity",
+          "confirmTitle": "Confirm Deletion",
+          "confirmDescription": "Type DELETE to confirm permanent account deletion",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "Permanently Delete Account",
+          "deleting": "Deleting account...",
+          "success": "Account deleted successfully",
+          "noPassword": "You signed in with Magic Link. Please set a password first before deleting your account.",
+          "error": "Deletion failed. Please try again later or contact support."
         }
       }
     }
