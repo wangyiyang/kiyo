@@ -82,7 +82,7 @@ export default function LyricsPage() {
       </div>
 
       {loading ? (
-        <div className="text-muted-foreground">{tCommon('loading')}</div>
+        <div className="text-muted-foreground">{tCommon('states.loading')}</div>
       ) : lyrics.length > 0 ? (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

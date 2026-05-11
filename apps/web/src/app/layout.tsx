@@ -3,17 +3,13 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 import { Toaster } from "@kiyo/ui";
 
 import { defaultLocale, type Locale } from "@/i18n/config";
 
 import { Providers } from "./providers";
-import { WaitlistDialog } from "@/components/waitlist-dialog";
-import { FeedbackDialog } from "@/components/feedback-dialog";
-import { GlobalPlayer } from "@/components/global-player";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kiyo.ai";
 
@@ -49,10 +45,6 @@ export async function generateMetadata(): Promise<Metadata> {
 		},
 		alternates: {
 			canonical: "/",
-			languages: {
-				en: "/en",
-				zh: "/zh",
-			},
 		},
 	};
 }
@@ -71,8 +63,6 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const messages = await getMessages({ locale: defaultLocale });
-
 	return (
 		<html
 			lang={defaultLocale}
@@ -80,15 +70,10 @@ export default async function RootLayout({
 			className={`${GeistSans.variable} ${GeistMono.variable}`}
 		>
 			<body className="min-h-screen bg-background font-sans text-foreground antialiased">
-				<NextIntlClientProvider locale={defaultLocale} messages={messages}>
-					<Providers>
-						{children}
-						<GlobalPlayer />
-						<WaitlistDialog />
-						<FeedbackDialog />
-						<Toaster richColors closeButton position="top-center" />
-					</Providers>
-				</NextIntlClientProvider>
+				<Providers>
+					{children}
+					<Toaster richColors closeButton position="top-center" />
+				</Providers>
 			</body>
 		</html>
 	);

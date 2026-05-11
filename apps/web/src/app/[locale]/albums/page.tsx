@@ -100,7 +100,7 @@ export default function AlbumsPage() {
       </div>
 
       {loading ? (
-        <div className="text-muted-foreground">{tCommon('loading')}</div>
+        <div className="text-muted-foreground">{tCommon('states.loading')}</div>
       ) : albums.length > 0 ? (
         <>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
