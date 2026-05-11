@@ -55,6 +55,7 @@ declare
   v_title text;
 begin
   begin
+    -- album_cover tasks do not generate notifications (no standalone detail page)
     if new.type not in ('music', 'cover') then
       return new;
     end if;

@@ -34,7 +34,7 @@ export async function GET(request: Request) {
   return NextResponse.json({ data, count })
 }
 
-export async function PATCH() {
+export async function PATCH(_request?: Request) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
