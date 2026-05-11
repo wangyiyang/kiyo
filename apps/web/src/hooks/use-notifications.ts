@@ -84,8 +84,8 @@ export function useNotifications(userId: string | undefined) {
           prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
         )
         setUnreadCount((prev) => Math.max(0, prev - 1))
-      } catch {
-        // 静默失败
+      } catch (err) {
+        console.error('Failed to mark notification as read:', err)
       }
     },
     []
@@ -100,8 +100,8 @@ export function useNotifications(userId: string | undefined) {
 
       setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })))
       setUnreadCount(0)
-    } catch {
-      // 静默失败
+    } catch (err) {
+      console.error('Failed to mark all notifications as read:', err)
     }
   }, [])
 
