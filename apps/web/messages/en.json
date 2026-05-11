@@ -905,6 +905,19 @@
       }
     }
   },
+  "share": {
+    "button": "Share",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "copyFailed": "Failed to copy link",
+    "shareTwitter": "Share on X",
+    "twitterText": "Created with Kiyo",
+    "makingPublic": "Making public...",
+    "madePublic": "Made public and link copied!",
+    "makePublicFailed": "Failed to make public",
+    "loginToPlay": "Log in to Play",
+    "playOnKiyo": "View on Kiyo"
+  },
   "settings": {
     "title": "Settings",
     "emailSection": {

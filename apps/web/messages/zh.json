@@ -905,6 +905,19 @@
       }
     }
   },
+  "share": {
+    "button": "分享",
+    "copyLink": "复制链接",
+    "copied": "已复制！",
+    "copyFailed": "复制链接失败",
+    "shareTwitter": "分享到 X",
+    "twitterText": "使用 Kiyo 创作",
+    "makingPublic": "正在设为公开...",
+    "madePublic": "已设为公开并复制链接！",
+    "makePublicFailed": "设为公开失败",
+    "loginToPlay": "登录以播放",
+    "playOnKiyo": "在 Kiyo 上查看"
+  },
   "settings": {
     "title": "设置",
     "emailSection": {

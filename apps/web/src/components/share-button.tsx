@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import {
   Button,
   DropdownMenu,
@@ -10,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@kiyo/ui'
 import { Share2, Link2, Twitter } from 'lucide-react'
-import { toast } from 'sonner'
+import { toast } from '@kiyo/ui'
 
 interface ShareButtonProps {
   entityType: 'song' | 'album'
@@ -22,17 +23,19 @@ interface ShareButtonProps {
 
 export function ShareButton({ entityType, entityId, title, isPublic, locale }: ShareButtonProps) {
   const t = useTranslations('share')
-  const [copied, setCopied] = useState(false)
+  const router = useRouter()
   const [makingPublic, setMakingPublic] = useState(false)
 
   const publicUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/${locale}/${entityType}s/${entityId}/public`
 
   const handleCopy = async () => {
+    if (!navigator.clipboard) {
+      toast.error(t('copyFailed'))
+      return
+    }
     try {
       await navigator.clipboard.writeText(publicUrl)
-      setCopied(true)
       toast.success(t('copied'))
-      setTimeout(() => setCopied(false), 2000)
     } catch {
       toast.error(t('copyFailed'))
     }
@@ -42,7 +45,8 @@ export function ShareButton({ entityType, entityId, title, isPublic, locale }: S
     const text = encodeURIComponent(`${title} — ${t('twitterText')}`)
     window.open(
       `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(publicUrl)}`,
-      '_blank'
+      '_blank',
+      'noopener,noreferrer'
     )
   }
 
@@ -58,14 +62,24 @@ export function ShareButton({ entityType, entityId, title, isPublic, locale }: S
         const data = await res.json()
         throw new Error(data.error?.message || 'Failed')
       }
-      await navigator.clipboard.writeText(publicUrl)
-      toast.success(t('madePublic'))
-      window.location.reload()
     } catch {
       toast.error(t('makePublicFailed'))
-    } finally {
       setMakingPublic(false)
+      return
     }
+
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(publicUrl)
+        toast.success(t('madePublic'))
+      } catch {
+        toast.error(t('copyFailed'))
+      }
+    } else {
+      toast.success(t('madePublic'))
+    }
+
+    router.refresh()
   }
 
   if (!isPublic) {
@@ -88,7 +102,7 @@ export function ShareButton({ entityType, entityId, title, isPublic, locale }: S
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={handleCopy}>
           <Link2 className="mr-2 h-4 w-4" />
-          {copied ? t('copied') : t('copyLink')}
+          {t('copyLink')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleTwitter}>
           <Twitter className="mr-2 h-4 w-4" />
