@@ -1,1 +1,1 @@
-export { createServerClient } from './src/server'
+export { createServerClient, createServiceRoleClient } from './src/server'

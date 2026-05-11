@@ -490,7 +490,15 @@
       "coverStyle": "翻唱风格",
       "compareOriginal": "对比原曲",
       "original": "原曲",
-      "cover": "翻唱",
+      "cover": {
+        "generate": "生成封面",
+        "regenerate": "重新生成",
+        "upload": "上传封面",
+        "replace": "更换封面",
+        "generating": "生成中...",
+        "retry": "重试",
+        "error": "生成失败，请重试"
+      },
       "aiPrompt": "生成描述",
       "status": {
         "draft": {
@@ -511,15 +519,6 @@
         "ai_generated": "AI 生成",
         "ai_cover": "AI 翻唱",
         "manual": "手动创建"
-      },
-      "cover": {
-        "generate": "生成封面",
-        "regenerate": "重新生成",
-        "upload": "上传封面",
-        "replace": "更换封面",
-        "generating": "生成中...",
-        "retry": "重试",
-        "error": "生成失败，请重试"
       },
       "lyricRequired": "需要关联歌词后才能生成音乐"
     },
@@ -897,6 +896,52 @@
         "contact": {
           "title": "联系方式",
           "p1": "如对本条款有任何疑问，请通过以下方式联系我们："
+        }
+      }
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "emailSection": {
+      "title": "更新邮箱",
+      "description": "更改您的登录邮箱地址",
+      "newEmail": "新邮箱",
+      "currentPassword": "当前密码",
+      "currentPasswordIncorrect": "当前密码不正确",
+      "submit": "更新邮箱",
+      "success": "验证邮件已发送至新邮箱，请查收"
+    },
+    "passwordSection": {
+      "title": "修改密码",
+      "description": "更新您的账户密码",
+      "currentPassword": "当前密码",
+      "currentPasswordIncorrect": "当前密码不正确",
+      "newPassword": "新密码",
+      "confirmPassword": "确认新密码",
+      "submit": "修改密码",
+      "success": "密码已更新"
+    },
+    "dangerZone": {
+      "title": "危险区域",
+      "description": "这些操作不可逆，请谨慎操作",
+      "deleteAccount": {
+        "title": "删除账户",
+        "description": "永久删除您的账户及所有数据",
+        "button": "删除账户",
+        "dialog": {
+          "warnTitle": "您确定要删除账户吗？",
+          "warnDescription": "此操作将永久删除您的账户及所有数据，包括歌曲、专辑、歌词和上传的音频文件。此操作不可撤销。",
+          "continue": "我已了解风险，继续",
+          "verifyTitle": "验证密码",
+          "verifyDescription": "请输入当前密码以验证身份",
+          "confirmTitle": "确认删除",
+          "confirmDescription": "请输入 DELETE 以确认永久删除账户",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "永久删除账户",
+          "deleting": "正在删除账户...",
+          "success": "账户已成功删除",
+          "noPassword": "您使用 Magic Link 登录，请先设置密码后再删除账户",
+          "error": "删除失败，请稍后重试或联系支持"
         }
       }
     }

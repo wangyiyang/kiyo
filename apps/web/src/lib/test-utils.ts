@@ -196,9 +196,18 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
 
   const auth = {
     getUser: vi.fn().mockResolvedValue({
-      data: { user: options.userId ? { id: options.userId } : null },
+      data: { user: options.userId ? { id: options.userId, email: 'test@example.com' } : null },
       error: null,
     }),
+    signInWithPassword: vi.fn().mockImplementation(({ password }: { password: string }) => {
+      if (password === 'correct-password') {
+        return Promise.resolve({ data: { user: { id: options.userId } }, error: null })
+      }
+      return Promise.resolve({ data: { user: null }, error: { code: 'invalid_credentials', message: 'Invalid credentials' } })
+    }),
+    admin: {
+      deleteUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
+    },
   }
 
   const uploadedFiles: { path: string; buffer: ArrayBuffer; contentType?: string }[] = []
@@ -216,6 +225,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
         data: { signedUrl: 'https://mock-cdn.supabase.co/storage/v1/object/sign/audio/mock-file.mp3?token=mock-token' },
         error: null,
       }),
+      remove: vi.fn().mockResolvedValue({ data: null, error: null }),
     }),
   }
 
