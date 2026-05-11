@@ -5,14 +5,15 @@ import { Link } from '@/i18n/navigation'
 import { DraggableSongList } from '../_components/DraggableSongList'
 import { CoverSection } from '@/components/CoverSection'
 import { AddSongsDialog } from './_components/AddSongsDialog'
+import { ShareButton } from '@/components/share-button'
 import { getTranslations } from 'next-intl/server'
 
 interface AlbumDetailPageProps {
-  params: Promise<{ id: string }>
+  params: Promise<{ locale: string; id: string }>
 }
 
 export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) {
-  const { id } = await params
+  const { locale, id } = await params
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -70,6 +71,13 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
         <h2 className="text-lg font-semibold">{t('detail.songList')}</h2>
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">{t('detail.songCount', { count: songs.length })}</span>
+          <ShareButton
+            entityType="album"
+            entityId={id}
+            title={album.title}
+            isPublic={album.is_public ?? false}
+            locale={locale}
+          />
           <AddSongsDialog albumId={id} excludeIds={songs.map((s: any) => s.id)} />
         </div>
       </div>
