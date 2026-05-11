@@ -150,6 +150,16 @@ export async function POST(request: Request) {
     )
   }
 
+  // 同步创建"开始生成"通知
+  await supabase.from('notifications').insert({
+    user_id: user.id,
+    song_id: song.id,
+    type: 'generation',
+    subtype: 'started',
+    template_key: 'notification.generation.started',
+    template_params: { songTitle: song.title },
+  })
+
   return NextResponse.json(
     { song, task },
     {

@@ -49,6 +49,16 @@ describe('POST /api/songs/generate (async)', () => {
     expect(task).toBeDefined()
     expect(task.user_id).toBe('user-1')
     expect(task.song_id).toBe(json.song.id)
+
+    // 验证 started 通知已创建
+    const notification = mockClient.dataStore.notifications[0]
+    expect(notification).toBeDefined()
+    expect(notification.type).toBe('generation')
+    expect(notification.subtype).toBe('started')
+    expect(notification.template_key).toBe('notification.generation.started')
+    expect(notification.template_params.songTitle).toBe(json.song.title)
+    expect(notification.user_id).toBe('user-1')
+    expect(notification.song_id).toBe(json.song.id)
   })
 
   it('instrumental mode returns 202', async () => {
