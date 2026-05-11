@@ -16,6 +16,9 @@ const groupLinks: Record<GroupKey, { href: string; key: string }[]> = {
 	resources: [],
 	about: [
 		{ href: "https://github.com/wangyiyang", key: "team" },
+		{ href: "/contact", key: "contact" },
+		{ href: "/privacy", key: "privacy" },
+		{ href: "/terms", key: "terms" },
 	],
 };
 

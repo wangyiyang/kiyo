@@ -29,12 +29,13 @@ import {
 } from "@kiyo/ui";
 
 import { submitFeedback } from "@/app/actions/feedback";
+import { useFeedback } from "@/lib/feedback-context";
 import { feedbackSchema, type FeedbackInput } from "@/lib/schemas/feedback";
 
 const typeOptions = ["bug", "suggestion", "other"] as const;
 
 export function FeedbackDialog() {
-	const [open, setOpen] = React.useState(false);
+	const { open, setOpen } = useFeedback();
 	const [pending, startTransition] = React.useTransition();
 	const t = useTranslations("feedback");
 
@@ -43,6 +44,11 @@ export function FeedbackDialog() {
 		defaultValues: { type: undefined, description: "", contact: "" },
 		mode: "onSubmit",
 	});
+
+	const handleOpenChange = (next: boolean) => {
+		if (!next) form.reset();
+		setOpen(next);
+	};
 
 	const onSubmit = (values: FeedbackInput) => {
 		startTransition(async () => {
@@ -59,7 +65,7 @@ export function FeedbackDialog() {
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-2">
@@ -139,7 +145,7 @@ export function FeedbackDialog() {
 							<Button
 								type="button"
 								variant="ghost"
-								onClick={() => setOpen(false)}
+								onClick={() => handleOpenChange(false)}
 								disabled={pending}
 							>
 								{t('actions.cancel')}
