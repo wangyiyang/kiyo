@@ -152,11 +152,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
     if (uploadError) throw new Error(uploadError.message)
 
-    const { data: publicUrl } = supabase.storage.from('covers').getPublicUrl(filePath)
-
     const { data: updatedSong, error: updateError } = await supabase
       .from('songs')
-      .update({ cover_url: publicUrl.publicUrl, cover_status: 'completed' })
+      .update({ cover_file_path: filePath, cover_url: null, cover_status: 'completed' })
       .eq('id', songId)
       .select()
       .single()
@@ -164,7 +162,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     if (updateError) throw updateError
 
     return NextResponse.json({
-      coverUrl: publicUrl.publicUrl,
+      coverFilePath: filePath,
       coverStatus: 'completed',
       song: updatedSong,
     })
