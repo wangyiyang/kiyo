@@ -61,5 +61,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Fix turbo permissions
+        run: chmod +x node_modules/.pnpm/turbo*/node_modules/turbo/bin/turbo || true
+
       - name: ${{ matrix.name }}
         run: ${{ matrix.run }}
