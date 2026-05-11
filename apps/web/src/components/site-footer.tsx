@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { Github, Mail, Twitter } from "lucide-react";
+import { Github, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Separator } from "@kiyo/ui";
@@ -13,21 +13,14 @@ const groupLinks: Record<GroupKey, { href: string; key: string }[]> = {
 		{ href: "#how", key: "howItWorks" },
 		{ href: "#showcase", key: "showcase" },
 	],
-	resources: [
-		{ href: "#", key: "docs" },
-		{ href: "#", key: "roadmap" },
-		{ href: "#", key: "changelog" },
-	],
+	resources: [],
 	about: [
-		{ href: "#", key: "team" },
-		{ href: "/contact", key: "contact" },
-		{ href: "/privacy", key: "privacy" },
+		{ href: "https://github.com/wangyiyang", key: "team" },
 	],
 };
 
 const social = [
 	{ href: "https://github.com/wangyiyang/kiyo", icon: Github, label: "GitHub" },
-	{ href: "#", icon: Twitter, label: "Twitter" },
 	{ href: "mailto:hello@kiyo.ai", icon: Mail, label: "Email" },
 ];
 
