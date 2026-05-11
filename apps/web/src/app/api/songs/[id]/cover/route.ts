@@ -1,6 +1,7 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { captureAppException } from '@/lib/monitoring'
 import { generateImage } from '@kiyo/ai'
+import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 import { buildCoverPrompt, downloadImage, uploadToCovers } from '@/lib/cover'
 
@@ -46,6 +47,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
 
   if (action === 'generate') {
+    // Rate limiting for AI cover generation
+    const rateLimit = await checkRateLimit('image_generate', user.id, request)
+    if (!rateLimit.allowed) {
+      return createRateLimitResponse(rateLimit)
+    }
+
     await supabase
       .from('songs')
       .update({ cover_status: 'generating' })

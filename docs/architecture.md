@@ -2,6 +2,42 @@
 
 本文档描述 Kiyo 的核心业务功能架构，包括数据模型、业务流程、API 设计和安全策略。
 
+## 安全策略
+
+### 速率限制（Rate Limiting）
+
+为防止 AI 生成类 API 被恶意滥用，系统对所有昂贵的 AI 操作实施了滑动窗口速率限制。
+
+**覆盖范围**：仅 AI 生成类端点（歌词生成、歌曲生成、翻唱、封面生成、任务重试），普通 CRUD 操作不限流。
+
+**限流维度**：
+- 已登录用户：`user:{user_id}`
+- 未登录用户：`ip:{client_ip}`（从 `X-Forwarded-For` → `X-Real-IP` 提取）
+
+**默认阈值**（每小时）：
+
+| 动作 | 端点 | 限制 |
+|------|------|------|
+| 歌词生成 | `POST /api/lyrics/generate` | 10 次 |
+| 歌曲生成 | `POST /api/songs/generate`, `POST /api/songs/:id/generate` | 5 次 |
+| AI 翻唱 | `POST /api/songs/cover` | 5 次 |
+| 封面生成 | `POST /api/songs/:id/cover?action=generate`, `POST /api/albums/:id/cover?action=generate` | 10 次 |
+| 任务重试 | `POST /api/tasks/retry` | 10 次 |
+
+**实现方式**：基于 Supabase PostgreSQL 的滑动窗口计数器，表为 `rate_limits`。详见设计文档 `docs/superpowers/specs/2026-05-11-rate-limiting-design.md`。
+
+**429 响应示例**：
+```json
+{
+  "error": {
+    "code": "RATE_LIMITED",
+    "message": "Rate limit exceeded. Limit: 10 requests per hour. Please try again after 3600 seconds."
+  }
+}
+```
+
+响应头：`Retry-After`, `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`。
+
 ## 专辑管理（Album）
 
 用户可从自己的歌曲库中选择歌曲创建专辑，并支持 AI 生成专辑封面。

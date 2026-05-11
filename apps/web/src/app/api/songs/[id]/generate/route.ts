@@ -1,6 +1,7 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { captureAppException } from '@/lib/monitoring'
 import { generateMusic, MinimaxError } from '@kiyo/ai'
+import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
@@ -12,6 +13,12 @@ export async function POST(request: Request, { params }: { params: { id: string 
       { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
       { status: 401 }
     )
+  }
+
+  // Rate limiting
+  const rateLimit = await checkRateLimit('song_generate', user.id, request)
+  if (!rateLimit.allowed) {
+    return createRateLimitResponse(rateLimit)
   }
 
   const { data: song, error: songError } = await supabase

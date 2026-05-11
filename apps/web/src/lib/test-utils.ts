@@ -7,6 +7,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     album_songs: [],
     lyrics: [],
     generation_tasks: [],
+    rate_limits: [],
   }
 
   let currentTable = ''
@@ -15,6 +16,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
   let currentOrder: { column: string; ascending: boolean } | null = null
   let currentSingle = false
   let currentLimit: number | null = null
+  let currentRange: { from: number; to: number } | null = null
 
   const reset = () => {
     currentTable = ''
@@ -23,6 +25,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     currentOrder = null
     currentSingle = false
     currentLimit = null
+    currentRange = null
   }
 
   const buildResult = () => {
@@ -39,6 +42,9 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     if (currentLimit) {
       result = result.slice(0, currentLimit)
     }
+    if (currentRange) {
+      result = result.slice(currentRange.from, currentRange.to + 1)
+    }
     if (currentSingle) {
       result = result[0] ?? null
     }
@@ -53,6 +59,21 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
           eq: (column: string, value: any) => {
             currentFilters.push((item) => item[column] === value)
             return {
+              eq: (column2: string, value2: any) => {
+                currentFilters.push((item) => item[column2] === value2)
+                return {
+                  gte: (column3: string, value3: any) => {
+                    currentFilters.push((item) => item[column3] >= value3)
+                    return {
+                      then: async (resolve: any) => {
+                        const filtered = buildResult()
+                        reset()
+                        return resolve({ data: null, count: filtered.length, error: null })
+                      },
+                    }
+                  },
+                }
+              },
               then: async (resolve: any) => {
                 const filtered = buildResult()
                 reset()
@@ -116,17 +137,26 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
       }
     },
     delete: () => {
-      const before = dataStore[currentTable].length
-      dataStore[currentTable] = dataStore[currentTable].filter((item) => !currentFilters.every((f) => f(item)))
-      const deleted = before - dataStore[currentTable].length
-      return {
-        data: deleted > 0 ? { count: deleted } : null,
+      const deleteChain = {
+        data: null,
         error: null,
         eq: (column: string, value: any) => {
           currentFilters.push((item) => item[column] === value)
-          return chain
+          return deleteChain
+        },
+        lt: (column: string, value: any) => {
+          currentFilters.push((item) => item[column] < value)
+          return deleteChain
+        },
+        then: async (resolve: any) => {
+          const before = dataStore[currentTable].length
+          dataStore[currentTable] = dataStore[currentTable].filter((item) => !currentFilters.every((f) => f(item)))
+          const deleted = before - dataStore[currentTable].length
+          reset()
+          return resolve({ data: deleted > 0 ? { count: deleted } : null, error: null })
         },
       }
+      return deleteChain
     },
     eq: (column: string, value: any) => {
       currentFilters.push((item) => item[column] === value)
@@ -142,6 +172,10 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     },
     limit: (n: number) => {
       currentLimit = n
+      return chain
+    },
+    range: (from: number, to: number) => {
+      currentRange = { from, to }
       return chain
     },
     single: () => {

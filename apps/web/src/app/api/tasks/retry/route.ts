@@ -1,4 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
+import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -10,6 +11,12 @@ export async function POST(request: Request) {
       { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
       { status: 401 }
     )
+  }
+
+  // Rate limiting
+  const rateLimit = await checkRateLimit('task_retry', user.id, request)
+  if (!rateLimit.allowed) {
+    return createRateLimitResponse(rateLimit)
   }
 
   let body: Record<string, unknown>
