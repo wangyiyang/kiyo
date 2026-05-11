@@ -31,17 +31,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Upload dependencies artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-modules
-          path: |
-            node_modules
-            **/node_modules
-            .turbo
-          include-hidden-files: true
-          retention-days: 1
-
   checks:
     name: ${{ matrix.name }}
     needs: setup
@@ -69,12 +58,7 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Download dependencies
-        uses: actions/download-artifact@v4
-        with:
-          name: node-modules
-
-      - name: Restore permissions
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: ${{ matrix.name }}
