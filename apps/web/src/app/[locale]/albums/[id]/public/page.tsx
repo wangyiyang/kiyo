@@ -73,9 +73,10 @@ export default async function AlbumPublicPage({ params }: AlbumPublicPageProps) 
     .order('order_index', { ascending: true })
 
   const songs = (albumSongs ?? []).map((as: any) => as.songs).filter(Boolean)
+  const playableSongs = songs.filter((s: any) => s.status === 'completed' && (s.audio_url || s.file_path))
 
   const formatDuration = (seconds?: number | null) => {
-    if (!seconds) return '--:--'
+    if (seconds == null) return '--:--'
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins}:${secs.toString().padStart(2, '0')}`
@@ -119,18 +120,18 @@ export default async function AlbumPublicPage({ params }: AlbumPublicPageProps) 
       </div>
 
       {/* Album Player */}
-      {songs.length > 0 && (
+      {playableSongs.length > 0 && (
         <div className="mb-6">
           {user ? (
             <AudioPlayer
-              src={songs[0]?.audio_url || ''}
-              filePath={songs[0]?.file_path}
-              title={songs[0]?.title}
+              src={playableSongs[0]?.audio_url || ''}
+              filePath={playableSongs[0]?.file_path}
+              title={playableSongs[0]?.title}
               album={album.title}
               coverUrl={album.cover_url}
               coverFilePath={album.cover_file_path}
-              songId={songs[0]?.id}
-              playlist={songs.map((s: any) => ({
+              songId={playableSongs[0]?.id}
+              playlist={playableSongs.map((s: any) => ({
                 id: s.id,
                 title: s.title,
                 audio_url: s.audio_url || '',
