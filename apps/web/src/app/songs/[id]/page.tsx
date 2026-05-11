@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation'
 import { ExportDialog } from './export-dialog'
 import { CoverSection } from '@/components/CoverSection'
 import { getTranslations } from 'next-intl/server'
+import { DeleteButton } from './delete-button'
 
 export default async function SongDetailPage({
   params,
@@ -124,6 +125,7 @@ export default async function SongDetailPage({
               {t('edit')}
             </Button>
           </Link>
+          <DeleteButton songId={song.id} songTitle={song.title} />
         </div>
       </div>
 

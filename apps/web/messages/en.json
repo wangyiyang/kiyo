@@ -479,6 +479,9 @@
     "detail": {
       "back": "Back to list",
       "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Confirm Delete Song",
+      "deleteConfirmDescription": "Are you sure you want to delete \"{title}\"? This action cannot be undone, and the audio file will also be removed.",
       "aiCover": "AI Cover",
       "export": "Export Audio",
       "audioPreview": "Audio Preview",

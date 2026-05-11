@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { EmptyState, SongCard } from '@kiyo/ui'
+import { EmptyState, SongCard, Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@kiyo/ui'
 import { Link } from '@/i18n/navigation'
 import { Plus, Wand2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
@@ -30,6 +30,8 @@ export default function SongsPage() {
   const [songs, setSongs] = useState<Song[]>([])
   const [pagination, setPagination] = useState<Pagination>({ page: 1, limit: 20, total: 0, totalPages: 0 })
   const [loading, setLoading] = useState(true)
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; song: Song | null }>({ open: false, song: null })
+  const [deleting, setDeleting] = useState(false)
 
   const page = pagination.page
 
@@ -62,6 +64,25 @@ export default function SongsPage() {
     generating: tCommon('states.generating'),
     completed: t('detail.source.manual'),
     failed: tCommon('errors.unknown'),
+  }
+
+  const handleDelete = async () => {
+    if (!deleteDialog.song) return
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/songs/${deleteDialog.song.id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setDeleteDialog({ open: false, song: null })
+        fetchSongs()
+      } else {
+        const data = await res.json().catch(() => ({}))
+        alert(data.error?.message || tCommon('errors.unknown'))
+      }
+    } catch {
+      alert(tCommon('errors.unknown'))
+    } finally {
+      setDeleting(false)
+    }
   }
 
   return (
@@ -102,9 +123,29 @@ export default function SongsPage() {
                 lyricTitle={song.lyrics?.title ?? null}
                 coverUrl={song.cover_url}
                 href={`/songs/${song.id}`}
+                onDelete={(id) => setDeleteDialog({ open: true, song: songs.find((s) => s.id === id) ?? null })}
               />
             ))}
           </div>
+
+          <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, song: open ? deleteDialog.song : null })}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{t('detail.deleteConfirmTitle')}</DialogTitle>
+                <DialogDescription>
+                  {deleteDialog.song && t('detail.deleteConfirmDescription', { title: deleteDialog.song.title })}
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setDeleteDialog({ open: false, song: null })} disabled={deleting}>
+                  {tCommon('actions.cancel')}
+                </Button>
+                <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+                  {deleting ? tCommon('states.deleting') : t('detail.delete')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           {pagination.totalPages > 1 && (
             <div className="mt-6 flex items-center justify-center gap-2">
               <button
