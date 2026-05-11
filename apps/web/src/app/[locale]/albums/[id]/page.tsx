@@ -22,7 +22,7 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
 
   const { data: album } = await supabase
     .from('albums')
-    .select('*')
+    .select('*, cover_file_path')
     .eq('id', id)
     .eq('user_id', user.id)
     .single()
@@ -33,7 +33,7 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
 
   const { data: albumSongs } = await supabase
     .from('album_songs')
-    .select('*, songs(*)')
+    .select('*, songs(id, title, audio_url, file_path, cover_url, cover_file_path, duration)')
     .eq('album_id', id)
     .order('order_index', { ascending: true })
 
@@ -54,6 +54,7 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
         entityId={id}
         entityType="album"
         coverUrl={album.cover_url}
+        coverFilePath={album.cover_file_path}
         coverStatus={album.cover_status}
         title={album.title}
       />
@@ -78,14 +79,17 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
           <div className="mb-6">
             <AudioPlayer
               src={songs[0]?.audio_url || ''}
+              filePath={songs[0]?.file_path}
               title={songs[0]?.title}
               album={album.title}
               coverUrl={album.cover_url}
+              coverFilePath={album.cover_file_path}
               songId={songs[0]?.id}
               playlist={songs.map((s: any) => ({
                 id: s.id,
                 title: s.title,
                 audio_url: s.audio_url || '',
+                file_path: s.file_path,
                 cover_url: s.cover_url,
                 duration: s.duration,
                 album: album.title,

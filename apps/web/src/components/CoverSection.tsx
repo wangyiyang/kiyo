@@ -11,17 +11,33 @@ interface CoverSectionProps {
   entityId: string
   entityType: 'album' | 'song'
   coverUrl: string | null
+  coverFilePath?: string | null
   coverStatus: string
   title: string
   genre?: string | null
   mood?: string | null
 }
 
-export function CoverSection({ entityId, entityType, coverUrl, coverStatus, title }: CoverSectionProps) {
+export function CoverSection({ entityId, entityType, coverUrl, coverFilePath, coverStatus, title }: CoverSectionProps) {
   const [status, setStatus] = useState(coverStatus)
   const [url, setUrl] = useState(coverUrl)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (coverFilePath) {
+      fetch('/api/storage/sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bucket: 'covers', path: coverFilePath }),
+      })
+        .then((res) => res.json())
+        .then((data) => setUrl(data.signedUrl))
+        .catch(() => setUrl(coverUrl))
+    } else {
+      setUrl(coverUrl)
+    }
+  }, [coverFilePath, coverUrl])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
   const t = useTranslations(entityType === 'album' ? 'albums.cover' : 'songs.detail.cover')
@@ -38,7 +54,9 @@ export function CoverSection({ entityId, entityType, coverUrl, coverStatus, titl
 
       if (entity.cover_status !== status) {
         setStatus(entity.cover_status)
-        if (entity.cover_url) {
+        if (entity.cover_file_path) {
+          setUrl(entity.cover_file_path)
+        } else if (entity.cover_url) {
           setUrl(entity.cover_url)
         }
         if (entity.cover_status !== 'generating') {
@@ -110,7 +128,7 @@ export function CoverSection({ entityId, entityType, coverUrl, coverStatus, titl
         throw new Error(data.error?.message || t('error'))
       }
 
-      setUrl(data.coverUrl)
+      setUrl(data.coverFilePath || data.coverUrl)
       setStatus('completed')
     } catch (err) {
       setStatus('failed')

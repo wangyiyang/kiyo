@@ -7,6 +7,7 @@ export interface PlayerSong {
   title: string
   audio_url: string
   cover_url?: string | null
+  file_path?: string | null
   duration?: number | null
   album?: string | null
 }
