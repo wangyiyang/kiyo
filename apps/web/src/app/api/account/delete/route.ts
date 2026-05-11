@@ -63,10 +63,8 @@ export async function POST(request: Request) {
   // 收集 Storage 路径
   const serviceClient = createServiceRoleClient()
 
-  const [songsResult, albumsResult] = await Promise.all([
-    serviceClient.from('songs').select('file_path, cover_url').eq('user_id', user.id),
-    serviceClient.from('albums').select('cover_url').eq('user_id', user.id),
-  ])
+  const songsResult = await serviceClient.from('songs').select('file_path, cover_url').eq('user_id', user.id)
+  const albumsResult = await serviceClient.from('albums').select('cover_url').eq('user_id', user.id)
 
   const storagePaths: { bucket: string; path: string }[] = []
 
