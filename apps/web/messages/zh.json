@@ -348,18 +348,45 @@
   "waitlist": {
     "title": "加入 Kiyo Waitlist",
     "description": "留下邮箱，上线第一时间告诉你。",
+    "inline": {
+      "expand": "展开更多，帮助我们了解你的需求",
+      "collapse": "收起",
+      "thanks": "已加入！感谢你的支持，上线时我们会第一时间通知你。"
+    },
     "fields": {
       "email": {
         "label": "邮箱",
         "placeholder": "you@example.com"
       },
       "role": {
-        "label": "你是…（选填）",
+        "label": "你在音乐创作中的角色（可选）",
         "options": {
-          "producer": "制作人",
-          "songwriter": "词曲创作",
+          "beginner": "音乐初学者",
           "enthusiast": "音乐爱好者",
-          "other": "其它"
+          "indie": "独立制作人",
+          "professional": "专业音乐人",
+          "songwriter": "词曲作者",
+          "other": "其他"
+        }
+      },
+      "interests": {
+        "label": "感兴趣的功能（可多选）",
+        "options": {
+          "composition": "AI 作曲",
+          "arrangement": "AI 编曲",
+          "vocal": "人声合成",
+          "mixing": "混音母带",
+          "cover": "AI 翻唱",
+          "lyrics": "智能歌词创作"
+        }
+      },
+      "useScenes": {
+        "label": "使用场景（可多选）",
+        "options": {
+          "personal": "个人创作",
+          "commercial": "商业项目",
+          "education": "教育学习",
+          "social": "社交分享"
         }
       }
     },
@@ -373,7 +400,7 @@
         "title": "已加入 Waitlist！",
         "description": "上线第一时间会发邮件通知你。"
       },
-      "duplicate": "换个邮箱试试，或者继续等我们的更新。",
+      "duplicate": "该邮箱已在 Waitlist 中。如需更新信息，请联系 hello@kiyo.ai。",
       "invalid": "请检查邮箱格式后重试。",
       "unknown": "稍后再试一次，或邮件联系 hello@kiyo.ai。"
     }
