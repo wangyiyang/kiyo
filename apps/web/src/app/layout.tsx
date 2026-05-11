@@ -9,6 +9,8 @@ import { Toaster } from "@kiyo/ui";
 
 import { defaultLocale, type Locale } from "@/i18n/config";
 
+import { Analytics } from "@vercel/analytics/next";
+
 import { Providers } from "./providers";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kiyo.ai";
@@ -74,6 +76,7 @@ export default async function RootLayout({
 					{children}
 					<Toaster richColors closeButton position="top-center" />
 				</Providers>
+				<Analytics />
 			</body>
 		</html>
 	);
