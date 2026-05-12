@@ -1,6 +1,7 @@
 'use server'
 
 import { createServerClient } from '@kiyo/supabase/server'
+import { redirect } from 'next/navigation'
 
 export type AuthResult =
   | { ok: true; message?: string }
@@ -115,4 +116,20 @@ export async function updatePassword(password: string): Promise<AuthResult> {
   }
 
   return { ok: true, message: 'Password updated successfully.' }
+}
+
+export async function signInWithOAuth(provider: 'github' | 'google'): Promise<never> {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    },
+  })
+
+  if (error || !data.url) {
+    throw new Error(error?.message ?? 'OAuth failed')
+  }
+
+  redirect(data.url)
 }
