@@ -2,12 +2,14 @@
   "nav": {
     "menu": "Menu",
     "openMenu": "Open navigation menu",
+    "home": "Home",
     "songs": "Songs",
     "albums": "Albums",
     "lyrics": "Lyrics",
     "explore": "Explore",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "settings": "Settings"
   },
   "metadata": {
     "title": "Kiyo — AI Music Creation Platform",
