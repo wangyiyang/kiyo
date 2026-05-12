@@ -4,11 +4,18 @@ import { Volume2, VolumeX } from 'lucide-react'
 import { usePlayerStore } from '../../store/usePlayerStore'
 import { cn } from '../../lib/utils'
 
-interface VolumeControlProps {
-  className?: string
+export interface VolumeControlLabels {
+  mute?: string
+  unmute?: string
+  volume?: string
 }
 
-export function VolumeControl({ className }: VolumeControlProps) {
+interface VolumeControlProps {
+  className?: string
+  labels?: VolumeControlLabels
+}
+
+export function VolumeControl({ className, labels = {} }: VolumeControlProps) {
   const volume = usePlayerStore((s) => s.volume)
   const isMuted = usePlayerStore((s) => s.isMuted)
   const setVolume = usePlayerStore((s) => s.setVolume)
@@ -22,6 +29,7 @@ export function VolumeControl({ className }: VolumeControlProps) {
         onClick={toggleMute}
         className="text-white/60 transition hover:text-white"
         title="静音 (M)"
+        aria-label={isMuted || displayVolume === 0 ? (labels.unmute ?? 'Unmute') : (labels.mute ?? 'Mute')}
       >
         {isMuted || displayVolume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
       </button>
@@ -38,7 +46,7 @@ export function VolumeControl({ className }: VolumeControlProps) {
           value={displayVolume}
           onChange={(e) => setVolume(parseFloat(e.target.value))}
           className="absolute inset-0 w-full cursor-pointer opacity-0"
-          aria-label="音量"
+          aria-label={labels.volume ?? 'Volume'}
         />
       </div>
     </div>
