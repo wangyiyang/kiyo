@@ -441,7 +441,8 @@
       "add": "添加",
       "search": "搜索...",
       "viewFull": "查看完整",
-      "optional": "可选"
+      "optional": "可选",
+      "login": "登录"
     },
     "ariaLabels": {
       "pageLoading": "页面加载中",
@@ -487,7 +488,8 @@
       "uploadFailed": "上传失败：{message}",
       "fileTooLarge": "文件大小不能超过 50MB",
       "addFailed": "添加失败",
-      "updateFailed": "更新失败"
+      "updateFailed": "更新失败",
+      "loginRequired": "请先登录以查看您的歌曲"
     },
     "empty": {
       "songs": {
@@ -727,7 +729,8 @@
       "description": "描述（可选）",
       "descriptionPlaceholder": "输入专辑描述",
       "selectSongs": "选择歌曲",
-      "save": "保存"
+      "save": "保存",
+      "dialogDescription": "填写专辑信息后保存"
     },
     "delete": {
       "title": "确认删除",

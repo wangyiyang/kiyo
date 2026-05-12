@@ -5,6 +5,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -98,6 +99,7 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>{mode === 'create' ? t('createTitle') : t('editTitle')}</DialogTitle>
+          <DialogDescription>{t('dialogDescription')}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
