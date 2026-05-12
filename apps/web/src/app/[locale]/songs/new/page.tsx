@@ -51,7 +51,11 @@ export default function NewSongPage() {
       if (res.ok) {
         router.push(`/songs/${data.song.id}`)
       } else {
-        setError(data.error?.message || tCommon('errors.createFailed'))
+        const errorMap: Record<string, string> = {
+          UNAUTHORIZED: tCommon('errors.unauthorized'),
+          VALIDATION_ERROR: tCommon('errors.validationError'),
+        }
+        setError(errorMap[data.error?.code] || tCommon('errors.createFailed'))
       }
     } catch {
       setError(tCommon('errors.network'))

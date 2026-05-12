@@ -57,8 +57,13 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error?.message ?? tCommon('errors.unknown'))
+        const errorData = await response.json()
+        const errorMap: Record<string, string> = {
+          UNAUTHORIZED: tCommon('errors.unauthorized'),
+          VALIDATION_ERROR: tCommon('errors.validationError'),
+        }
+        const message = errorMap[errorData.error?.code] || errorData.error?.message || tCommon('errors.unknown')
+        throw new Error(message)
       }
 
       setOpen(false)
