@@ -932,6 +932,16 @@
       }
     }
   },
+  "notification": {
+    "title": "通知",
+    "markAllAsRead": "全部已读",
+    "empty": "暂无通知",
+    "generation": {
+      "started": "⏳ 已开始生成歌曲《{songTitle}》",
+      "completed": "🎵 你的歌曲《{songTitle}》已生成完成，点击收听",
+      "failed": "❌ 歌曲《{songTitle}》生成失败，请重试"
+    }
+  },
   "share": {
     "button": "分享",
     "copyLink": "复制链接",

@@ -72,10 +72,12 @@ export type Database = {
       }
       albums: {
         Row: {
+          cover_file_path: string | null
           cover_status: string
           cover_url: string | null
           created_at: string | null
           description: string | null
+          genre: string | null
           id: string
           status: string
           title: string
@@ -83,10 +85,12 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          cover_file_path?: string | null
           cover_status?: string
           cover_url?: string | null
           created_at?: string | null
           description?: string | null
+          genre?: string | null
           id?: string
           status?: string
           title: string
@@ -94,15 +98,44 @@ export type Database = {
           user_id: string
         }
         Update: {
+          cover_file_path?: string | null
           cover_status?: string
           cover_url?: string | null
           created_at?: string | null
           description?: string | null
+          genre?: string | null
           id?: string
           status?: string
           title?: string
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      feedback: {
+        Row: {
+          contact: string | null
+          created_at: string | null
+          description: string
+          id: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          contact?: string | null
+          created_at?: string | null
+          description: string
+          id?: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          contact?: string | null
+          created_at?: string | null
+          description?: string
+          id?: string
+          type?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -220,16 +253,100 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          album_id: string | null
+          created_at: string | null
+          id: string
+          is_read: boolean
+          song_id: string | null
+          subtype: string
+          target_url: string | null
+          template_key: string
+          template_params: Json
+          type: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          album_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean
+          song_id?: string | null
+          subtype: string
+          target_url?: string | null
+          template_key: string
+          template_params?: Json
+          type: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          album_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean
+          song_id?: string | null
+          subtype?: string
+          target_url?: string | null
+          template_key?: string
+          template_params?: Json
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rate_limits: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          key: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          key: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          key?: string
+        }
+        Relationships: []
+      }
       songs: {
         Row: {
           ai_prompt: string | null
           audio_url: string | null
+          cover_file_path: string | null
+          cover_status: string
           cover_url: string | null
           created_at: string | null
           duration: number | null
           file_path: string | null
           genre: string | null
           id: string
+          is_featured: boolean | null
           lyric_id: string | null
           mood: string | null
           original_song_id: string | null
@@ -243,12 +360,15 @@ export type Database = {
         Insert: {
           ai_prompt?: string | null
           audio_url?: string | null
+          cover_file_path?: string | null
+          cover_status?: string
           cover_url?: string | null
           created_at?: string | null
           duration?: number | null
           file_path?: string | null
           genre?: string | null
           id?: string
+          is_featured?: boolean | null
           lyric_id?: string | null
           mood?: string | null
           original_song_id?: string | null
@@ -262,12 +382,15 @@ export type Database = {
         Update: {
           ai_prompt?: string | null
           audio_url?: string | null
+          cover_file_path?: string | null
+          cover_status?: string
           cover_url?: string | null
           created_at?: string | null
           duration?: number | null
           file_path?: string | null
           genre?: string | null
           id?: string
+          is_featured?: boolean | null
           lyric_id?: string | null
           mood?: string | null
           original_song_id?: string | null
@@ -353,6 +476,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      delete_user_data: { Args: { target_user_id: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

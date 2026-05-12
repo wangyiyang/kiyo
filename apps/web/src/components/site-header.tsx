@@ -9,6 +9,7 @@ import { cn } from '@kiyo/ui'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { ThemeToggle } from './theme-toggle'
 import { UserMenu } from './auth/user-menu'
+import { NotificationBell } from './notifications/notification-bell'
 import { createBrowserClient } from '@kiyo/supabase'
 import { useTranslations } from 'next-intl'
 import { MobileNavSheet } from './mobile-nav-sheet'
@@ -23,6 +24,7 @@ const navLinks = [
 export function SiteHeader() {
   const [scrolled, setScrolled] = React.useState(false)
   const [user, setUser] = React.useState<{ email: string } | null>(null)
+  const [userId, setUserId] = React.useState<string | undefined>(undefined)
   const t = useTranslations('nav')
 
   React.useEffect(() => {
@@ -38,6 +40,7 @@ export function SiteHeader() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user?.email) {
         setUser({ email: user.email })
+        setUserId(user.id)
       }
     })
 
@@ -45,8 +48,10 @@ export function SiteHeader() {
       (event, session) => {
         if (event === 'SIGNED_IN' && session?.user?.email) {
           setUser({ email: session.user.email })
+          setUserId(session.user.id)
         } else if (event === 'SIGNED_OUT') {
           setUser(null)
+          setUserId(undefined)
         }
       }
     )
@@ -91,6 +96,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ThemeToggle />
+          <NotificationBell userId={userId} />
           <UserMenu user={user} />
           <MobileNavSheet />
         </div>
