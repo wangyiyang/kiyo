@@ -94,9 +94,11 @@ export async function checkRateLimit(
   action: RateLimitAction,
   userId: string | undefined,
   request: Request,
-  config?: RateLimitConfig
+  config?: RateLimitConfig,
+  /** 测试注入用 */
+  client?: ReturnType<typeof createServiceRoleClient>,
 ): Promise<RateLimitResult> {
-  const supabase = createServiceRoleClient()
+  const supabase = client ?? createServiceRoleClient()
   const { windowMs, maxRequests } = config ?? DEFAULT_CONFIGS[action]
   const windowStart = new Date(Date.now() - windowMs).toISOString()
   const key = buildRateLimitKey(userId, getClientIp(request))
