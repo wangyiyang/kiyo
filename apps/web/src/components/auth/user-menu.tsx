@@ -94,6 +94,13 @@ export function UserMenu({ user }: UserMenuProps) {
 					</Link>
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />
+				<DropdownMenuItem asChild>
+					<Link href="/dashboard">
+						<LayoutDashboard className="mr-2 h-4 w-4" />
+						{t("userMenu.dashboard")}
+					</Link>
+				</DropdownMenuItem>
+				<DropdownMenuSeparator />
 				<DropdownMenuItem onClick={showFeedback}>
 					<MessageSquare className="mr-2 h-4 w-4" />
 					{t("userMenu.feedback")}
