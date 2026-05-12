@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { FeedbackDialog } from "@/components/feedback-dialog";
 import { GlobalPlayer } from "@/components/global-player";
 import { WaitlistDialog } from "@/components/waitlist-dialog";
+import { LocaleProvider } from "@/i18n/client";
 import { locales, type Locale } from "@/i18n/config";
 
 type LocaleLayoutProps = {
@@ -27,11 +28,13 @@ export default async function LocaleLayout({
 	const messages = await getMessages({ locale });
 
 	return (
-		<NextIntlClientProvider locale={locale} messages={messages}>
-			{children}
-			<GlobalPlayer />
-			<WaitlistDialog />
-			<FeedbackDialog />
-		</NextIntlClientProvider>
+		<LocaleProvider initialLocale={locale} initialMessages={messages}>
+			<NextIntlClientProvider locale={locale} messages={messages}>
+				{children}
+				<GlobalPlayer />
+				<WaitlistDialog />
+				<FeedbackDialog />
+			</NextIntlClientProvider>
+		</LocaleProvider>
 	);
 }

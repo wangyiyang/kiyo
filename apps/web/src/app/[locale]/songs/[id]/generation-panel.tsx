@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@kiyo/ui'
+import { useTranslations } from 'next-intl'
 
 interface GenerationPanelProps {
   songId: string
@@ -13,6 +14,7 @@ export function GenerationPanel({ songId, initialStatus }: GenerationPanelProps)
   const [status, setStatus] = useState(initialStatus)
   const [errorMsg, setErrorMsg] = useState('')
   const router = useRouter()
+  const t = useTranslations('songs.detail.status')
 
   const pollStatus = useCallback(async () => {
     try {
@@ -50,10 +52,10 @@ export function GenerationPanel({ songId, initialStatus }: GenerationPanelProps)
         setStatus('generating')
       } else {
         const data = await res.json()
-        setErrorMsg(data.error?.message || '重试失败，请稍后重试')
+        setErrorMsg(data.error?.message || t('failed.error'))
       }
     } catch {
-      setErrorMsg('网络错误，请稍后重试')
+      setErrorMsg(t('errors.network'))
     }
   }
 
@@ -61,8 +63,10 @@ export function GenerationPanel({ songId, initialStatus }: GenerationPanelProps)
     return (
       <div className="mb-6 rounded-lg border p-6 text-center">
         <div className="mx-auto mb-3 h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        <p className="text-sm text-muted-foreground">音乐生成中，请稍候...</p>
-        <p className="mt-1 text-xs text-muted-foreground">这通常需要 30-120 秒</p>
+        <p className="text-sm text-muted-foreground">{t('generating.title')}</p>
+        {t('generating.hint') !== 'generating.hint' && (
+          <p className="mt-1 text-xs text-muted-foreground">{t('generating.hint')}</p>
+        )}
       </div>
     )
   }
@@ -70,10 +74,10 @@ export function GenerationPanel({ songId, initialStatus }: GenerationPanelProps)
   if (status === 'failed') {
     return (
       <div className="mb-6 rounded-lg border border-destructive/50 p-6 text-center">
-        <p className="mb-2 text-sm text-destructive">音乐生成失败</p>
+        <p className="mb-2 text-sm text-destructive">{t('failed.title')}</p>
         {errorMsg && <p className="mb-3 text-xs text-destructive">{errorMsg}</p>}
         <Button onClick={handleRetry} variant="outline">
-          重新生成
+          {t('failed.action')}
         </Button>
       </div>
     )
