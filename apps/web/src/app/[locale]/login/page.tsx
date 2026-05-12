@@ -20,11 +20,15 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function LoginPage() {
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams: { redirectTo?: string }
+}) {
   return (
     <>
       <SiteHeader />
-      <AuthGuard>
+      <AuthGuard redirectTo={searchParams.redirectTo ?? '/'}>
         <div className="container mx-auto flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
           <Card className="w-full max-w-md">
             <CardHeader className="space-y-1 text-center">
