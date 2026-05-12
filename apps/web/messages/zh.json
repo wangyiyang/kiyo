@@ -505,29 +505,46 @@
   "songs": {
     "list": {
       "title": "歌曲库",
-      "new": "新建歌曲",
+      "new": "AI 作曲",
       "generate": "AI 作曲",
       "cover": "AI 翻唱"
     },
     "new": {
-      "title": "新建歌曲",
+      "title": "AI 作曲",
       "fields": {
-        "title": "标题",
-        "lyric": "关联歌词",
-        "noLyric": "不关联歌词",
-        "genre": "风格",
-        "mood": "情绪",
-        "aiPrompt": "生成描述"
+        "prompt": "主题描述",
+        "genre": "风格（可选）",
+        "mood": "情绪（可选）",
+        "language": "语言（可选）",
+        "mode": "创作模式"
       },
       "placeholders": {
-        "title": "歌曲标题",
-        "genre": "如：流行、摇滚",
-        "mood": "如：励志、忧伤",
-        "aiPrompt": "描述你想要的音乐风格，如：独立民谣，忧郁，适合在咖啡馆聆听"
+        "prompt": "描述你想要的音乐，如：一首关于夏天的流行歌曲",
+        "genre": "如：流行",
+        "mood": "如：欢快"
       },
+      "mode": {
+        "instrumental": {
+          "label": "纯音乐",
+          "desc": "仅生成伴奏，无歌词"
+        },
+        "auto_lyrics": {
+          "label": "自动写词",
+          "desc": "AI 自动生成歌词并作曲"
+        },
+        "existing_lyric": {
+          "label": "已有歌词",
+          "desc": "使用已有歌词进行作曲"
+        }
+      },
+      "languageUnlimited": "不限",
+      "selectLyric": "请选择歌词",
+      "noLyrics": "暂无可选歌词，请先创建歌词",
       "error": {
-        "emptyTitle": "标题不能为空"
-      }
+        "emptyPrompt": "主题描述不能为空",
+        "noLyricSelected": "请选择关联歌词"
+      },
+      "submit": "开始创作"
     },
     "detail": {
       "back": "返回列表",

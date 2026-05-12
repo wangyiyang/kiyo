@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { POST, GET } from './route'
+import { GET } from './route'
 import { createMockSupabaseClient } from '@/lib/test-utils'
 
 vi.mock('@kiyo/supabase/server', async () => {
@@ -12,83 +12,6 @@ vi.mock('@kiyo/supabase/server', async () => {
 
 beforeEach(() => {
   vi.resetAllMocks()
-})
-
-describe('POST /api/songs', () => {
-  it('creates song with 200', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/songs', {
-      method: 'POST',
-      body: JSON.stringify({ title: 'My Song', genre: 'pop', mood: 'happy', ai_prompt: 'A pop song' }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(200)
-    const json = await response.json()
-    expect(json.song.title).toBe('My Song')
-    expect(json.song.genre).toBe('pop')
-    expect(json.song.mood).toBe('happy')
-    expect(json.song.ai_prompt).toBe('A pop song')
-    expect(json.song.status).toBe('draft')
-    expect(json.song.source).toBe('manual')
-    expect(json.song.user_id).toBe('user-1')
-    expect(mockClient.dataStore.songs).toHaveLength(1)
-  })
-
-  it('creates song with lyric_id (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/songs', {
-      method: 'POST',
-      body: JSON.stringify({ title: 'My Song', lyric_id: 'l1' }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(200)
-    const json = await response.json()
-    expect(json.song.lyric_id).toBe('l1')
-  })
-
-  it('returns 400 when title is missing', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/songs', {
-      method: 'POST',
-      body: JSON.stringify({ genre: 'pop' }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(400)
-    const json = await response.json()
-    expect(json.error.code).toBe('VALIDATION_ERROR')
-  })
-
-  it('returns 401 when not authenticated', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: undefined })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/songs', {
-      method: 'POST',
-      body: JSON.stringify({ title: 'My Song' }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(401)
-    const json = await response.json()
-    expect(json.error.code).toBe('UNAUTHORIZED')
-  })
 })
 
 describe('GET /api/songs', () => {

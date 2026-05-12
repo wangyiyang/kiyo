@@ -505,29 +505,46 @@
   "songs": {
     "list": {
       "title": "Songs",
-      "new": "New Song",
+      "new": "AI Compose",
       "generate": "AI Compose",
       "cover": "AI Cover"
     },
     "new": {
-      "title": "New Song",
+      "title": "AI Compose",
       "fields": {
-        "title": "Title",
-        "lyric": "Linked Lyric",
-        "noLyric": "No lyric",
-        "genre": "Genre",
-        "mood": "Mood",
-        "aiPrompt": "Generation Prompt"
+        "prompt": "Theme Description",
+        "genre": "Genre (optional)",
+        "mood": "Mood (optional)",
+        "language": "Language (optional)",
+        "mode": "Composition Mode"
       },
       "placeholders": {
-        "title": "Song title",
-        "genre": "e.g. Pop, Rock",
-        "mood": "e.g. Inspiring, Sad",
-        "aiPrompt": "Describe the music style you want, e.g. Indie folk, melancholy, perfect for a café"
+        "prompt": "Describe the music you want, e.g. A pop song about summer",
+        "genre": "e.g. Pop",
+        "mood": "e.g. Cheerful"
       },
+      "mode": {
+        "instrumental": {
+          "label": "Instrumental",
+          "desc": "Generate instrumental only, no lyrics"
+        },
+        "auto_lyrics": {
+          "label": "Auto Lyrics",
+          "desc": "AI auto-generates lyrics and composes"
+        },
+        "existing_lyric": {
+          "label": "Existing Lyric",
+          "desc": "Compose using existing lyrics"
+        }
+      },
+      "languageUnlimited": "Any",
+      "selectLyric": "Select a lyric",
+      "noLyrics": "No lyrics available, please create one first",
       "error": {
-        "emptyTitle": "Title cannot be empty"
-      }
+        "emptyPrompt": "Theme description cannot be empty",
+        "noLyricSelected": "Please select a linked lyric"
+      },
+      "submit": "Start Composing"
     },
     "detail": {
       "back": "Back to list",
