@@ -7,6 +7,21 @@ vi.mock('@kiyo/supabase/server', async () => {
   return {
     ...actual,
     createServerClient: vi.fn(),
+    createServiceRoleClient: () => ({
+      from: () => ({
+        delete: () => ({
+          lt: () => ({ then: async (resolve: any) => resolve({ error: null }) }),
+        }),
+        select: () => ({
+          eq: () => ({
+            eq: () => ({
+              gte: () => ({ then: async (resolve: any) => resolve({ count: 0, error: null }) }),
+            }),
+          }),
+        }),
+        insert: () => ({ then: async (resolve: any) => resolve({ error: null }) }),
+      }),
+    }) as any,
   }
 })
 
