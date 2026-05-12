@@ -117,13 +117,68 @@ Response:
 }
 ```
 
+## Navigation Integration
+
+### User Menu Dropdown (Desktop)
+
+Add "Dashboard" link below "My Songs" in `user-menu.tsx`:
+
+```
+[User Avatar Dropdown]
+├── user@email.com
+├── ─────────────────
+├── 🎨 Dashboard          ← NEW
+├── 🎵 My Songs
+├── 💿 My Albums
+├── 📝 My Lyrics
+├── ─────────────────
+├── 💬 Feedback
+├── ⚙️ Settings
+└── 🚪 Logout
+```
+
+### Mobile Navigation (Mobile)
+
+Add "Dashboard" link at top of navigation in `mobile-nav-sheet.tsx`:
+
+```
+[Mobile Nav Sheet]
+├── 🎨 Dashboard          ← NEW
+├── ─────────────────
+├── 🧭 Explore
+├── 🎵 Songs
+├── 💿 Albums
+├── 📝 Lyrics
+├── ─────────────────
+├── 🌐 Language [EN/中文]
+└── 🌓 Theme
+```
+
+### Translation Keys
+
+Add to `auth.userMenu`:
+```json
+{
+  "dashboard": "Dashboard"
+}
+```
+
+Add to `nav`:
+```json
+{
+  "dashboard": "Dashboard"
+}
+```
+
+
 ## Implementation Plan
 
 1. Create `/api/stats/route.ts` - fetch aggregated counts
 2. Create `/api/recent/route.ts` - fetch recent items
 3. Create `DashboardPage` component in `apps/web/src/app/[locale]/dashboard/page.tsx`
 4. Add translations for dashboard section in en.json/zh.json
-5. Update navigation if needed (add dashboard link to header)
+5. Update `user-menu.tsx` - add Dashboard link
+6. Update `mobile-nav-sheet.tsx` - add Dashboard link
 
 ## Component Structure
 
