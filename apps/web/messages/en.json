@@ -9,11 +9,8 @@
     "explore": "Explore",
     "language": "Language",
     "theme": "Theme",
-<<<<<<< HEAD
-    "dashboard": "Dashboard"
-=======
+    "dashboard": "Dashboard",
     "settings": "Settings"
->>>>>>> b3ef3f2283a1e2dbe7167dc287aed1bbc87411ee
   },
   "metadata": {
     "title": "Kiyo — AI Music Creation Platform",
