@@ -55,6 +55,15 @@ const nextConfig = {
       },
     ]
   },
+  async redirects() {
+    return [
+      {
+        source: '/songs/generate',
+        destination: '/songs/new',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 const sentryConfig = {
