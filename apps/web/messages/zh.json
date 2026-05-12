@@ -7,7 +7,8 @@
     "lyrics": "歌词",
     "explore": "探索",
     "language": "语言",
-    "theme": "主题"
+    "theme": "主题",
+    "dashboard": "控制台"
   },
   "metadata": {
     "title": "Kiyo — AI 音乐创作平台",
@@ -122,7 +123,8 @@
       "settings": "设置",
       "logout": "退出登录",
       "login": "登录",
-      "feedback": "反馈"
+      "feedback": "反馈",
+      "dashboard": "控制台"
     },
     "errors": {
       "invalidEmail": "请输入有效的邮箱地址",
@@ -949,6 +951,38 @@
           "error": "删除失败，请稍后重试或联系支持"
         }
       }
+    }
+  },
+  "dashboard": {
+    "title": "控制台",
+    "stats": {
+      "songs": {
+        "label": "歌曲",
+        "completed": "{count} 首已完成"
+      },
+      "lyrics": {
+        "label": "歌词",
+        "composed": "{count} 首已配曲"
+      },
+      "albums": {
+        "label": "专辑",
+        "totalSongs": "{count} 首歌"
+      },
+      "generating": {
+        "label": "生成中",
+        "description": "首歌曲正在生成"
+      }
+    },
+    "quickActions": "快速操作",
+    "newSong": "新建歌曲",
+    "aiCompose": "AI 作曲",
+    "aiCover": "AI 翻唱",
+    "newLyric": "新建歌词",
+    "newAlbum": "新建专辑",
+    "recent": {
+      "title": "最近项目",
+      "viewAll": "查看全部",
+      "empty": "暂无最近活动"
     }
   }
 }

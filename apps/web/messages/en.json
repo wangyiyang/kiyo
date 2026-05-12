@@ -7,7 +7,8 @@
     "lyrics": "Lyrics",
     "explore": "Explore",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "dashboard": "Dashboard"
   },
   "metadata": {
     "title": "Kiyo — AI Music Creation Platform",
@@ -122,7 +123,8 @@
       "settings": "Settings",
       "logout": "Log out",
       "login": "Log in",
-      "feedback": "Feedback"
+      "feedback": "Feedback",
+      "dashboard": "Dashboard"
     },
     "errors": {
       "invalidEmail": "Please enter a valid email address",
@@ -949,6 +951,38 @@
           "error": "Deletion failed. Please try again later or contact support."
         }
       }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "stats": {
+      "songs": {
+        "label": "Songs",
+        "completed": "{count} completed"
+      },
+      "lyrics": {
+        "label": "Lyrics",
+        "composed": "{count} composed"
+      },
+      "albums": {
+        "label": "Albums",
+        "totalSongs": "{count} songs"
+      },
+      "generating": {
+        "label": "Generating",
+        "description": "songs in progress"
+      }
+    },
+    "quickActions": "Quick Actions",
+    "newSong": "New Song",
+    "aiCompose": "AI Compose",
+    "aiCover": "AI Cover",
+    "newLyric": "New Lyric",
+    "newAlbum": "New Album",
+    "recent": {
+      "title": "Recent Projects",
+      "viewAll": "View All",
+      "empty": "No recent activity"
     }
   }
 }
