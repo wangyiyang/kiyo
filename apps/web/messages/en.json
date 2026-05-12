@@ -124,6 +124,10 @@
       "login": "Log in",
       "feedback": "Feedback"
     },
+    "oauth": {
+      "github": "Continue with GitHub",
+      "google": "Continue with Google"
+    },
     "errors": {
       "invalidEmail": "Please enter a valid email address",
       "emailRequired": "Email is required",

@@ -124,6 +124,10 @@
       "login": "登录",
       "feedback": "反馈"
     },
+    "oauth": {
+      "github": "使用 GitHub 登录",
+      "google": "使用 Google 登录"
+    },
     "errors": {
       "invalidEmail": "请输入有效的邮箱地址",
       "emailRequired": "邮箱不能为空",

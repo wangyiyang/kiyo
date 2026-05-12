@@ -8,6 +8,7 @@ import { Separator } from '@kiyo/ui'
 
 import { PasswordLoginForm } from './password-login-form'
 import { MagicLinkForm } from './magic-link-form'
+import { OAuthButtons } from './oauth-buttons'
 
 type Mode = 'password' | 'magicLink'
 
@@ -17,6 +18,12 @@ export function LoginForm() {
 
   return (
     <div className="space-y-4">
+      <OAuthButtons />
+      <div className="flex items-center gap-3">
+        <Separator className="flex-1" />
+        <span className="text-xs text-muted-foreground">或</span>
+        <Separator className="flex-1" />
+      </div>
       {mode === 'password' ? (
         <>
           <PasswordLoginForm />

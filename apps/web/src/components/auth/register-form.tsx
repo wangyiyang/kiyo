@@ -16,12 +16,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  Separator,
   toast,
 } from '@kiyo/ui'
 
 import { signUp } from '@/app/actions/auth'
 import { registerSchema, type RegisterInput } from '@/lib/schemas/auth'
 import { Link } from '@/i18n/navigation'
+import { OAuthButtons } from './oauth-buttons'
 
 function getPasswordStrength(password: string): number {
   let score = 0
@@ -83,8 +85,15 @@ export function RegisterForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <div className="space-y-4">
+      <OAuthButtons />
+      <div className="flex items-center gap-3">
+        <Separator className="flex-1" />
+        <span className="text-xs text-muted-foreground">或</span>
+        <Separator className="flex-1" />
+      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="email"
@@ -198,7 +207,8 @@ export function RegisterForm() {
         <Button type="submit" className="w-full" disabled={pending}>
           {pending ? t('register.submitting') : t('register.submit')}
         </Button>
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </div>
   )
 }
