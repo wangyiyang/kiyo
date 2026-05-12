@@ -98,7 +98,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     )
   }
 
-  let body: { title?: string; song_ids?: string[] }
+  let body: { title?: string; song_ids?: string[]; is_public?: boolean }
   try {
     body = await request.json()
   } catch {
@@ -108,7 +108,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     )
   }
 
-  const { title, song_ids } = body
+  const { title, song_ids, is_public } = body
 
   if (song_ids && Array.isArray(song_ids) && song_ids.length > 0) {
     const { data: ownedSongs, error: songsError } = await supabase
@@ -130,6 +130,32 @@ export async function PATCH(request: Request, { params }: { params: { id: string
         { status: 403 }
       )
     }
+  }
+
+  if (is_public !== undefined) {
+    if (typeof is_public !== 'boolean') {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: 'is_public must be a boolean' } },
+        { status: 400 }
+      )
+    }
+
+    const { data: updatedAlbum, error: updateError } = await supabase
+      .from('albums')
+      .update({ is_public })
+      .eq('id', params.id)
+      .eq('user_id', user.id)
+      .select()
+      .single()
+
+    if (updateError) {
+      return NextResponse.json(
+        { error: { code: 'INTERNAL_ERROR', message: updateError.message } },
+        { status: 500 }
+      )
+    }
+
+    Object.assign(album, updatedAlbum)
   }
 
   if (title !== undefined) {

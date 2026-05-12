@@ -85,7 +85,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     }
   }
 
-  const allowed = ['title', 'lyric_id', 'genre', 'mood', 'ai_prompt', 'cover_url']
+  const allowed = ['title', 'lyric_id', 'genre', 'mood', 'ai_prompt', 'cover_url', 'is_public']
   const updates: Record<string, unknown> = {}
 
   for (const key of allowed) {
@@ -104,6 +104,14 @@ export async function PATCH(request: Request, { params }: { params: { id: string
         if (error) {
           return NextResponse.json(
             { error: { code: 'VALIDATION_ERROR', message: error } },
+            { status: 400 }
+          )
+        }
+        updates[key] = body[key]
+      } else if (key === 'is_public') {
+        if (typeof body[key] !== 'boolean') {
+          return NextResponse.json(
+            { error: { code: 'VALIDATION_ERROR', message: 'is_public must be a boolean' } },
             { status: 400 }
           )
         }
