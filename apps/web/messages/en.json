@@ -348,18 +348,45 @@
   "waitlist": {
     "title": "Join the Kiyo Waitlist",
     "description": "Leave your email and we'll tell you the moment we launch.",
+    "inline": {
+      "expand": "Show more to help us understand your needs",
+      "collapse": "Collapse",
+      "thanks": "You're in! Thanks for your support — we'll notify you the moment we launch."
+    },
     "fields": {
       "email": {
         "label": "Email",
         "placeholder": "you@example.com"
       },
       "role": {
-        "label": "You are… (optional)",
+        "label": "Your role in music creation (optional)",
         "options": {
-          "producer": "Producer",
+          "beginner": "Music Beginner",
+          "enthusiast": "Music Enthusiast",
+          "indie": "Indie Producer",
+          "professional": "Professional Musician",
           "songwriter": "Songwriter",
-          "enthusiast": "Music enthusiast",
           "other": "Other"
+        }
+      },
+      "interests": {
+        "label": "Features you're interested in (multiple)",
+        "options": {
+          "composition": "AI Composition",
+          "arrangement": "AI Arrangement",
+          "vocal": "Vocal Synthesis",
+          "mixing": "Mixing & Mastering",
+          "cover": "AI Cover",
+          "lyrics": "Smart Lyrics Writing"
+        }
+      },
+      "useScenes": {
+        "label": "Usage scenarios (multiple)",
+        "options": {
+          "personal": "Personal Creation",
+          "commercial": "Commercial Projects",
+          "education": "Education",
+          "social": "Social Sharing"
         }
       }
     },
@@ -373,8 +400,8 @@
         "title": "You're on the waitlist!",
         "description": "We'll email you the moment we launch."
       },
-      "duplicate": "Try a different email, or just hang tight for our update.",
-      "invalid": "Check the email format and try again.",
+      "duplicate": "This email is already on the waitlist. Contact hello@kiyo.ai to update your info.",
+      "invalid": "Please check your email format and try again.",
       "unknown": "Try again later, or reach us at hello@kiyo.ai."
     }
   },
@@ -914,6 +941,19 @@
       "completed": "🎵 Your song \"{songTitle}\" is ready! Click to listen",
       "failed": "❌ Song \"{songTitle}\" generation failed, please retry"
     }
+  },
+  "share": {
+    "button": "Share",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "copyFailed": "Failed to copy link",
+    "shareTwitter": "Share on X",
+    "twitterText": "Created with Kiyo",
+    "makingPublic": "Making public...",
+    "madePublic": "Made public and link copied!",
+    "makePublicFailed": "Failed to make public",
+    "loginToPlay": "Log in to Play",
+    "playOnKiyo": "View on Kiyo"
   },
   "settings": {
     "title": "Settings",

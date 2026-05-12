@@ -22,11 +22,52 @@ vi.mock('@kiyo/supabase/server', () => ({
   })),
 }))
 
-describe('waitlist action monitoring', () => {
+describe('waitlist action', () => {
   beforeEach(() => {
     captureAppException.mockClear()
     insert.mockReset()
     getHeader.mockClear()
+  })
+
+  it('inserts with new columns', async () => {
+    insert.mockReturnValue({ error: null })
+    const { joinWaitlist } = await import('./waitlist')
+
+    const result = await joinWaitlist({
+      email: 'listener@example.com',
+      role: 'indie',
+      interests: ['composition', 'cover'],
+      useScenes: ['personal'],
+    })
+
+    expect(result).toEqual({ ok: true })
+    expect(insert).toHaveBeenCalledWith({
+      email: 'listener@example.com',
+      role_new: 'indie',
+      interests: ['composition', 'cover'],
+      use_scenes: ['personal'],
+      source: 'landing',
+      user_agent: 'Vitest',
+    })
+  })
+
+  it('inserts with only email (optional fields omitted)', async () => {
+    insert.mockReturnValue({ error: null })
+    const { joinWaitlist } = await import('./waitlist')
+
+    const result = await joinWaitlist({
+      email: 'minimal@example.com',
+    })
+
+    expect(result).toEqual({ ok: true })
+    expect(insert).toHaveBeenCalledWith({
+      email: 'minimal@example.com',
+      role_new: null,
+      interests: null,
+      use_scenes: null,
+      source: 'landing',
+      user_agent: 'Vitest',
+    })
   })
 
   it('captures insert failures', async () => {
@@ -36,7 +77,7 @@ describe('waitlist action monitoring', () => {
 
     const result = await joinWaitlist({
       email: 'listener@example.com',
-      role: 'producer',
+      role: 'professional',
     })
 
     expect(result).toEqual({
@@ -46,12 +87,30 @@ describe('waitlist action monitoring', () => {
     })
     expect(insert).toHaveBeenCalledWith({
       email: 'listener@example.com',
-      role: 'producer',
+      role_new: 'professional',
+      interests: null,
+      use_scenes: null,
       source: 'landing',
       user_agent: 'Vitest',
     })
     expect(captureAppException).toHaveBeenCalledWith(error, {
       tags: { area: 'waitlist', operation: 'insert' },
+    })
+  })
+
+  it('handles duplicate email', async () => {
+    const error = { code: '23505', message: 'unique violation' }
+    insert.mockReturnValue({ error })
+    const { joinWaitlist } = await import('./waitlist')
+
+    const result = await joinWaitlist({
+      email: 'dup@example.com',
+    })
+
+    expect(result).toEqual({
+      ok: false,
+      code: 'DUPLICATE',
+      message: '该邮箱已在 Waitlist 中，感谢支持',
     })
   })
 })

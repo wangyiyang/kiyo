@@ -1,15 +1,11 @@
 'use client'
 
-import { ArrowRight } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
-import { Button } from '@kiyo/ui'
-
 import { ScrollReveal } from '../scroll-reveal'
-import { useWaitlist } from '@/lib/waitlist-context'
+import { InlineWaitlistForm } from '../inline-waitlist-form'
 
 export function FinalCta() {
-  const { show } = useWaitlist()
   const t = useTranslations('finalCta')
 
   return (
@@ -32,14 +28,8 @@ export function FinalCta() {
           <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
             {t('description')}
           </p>
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Button size="lg" onClick={show} className="group">
-              {t('cta.primary')}
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </Button>
-            <Button size="lg" variant="ghost" asChild>
-              <a href="#features">{t('cta.secondary')}</a>
-            </Button>
+          <div className="mx-auto mt-8 max-w-md">
+            <InlineWaitlistForm />
           </div>
         </ScrollReveal>
       </div>

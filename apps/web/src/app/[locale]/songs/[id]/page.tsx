@@ -8,12 +8,14 @@ import { ExportDialog } from './export-dialog'
 import { CoverSection } from '@/components/CoverSection'
 import { getTranslations } from 'next-intl/server'
 import { DeleteButton } from './delete-button'
+import { ShareButton } from '@/components/share-button'
 
 export default async function SongDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: { locale: string; id: string }
 }) {
+  const { locale, id } = params
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -24,7 +26,7 @@ export default async function SongDetailPage({
   const { data: song } = await supabase
     .from('songs')
     .select('*, cover_file_path, file_path, lyrics(*), original_song:original_song_id(*)')
-    .eq('id', params.id)
+    .eq('id', id)
     .eq('user_id', user.id)
     .single()
 
@@ -120,6 +122,13 @@ export default async function SongDetailPage({
               </Link>
             </>
           )}
+          <ShareButton
+            entityType="song"
+            entityId={song.id}
+            title={song.title}
+            isPublic={song.is_public ?? false}
+            locale={locale}
+          />
           <Link href={`/songs/${song.id}/edit`}>
             <Button variant="outline" size="sm">
               <Pencil className="mr-1 h-4 w-4" />
