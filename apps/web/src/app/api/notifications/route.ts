@@ -1,5 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   const supabase = await createServerClient()
@@ -34,7 +34,7 @@ export async function GET(request: Request) {
   return NextResponse.json({ data, count })
 }
 
-export async function PATCH(_request?: Request) {
+export async function PATCH(request: NextRequest) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
