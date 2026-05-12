@@ -54,14 +54,18 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
   const [coverUrl, setCoverUrl] = useState<string | null>(track.cover_url)
 
   useEffect(() => {
+    // API already pre-signed the cover_url — use it directly
+    if (track.cover_url) {
+      setCoverUrl(track.cover_url)
+      return
+    }
+    // Fallback: client-side signing for legacy/un-signed tracks
     if (track.cover_file_path) {
       getSignedCoverUrl(track.cover_file_path).then((url) => {
-        setCoverUrl(url || track.cover_url)
+        setCoverUrl(url || null)
       })
-    } else {
-      setCoverUrl(track.cover_url)
     }
-  }, [track.cover_file_path, track.cover_url])
+  }, [track.cover_url, track.cover_file_path])
 
   const handlePlay = () => {
     if (!track.audio_url && !track.file_path) return
