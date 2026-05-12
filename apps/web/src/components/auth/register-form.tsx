@@ -21,7 +21,7 @@ import {
 } from '@kiyo/ui'
 
 import { signUp } from '@/app/actions/auth'
-import { registerSchema, type RegisterInput } from '@/lib/schemas/auth'
+import { getRegisterSchema, type RegisterInput } from '@/lib/schemas/auth'
 import { Link } from '@/i18n/navigation'
 import { OAuthButtons } from './oauth-buttons'
 
@@ -57,8 +57,9 @@ export function RegisterForm() {
   const [pending, startTransition] = React.useTransition()
   const [showPassword, setShowPassword] = React.useState(false)
 
+  const schema = getRegisterSchema((key) => t(key))
   const form = useForm<RegisterInput>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(schema),
     defaultValues: { email: '', password: '', confirmPassword: '', termsAccepted: false },
     mode: 'onBlur',
   })
@@ -89,7 +90,7 @@ export function RegisterForm() {
       <OAuthButtons />
       <div className="flex items-center gap-3">
         <Separator className="flex-1" />
-        <span className="text-xs text-muted-foreground">或</span>
+        <span className="text-xs text-muted-foreground">{t('register.orSeparator')}</span>
         <Separator className="flex-1" />
       </div>
       <Form {...form}>
@@ -134,7 +135,7 @@ export function RegisterForm() {
                     onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? 'Hide' : 'Show'}
+                    {showPassword ? t('common.hide') : t('common.show')}
                   </button>
                 </div>
               </FormControl>
@@ -189,14 +190,18 @@ export function RegisterForm() {
               </FormControl>
               <div className="space-y-1 leading-none">
                 <FormLabel className="text-sm font-normal cursor-pointer">
-                  I have read and agree to the{' '}
-                  <Link href="/privacy" className="underline hover:text-foreground">
-                    Privacy Policy
-                  </Link>{' '}
-                  and{' '}
-                  <Link href="/terms" className="underline hover:text-foreground">
-                    Terms of Service
-                  </Link>
+                  {t.rich('register.termsLabel', {
+                    privacy: (chunks) => (
+                      <Link href="/privacy" className="underline hover:text-foreground">
+                        {chunks}
+                      </Link>
+                    ),
+                    terms: (chunks) => (
+                      <Link href="/terms" className="underline hover:text-foreground">
+                        {chunks}
+                      </Link>
+                    ),
+                  })}
                 </FormLabel>
                 <FormMessage />
               </div>

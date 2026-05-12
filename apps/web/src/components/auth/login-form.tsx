@@ -21,7 +21,7 @@ export function LoginForm() {
       <OAuthButtons />
       <div className="flex items-center gap-3">
         <Separator className="flex-1" />
-        <span className="text-xs text-muted-foreground">或</span>
+        <span className="text-xs text-muted-foreground">{t('login.orSeparator')}</span>
         <Separator className="flex-1" />
       </div>
       {mode === 'password' ? (
