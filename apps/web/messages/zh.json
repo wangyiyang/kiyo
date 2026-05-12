@@ -2,12 +2,14 @@
   "nav": {
     "menu": "菜单",
     "openMenu": "打开导航菜单",
+    "home": "首页",
     "songs": "歌曲库",
     "albums": "专辑",
     "lyrics": "歌词",
     "explore": "探索",
     "language": "语言",
-    "theme": "主题"
+    "theme": "主题",
+    "settings": "设置"
   },
   "metadata": {
     "title": "Kiyo — AI 音乐创作平台",
