@@ -9,11 +9,8 @@
     "explore": "探索",
     "language": "语言",
     "theme": "主题",
-<<<<<<< HEAD
-    "dashboard": "控制台"
-=======
+    "dashboard": "控制台",
     "settings": "设置"
->>>>>>> b3ef3f2283a1e2dbe7167dc287aed1bbc87411ee
   },
   "metadata": {
     "title": "Kiyo — AI 音乐创作平台",
@@ -470,6 +467,8 @@
       "loadFailed": "加载失败",
       "saveFailed": "保存失败",
       "createFailed": "创建失败",
+      "unauthorized": "请先登录后再进行操作",
+      "validationError": "请检查输入内容是否正确",
       "deleteFailed": "删除失败",
       "exportFailed": "导出失败，请稍后重试",
       "uploadFailed": "上传失败：{message}",

@@ -9,11 +9,8 @@
     "explore": "Explore",
     "language": "Language",
     "theme": "Theme",
-<<<<<<< HEAD
-    "dashboard": "Dashboard"
-=======
+    "dashboard": "Dashboard",
     "settings": "Settings"
->>>>>>> b3ef3f2283a1e2dbe7167dc287aed1bbc87411ee
   },
   "metadata": {
     "title": "Kiyo — AI Music Creation Platform",
@@ -470,6 +467,8 @@
       "loadFailed": "Failed to load",
       "saveFailed": "Failed to save",
       "createFailed": "Failed to create",
+      "unauthorized": "Please log in first to continue",
+      "validationError": "Please check your input",
       "deleteFailed": "Failed to delete",
       "exportFailed": "Export failed, please try again later",
       "uploadFailed": "Upload failed: {message}",
