@@ -49,17 +49,19 @@ export function AudioPlayer({
   const [resolvedCoverUrl, setResolvedCoverUrl] = useState<string | null>(coverUrl || null)
 
   useEffect(() => {
-    if (coverFilePath) {
+    if (coverUrl) {
+      setResolvedCoverUrl(coverUrl)
+    } else if (coverFilePath) {
       fetch('/api/storage/sign', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bucket: 'covers', path: coverFilePath }),
       })
         .then((res) => res.json())
-        .then((data) => setResolvedCoverUrl(data.signedUrl))
-        .catch(() => setResolvedCoverUrl(coverUrl || null))
+        .then((data) => setResolvedCoverUrl(data.signedUrl || null))
+        .catch(() => setResolvedCoverUrl(null))
     } else {
-      setResolvedCoverUrl(coverUrl || null)
+      setResolvedCoverUrl(null)
     }
   }, [coverFilePath, coverUrl])
 
