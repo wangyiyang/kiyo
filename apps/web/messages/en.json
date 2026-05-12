@@ -352,7 +352,9 @@
     "empty": {
       "title": "No songs yet",
       "description": "No songs found with the current filters. Try other filters."
-    }
+    },
+    "retry": "Retry",
+    "allLoaded": "All songs loaded"
   },
   "finalCta": {
     "headline": {
