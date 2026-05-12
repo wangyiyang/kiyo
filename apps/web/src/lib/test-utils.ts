@@ -8,6 +8,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     lyrics: [],
     generation_tasks: [],
     rate_limits: [],
+    notifications: [],
   }
 
   let currentTable = ''
@@ -17,6 +18,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
   let currentSingle = false
   let currentLimit: number | null = null
   let currentRange: { from: number; to: number } | null = null
+  let currentCount = false
 
   const reset = () => {
     currentTable = ''
@@ -26,6 +28,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     currentSingle = false
     currentLimit = null
     currentRange = null
+    currentCount = false
   }
 
   const buildResult = () => {
@@ -55,33 +58,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     select: (columns = '*', options?: { count?: string }) => {
       currentSelect = columns
       if (options?.count) {
-        return {
-          eq: (column: string, value: any) => {
-            currentFilters.push((item) => item[column] === value)
-            return {
-              eq: (column2: string, value2: any) => {
-                currentFilters.push((item) => item[column2] === value2)
-                return {
-                  gte: (column3: string, value3: any) => {
-                    currentFilters.push((item) => item[column3] >= value3)
-                    return {
-                      then: async (resolve: any) => {
-                        const filtered = buildResult()
-                        reset()
-                        return resolve({ data: null, count: filtered.length, error: null })
-                      },
-                    }
-                  },
-                }
-              },
-              then: async (resolve: any) => {
-                const filtered = buildResult()
-                reset()
-                return resolve({ data: null, count: filtered.length, error: null })
-              },
-            }
-          },
-        }
+        currentCount = true
       }
       return chain
     },
@@ -166,6 +143,10 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
       currentFilters.push((item) => values.includes(item[column]))
       return chain
     },
+    gte: (column: string, value: any) => {
+      currentFilters.push((item) => item[column] >= value)
+      return chain
+    },
     order: (column: string, { ascending = true } = {}) => {
       currentOrder = { column, ascending }
       return chain
@@ -184,6 +165,10 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     },
     then: async (resolve: any) => {
       const result = buildResult()
+      if (currentCount) {
+        reset()
+        return resolve({ data: result, count: Array.isArray(result) ? result.length : (result ? 1 : 0), error: null })
+      }
       reset()
       return resolve({ data: result, error: null })
     },

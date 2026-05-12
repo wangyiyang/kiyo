@@ -48,6 +48,7 @@ export default async function ExplorePage({
   let query = supabase
     .from("songs")
     .select("id, title, genre, mood, cover_url, cover_file_path, audio_url, file_path, duration")
+    .eq("is_public", true)
 
   if (genre) {
     query = query.eq("genre", genre)
@@ -73,6 +74,7 @@ export default async function ExplorePage({
   const { data: allSongs } = await supabase
     .from("songs")
     .select("genre, mood")
+    .eq("is_public", true)
 
   const genres = Array.from(
     new Set(allSongs?.map((s) => s.genre).filter(Boolean) as string[])
