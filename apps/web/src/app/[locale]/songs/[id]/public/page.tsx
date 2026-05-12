@@ -52,6 +52,7 @@ export default async function SongPublicPage({ params }: SongPublicPageProps) {
   const supabase = await createServerClient()
   const t = await getTranslations('share')
   const tCommon = await getTranslations('common')
+  const tPlayer = await getTranslations('player')
 
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -130,6 +131,22 @@ export default async function SongPublicPage({ params }: SongPublicPageProps) {
               coverFilePath={song.cover_file_path}
               songId={song.id}
               className="w-full"
+              labels={{
+                play: tPlayer('play'),
+                pause: tPlayer('pause'),
+                playlist: tPlayer('playlist'),
+                prev: tPlayer('prev'),
+                next: tPlayer('next'),
+                shuffle: tPlayer('shuffle'),
+                repeat: tPlayer('repeat'),
+                repeatOne: tPlayer('repeatOne'),
+                mute: tPlayer('mute'),
+                unmute: tPlayer('unmute'),
+                volume: tPlayer('volume'),
+                empty: tPlayer('empty'),
+                playSong: tPlayer('playSong'),
+                playingIndicator: tPlayer('playingIndicator'),
+              }}
             />
           ) : (
             <div className="relative rounded-lg border bg-muted/30 p-8">
