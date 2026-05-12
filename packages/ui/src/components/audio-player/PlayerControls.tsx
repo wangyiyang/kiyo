@@ -4,12 +4,23 @@ import { Play, Pause, SkipBack, SkipForward, Repeat, Repeat1, Shuffle } from 'lu
 import { usePlayerStore } from '../../store/usePlayerStore'
 import { cn } from '../../lib/utils'
 
+export interface PlayerControlsLabels {
+  shuffle?: string
+  prev?: string
+  next?: string
+  play?: string
+  pause?: string
+  repeat?: string
+  repeatOne?: string
+}
+
 interface PlayerControlsProps {
   className?: string
   size?: 'sm' | 'md' | 'lg'
+  labels?: PlayerControlsLabels
 }
 
-export function PlayerControls({ className, size = 'md' }: PlayerControlsProps) {
+export function PlayerControls({ className, size = 'md', labels = {} }: PlayerControlsProps) {
   const isPlaying = usePlayerStore((s) => s.isPlaying)
   const repeatMode = usePlayerStore((s) => s.repeatMode)
   const isShuffle = usePlayerStore((s) => s.isShuffle)
@@ -39,6 +50,7 @@ export function PlayerControls({ className, size = 'md' }: PlayerControlsProps) 
           isShuffle && 'text-primary'
         )}
         title="随机播放"
+        aria-label={labels.shuffle ?? 'Shuffle'}
       >
         <Shuffle size={iconSize} />
       </button>
@@ -51,6 +63,7 @@ export function PlayerControls({ className, size = 'md' }: PlayerControlsProps) 
           btnSize
         )}
         title="上一首 (P)"
+        aria-label={labels.prev ?? 'Previous'}
       >
         <SkipBack size={iconSize} />
       </button>
@@ -62,6 +75,7 @@ export function PlayerControls({ className, size = 'md' }: PlayerControlsProps) 
           playSize
         )}
         title="播放/暂停 (Space)"
+        aria-label={isPlaying ? (labels.pause ?? 'Pause') : (labels.play ?? 'Play')}
       >
         {isPlaying ? <Pause size={playIconSize} /> : <Play size={playIconSize} className="ml-0.5" />}
       </button>
@@ -74,6 +88,7 @@ export function PlayerControls({ className, size = 'md' }: PlayerControlsProps) 
           btnSize
         )}
         title="下一首 (N)"
+        aria-label={labels.next ?? 'Next'}
       >
         <SkipForward size={iconSize} />
       </button>
@@ -86,6 +101,7 @@ export function PlayerControls({ className, size = 'md' }: PlayerControlsProps) 
           repeatMode !== 'off' && 'text-primary'
         )}
         title="循环模式"
+        aria-label={repeatMode === 'one' ? (labels.repeatOne ?? 'Repeat one') : (labels.repeat ?? 'Repeat')}
       >
         {repeatMode === 'one' ? <Repeat1 size={iconSize} /> : <Repeat size={iconSize} />}
       </button>

@@ -5,8 +5,15 @@ import { usePlayerStore } from '../../store/usePlayerStore'
 import { cn } from '../../lib/utils'
 import { Music2 } from 'lucide-react'
 
+export interface PlaylistPanelLabels {
+  empty?: string
+  playSong?: string
+  playingIndicator?: string
+}
+
 interface PlaylistPanelProps {
   className?: string
+  labels?: PlaylistPanelLabels
 }
 
 function formatDuration(seconds?: number | null): string {
@@ -16,7 +23,7 @@ function formatDuration(seconds?: number | null): string {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-export function PlaylistPanel({ className }: PlaylistPanelProps) {
+export function PlaylistPanel({ className, labels = {} }: PlaylistPanelProps) {
   const playlist = usePlayerStore((s) => s.playlist)
   const currentTrack = usePlayerStore((s) => s.currentTrack)
   const play = usePlayerStore((s) => s.play)
@@ -25,7 +32,7 @@ export function PlaylistPanel({ className }: PlaylistPanelProps) {
   if (playlistLength === 0) {
     return (
       <div className={cn('p-4 text-center text-sm text-white/40', className)}>
-        暂无播放队列
+        {labels.empty ?? '暂无播放队列'}
       </div>
     )
   }
@@ -41,6 +48,11 @@ export function PlaylistPanel({ className }: PlaylistPanelProps) {
           return (
             <li
               key={song.id}
+              aria-label={
+                isActive
+                  ? (labels.playingIndicator ? labels.playingIndicator.replace('{title}', song.title) : 'Playing ' + song.title)
+                  : (labels.playSong ? labels.playSong.replace('{title}', song.title) : 'Play ' + song.title)
+              }
               onClick={() => play(song, playlist)}
               className={cn(
                 'flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 transition',

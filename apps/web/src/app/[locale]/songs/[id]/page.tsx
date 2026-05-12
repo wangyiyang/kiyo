@@ -36,6 +36,7 @@ export default async function SongDetailPage({
 
   const t = await getTranslations('songs.detail')
   const tCommon = await getTranslations('common')
+  const tPlayer = await getTranslations('player')
 
   const formatDuration = (seconds?: number | null) => {
     if (!seconds) return null
@@ -153,6 +154,22 @@ export default async function SongDetailPage({
             coverFilePath={song.cover_file_path}
             songId={song.id}
             className="w-full"
+            labels={{
+              play: tPlayer('play'),
+              pause: tPlayer('pause'),
+              playlist: tPlayer('playlist'),
+              prev: tPlayer('prev'),
+              next: tPlayer('next'),
+              shuffle: tPlayer('shuffle'),
+              repeat: tPlayer('repeat'),
+              repeatOne: tPlayer('repeatOne'),
+              mute: tPlayer('mute'),
+              unmute: tPlayer('unmute'),
+              volume: tPlayer('volume'),
+              empty: tPlayer('empty'),
+              playSong: tPlayer('playSong'),
+              playingIndicator: tPlayer('playingIndicator'),
+            }}
           />
         </div>
       )}
@@ -179,6 +196,22 @@ export default async function SongDetailPage({
                 coverFilePath={(song.original_song as any)?.cover_file_path}
                 songId={(song.original_song as any)?.id}
                 className="w-full"
+                labels={{
+                  play: tPlayer('play'),
+                  pause: tPlayer('pause'),
+                  playlist: tPlayer('playlist'),
+                  prev: tPlayer('prev'),
+                  next: tPlayer('next'),
+                  shuffle: tPlayer('shuffle'),
+                  repeat: tPlayer('repeat'),
+                  repeatOne: tPlayer('repeatOne'),
+                  mute: tPlayer('mute'),
+                  unmute: tPlayer('unmute'),
+                  volume: tPlayer('volume'),
+                  empty: tPlayer('empty'),
+                  playSong: tPlayer('playSong'),
+                  playingIndicator: tPlayer('playingIndicator'),
+                }}
               />
             </div>
             <div>
@@ -192,6 +225,22 @@ export default async function SongDetailPage({
                 coverFilePath={song.cover_file_path}
                 songId={song.id}
                 className="w-full"
+                labels={{
+                  play: tPlayer('play'),
+                  pause: tPlayer('pause'),
+                  playlist: tPlayer('playlist'),
+                  prev: tPlayer('prev'),
+                  next: tPlayer('next'),
+                  shuffle: tPlayer('shuffle'),
+                  repeat: tPlayer('repeat'),
+                  repeatOne: tPlayer('repeatOne'),
+                  mute: tPlayer('mute'),
+                  unmute: tPlayer('unmute'),
+                  volume: tPlayer('volume'),
+                  empty: tPlayer('empty'),
+                  playSong: tPlayer('playSong'),
+                  playingIndicator: tPlayer('playingIndicator'),
+                }}
               />
             </div>
           </div>

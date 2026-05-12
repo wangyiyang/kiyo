@@ -13,9 +13,10 @@ function formatTime(seconds: number): string {
 
 interface ProgressBarProps {
   className?: string
+  ariaLabel?: string
 }
 
-export function ProgressBar({ className }: ProgressBarProps) {
+export function ProgressBar({ className, ariaLabel = 'Progress' }: ProgressBarProps) {
   const currentTime = usePlayerStore((s) => s.currentTime)
   const duration = usePlayerStore((s) => s.duration)
   const seek = usePlayerStore((s) => s.seek)
@@ -40,6 +41,12 @@ export function ProgressBar({ className }: ProgressBarProps) {
         ref={barRef}
         onClick={handleClick}
         className="group relative h-1.5 cursor-pointer rounded-full bg-white/10"
+        role="slider"
+        aria-label={ariaLabel}
+        aria-valuemin={0}
+        aria-valuemax={Math.round(duration)}
+        aria-valuenow={Math.round(currentTime)}
+        tabIndex={0}
       >
         <div
           className="absolute left-0 top-0 h-full rounded-full bg-white transition-all duration-150"

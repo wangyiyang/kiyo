@@ -42,6 +42,7 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
 
   const t = await getTranslations('albums')
   const tCommon = await getTranslations('common')
+  const tPlayer = await getTranslations('player')
 
   return (
     <div className="container mx-auto py-8">
@@ -103,6 +104,22 @@ export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) 
                 album: album.title,
               }))}
               className="w-full"
+              labels={{
+                play: tPlayer('play'),
+                pause: tPlayer('pause'),
+                playlist: tPlayer('playlist'),
+                prev: tPlayer('prev'),
+                next: tPlayer('next'),
+                shuffle: tPlayer('shuffle'),
+                repeat: tPlayer('repeat'),
+                repeatOne: tPlayer('repeatOne'),
+                mute: tPlayer('mute'),
+                unmute: tPlayer('unmute'),
+                volume: tPlayer('volume'),
+                empty: tPlayer('empty'),
+                playSong: tPlayer('playSong'),
+                playingIndicator: tPlayer('playingIndicator'),
+              }}
             />
           </div>
           <DraggableSongList
