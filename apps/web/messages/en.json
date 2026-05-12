@@ -428,7 +428,8 @@
       "add": "Add",
       "search": "Search...",
       "viewFull": "View full",
-      "optional": "optional"
+      "optional": "optional",
+      "login": "Log in"
     },
     "ariaLabels": {
       "pageLoading": "Page loading",
@@ -472,7 +473,8 @@
       "uploadFailed": "Upload failed: {message}",
       "fileTooLarge": "File size cannot exceed 50MB",
       "addFailed": "Failed to add",
-      "updateFailed": "Failed to update"
+      "updateFailed": "Failed to update",
+      "loginRequired": "Please log in to view your songs"
     },
     "empty": {
       "songs": {
@@ -695,7 +697,8 @@
       "description": "Description (optional)",
       "descriptionPlaceholder": "Enter album description",
       "selectSongs": "Select Songs",
-      "save": "Save"
+      "save": "Save",
+      "dialogDescription": "Fill in the album information and save"
     },
     "delete": {
       "title": "Confirm Delete",
