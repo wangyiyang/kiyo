@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { useTranslations } from 'next-intl'
 import { Link, usePathname, useRouter } from '@/i18n/navigation'
 import {
 	Music2,
@@ -127,6 +128,7 @@ function SidebarContent({
 	isAuthenticated,
 	onClose,
 }: SidebarContentProps) {
+	const tNav = useTranslations('nav')
 	return (
 		<div className="flex h-full flex-col">
 			{/* Logo */}
@@ -186,7 +188,7 @@ function SidebarContent({
 							)}
 						>
 							<item.icon className="h-4 w-4" />
-							<span>{item.label}</span>
+							<span>{tNav(item.label)}</span>
 						</Link>
 					))}
 				</div>
@@ -208,7 +210,7 @@ function SidebarContent({
 							)}
 						>
 							<item.icon className="h-4 w-4" />
-							<span>{item.label}</span>
+							<span>{tNav(item.label)}</span>
 						</Link>
 					))}
 					{isAuthenticated && (
