@@ -20,7 +20,7 @@ import {
 } from '@kiyo/ui'
 
 import { updatePassword } from '@/app/actions/auth'
-import { resetPasswordSchema, type ResetPasswordInput } from '@/lib/schemas/auth'
+import { getResetPasswordSchema, type ResetPasswordInput } from '@/lib/schemas/auth'
 
 export function ResetPasswordForm() {
   const t = useTranslations('auth')
@@ -34,12 +34,13 @@ export function ResetPasswordForm() {
 
   React.useEffect(() => {
     if (!code) {
-      setError('Invalid or expired reset link.')
+      setError(t('resetPassword.invalidLink'))
     }
-  }, [code])
+  }, [code, t])
 
+  const schema = getResetPasswordSchema((key) => t(key))
   const form = useForm<ResetPasswordInput>({
-    resolver: zodResolver(resetPasswordSchema),
+    resolver: zodResolver(schema),
     defaultValues: { password: '', confirmPassword: '' },
     mode: 'onBlur',
   })
@@ -67,7 +68,7 @@ export function ResetPasswordForm() {
         {error}
         <div className="mt-4">
           <Button variant="outline" onClick={() => router.push('/forgot-password')}>
-            Request new link
+            {t('resetPassword.requestNewLink')}
           </Button>
         </div>
       </div>
@@ -97,7 +98,7 @@ export function ResetPasswordForm() {
                     onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? 'Hide' : 'Show'}
+                    {showPassword ? t('common.hide') : t('common.show')}
                   </button>
                 </div>
               </FormControl>

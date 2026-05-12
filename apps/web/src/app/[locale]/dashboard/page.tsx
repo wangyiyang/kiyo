@@ -170,10 +170,7 @@ export default async function DashboardPage() {
             <h2 className="mb-4 text-xl font-semibold">{t('quickActions')}</h2>
             <div className="flex flex-wrap gap-3">
               <Button asChild>
-                <Link href="/songs/new"><Plus className="mr-2 h-4 w-4" />{t('newSong')}</Link>
-              </Button>
-              <Button asChild variant="secondary">
-                <Link href="/songs/generate"><Wand2 className="mr-2 h-4 w-4" />{t('aiCompose')}</Link>
+                <Link href="/songs/new"><Wand2 className="mr-2 h-4 w-4" />{t('aiCompose')}</Link>
               </Button>
               <Button asChild variant="secondary">
                 <Link href="/songs/cover"><Mic2 className="mr-2 h-4 w-4" />{t('aiCover')}</Link>

@@ -11,6 +11,7 @@ import {
 	Disc,
 	FileText,
 	MessageSquare,
+	LayoutDashboard,
 } from "lucide-react";
 
 import { useFeedback } from "@/lib/feedback-context";

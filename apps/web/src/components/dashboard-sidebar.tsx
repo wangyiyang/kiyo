@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { Link, usePathname, useRouter } from '@/i18n/navigation'
+import * as React from "react";
+import { useTranslations } from "next-intl";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import {
 	Music2,
 	Plus,
@@ -14,48 +15,48 @@ import {
 	LogOut,
 	Menu,
 	X,
-} from 'lucide-react'
-import { cn } from '@kiyo/ui'
-import { createBrowserClient } from '@kiyo/supabase'
+} from "lucide-react";
+import { cn } from "@kiyo/ui";
+import { createBrowserClient } from "@kiyo/supabase";
 
 const sidebarNavItems = [
-	{ href: '/', icon: Home, label: 'nav.home' },
-	{ href: '/songs', icon: Music, label: 'nav.songs' },
-	{ href: '/lyrics', icon: Mic2, label: 'nav.lyrics' },
-	{ href: '/albums', icon: Disc, label: 'nav.albums' },
-] as const
+	{ href: "/", icon: Home, label: "home" },
+	{ href: "/songs", icon: Music, label: "songs" },
+	{ href: "/lyrics", icon: Mic2, label: "lyrics" },
+	{ href: "/albums", icon: Disc, label: "albums" },
+] as const;
 
 const bottomNavItems = [
-	{ href: '/settings', icon: Settings, label: 'nav.settings' },
-] as const
+	{ href: "/settings", icon: Settings, label: "settings" },
+] as const;
 
 interface DashboardSidebarProps {
-	children: React.ReactNode
+	children: React.ReactNode;
 }
 
 export function DashboardSidebar({ children }: DashboardSidebarProps) {
-	const pathname = usePathname()
-	const router = useRouter()
-	const [mobileOpen, setMobileOpen] = React.useState(false)
-	const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+	const pathname = usePathname();
+	const router = useRouter();
+	const [mobileOpen, setMobileOpen] = React.useState(false);
+	const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
 	React.useEffect(() => {
-		const supabase = createBrowserClient()
+		const supabase = createBrowserClient();
 		supabase.auth.getUser().then(({ data }) => {
-			setIsAuthenticated(!!data.user)
-		})
-	}, [])
+			setIsAuthenticated(!!data.user);
+		});
+	}, []);
 
 	const handleSignOut = async () => {
-		const supabase = createBrowserClient()
-		await supabase.auth.signOut()
-		router.push('/')
-	}
+		const supabase = createBrowserClient();
+		await supabase.auth.signOut();
+		router.push("/");
+	};
 
 	const isActive = (href: string) => {
-		if (href === '/') return pathname === '/'
-		return pathname.startsWith(href)
-	}
+		if (href === "/") return pathname === "/";
+		return pathname.startsWith(href);
+	};
 
 	return (
 		<div className="flex min-h-screen">
@@ -79,8 +80,8 @@ export function DashboardSidebar({ children }: DashboardSidebarProps) {
 			{/* Mobile Sidebar */}
 			<aside
 				className={cn(
-					'fixed inset-y-0 left-0 z-50 w-72 bg-card border-r border-border transform transition-transform duration-300 ease-in-out md:hidden',
-					mobileOpen ? 'translate-x-0' : '-translate-x-full'
+					"fixed inset-y-0 left-0 z-50 w-72 bg-card border-r border-border transform transition-transform duration-300 ease-in-out md:hidden",
+					mobileOpen ? "translate-x-0" : "-translate-x-full",
 				)}
 			>
 				<SidebarContent
@@ -111,14 +112,14 @@ export function DashboardSidebar({ children }: DashboardSidebarProps) {
 				<main className="flex-1">{children}</main>
 			</div>
 		</div>
-	)
+	);
 }
 
 interface SidebarContentProps {
-	isActive: (href: string) => boolean
-	onSignOut: () => void
-	isAuthenticated: boolean
-	onClose?: () => void
+	isActive: (href: string) => boolean;
+	onSignOut: () => void;
+	isAuthenticated: boolean;
+	onClose?: () => void;
 }
 
 function SidebarContent({
@@ -127,6 +128,7 @@ function SidebarContent({
 	isAuthenticated,
 	onClose,
 }: SidebarContentProps) {
+	const tNav = useTranslations("nav");
 	return (
 		<div className="flex h-full flex-col">
 			{/* Logo */}
@@ -179,14 +181,14 @@ function SidebarContent({
 							href={item.href}
 							onClick={onClose}
 							className={cn(
-								'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+								"flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
 								isActive(item.href)
-									? 'bg-kiyo-purple/10 text-kiyo-purple border-l-[3px] border-kiyo-purple -ml-[3px]'
-									: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+									? "bg-kiyo-purple/10 text-kiyo-purple border-l-[3px] border-kiyo-purple -ml-[3px]"
+									: "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
 							)}
 						>
 							<item.icon className="h-4 w-4" />
-							<span>{item.label}</span>
+							<span>{tNav(item.label)}</span>
 						</Link>
 					))}
 				</div>
@@ -201,21 +203,21 @@ function SidebarContent({
 							href={item.href}
 							onClick={onClose}
 							className={cn(
-								'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+								"flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
 								isActive(item.href)
-									? 'bg-kiyo-purple/10 text-kiyo-purple border-l-[3px] border-kiyo-purple -ml-[3px]'
-									: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+									? "bg-kiyo-purple/10 text-kiyo-purple border-l-[3px] border-kiyo-purple -ml-[3px]"
+									: "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
 							)}
 						>
 							<item.icon className="h-4 w-4" />
-							<span>{item.label}</span>
+							<span>{tNav(item.label)}</span>
 						</Link>
 					))}
 					{isAuthenticated && (
 						<button
 							onClick={() => {
-								onSignOut()
-								onClose?.()
+								onSignOut();
+								onClose?.();
 							}}
 							className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
 						>
@@ -226,5 +228,5 @@ function SidebarContent({
 				</div>
 			</div>
 		</div>
-	)
+	);
 }

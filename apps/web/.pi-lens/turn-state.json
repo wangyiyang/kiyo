@@ -1,0 +1,60 @@
+{
+  "files": {
+    "src/app/[locale]/songs/new/page.tsx": {
+      "modifiedRanges": [
+        {
+          "start": 74,
+          "end": 74
+        },
+        {
+          "start": 78,
+          "end": 82
+        }
+      ],
+      "importsChanged": false,
+      "lastEdit": "2026-05-12T15:17:13.031Z"
+    },
+    "src/app/[locale]/songs/page.tsx": {
+      "modifiedRanges": [
+        {
+          "start": 6,
+          "end": 6
+        },
+        {
+          "start": 8,
+          "end": 9
+        },
+        {
+          "start": 11,
+          "end": 11
+        },
+        {
+          "start": 96,
+          "end": 96
+        },
+        {
+          "start": 100,
+          "end": 100
+        },
+        {
+          "start": 102,
+          "end": 102
+        },
+        {
+          "start": 106,
+          "end": 106
+        },
+        {
+          "start": 114,
+          "end": 123
+        }
+      ],
+      "importsChanged": true,
+      "lastEdit": "2026-05-12T15:17:57.524Z"
+    }
+  },
+  "turnCycles": 0,
+  "maxCycles": 3,
+  "lastUpdated": "2026-05-12T15:17:57.524Z",
+  "sessionId": "lens-mp2ps9x0-c48669ed"
+}

@@ -1,17 +1,12 @@
 import { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
 import { createServerClient } from "@kiyo/supabase/server"
 import { EmptyState, cn } from "@kiyo/ui"
 import { Link } from "@/i18n/navigation"
-import { getTranslations } from "next-intl/server"
 import { ShowcaseCard } from "@/components/sections/showcase-card"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-
-export const metadata: Metadata = {
-  title: "Explore Songs",
-  description: "Discover AI-generated music",
-}
 
 interface FeaturedTrack {
   id: string

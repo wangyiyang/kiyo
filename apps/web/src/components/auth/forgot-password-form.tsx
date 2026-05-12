@@ -18,15 +18,16 @@ import {
 } from '@kiyo/ui'
 
 import { sendResetPassword } from '@/app/actions/auth'
-import { forgotPasswordSchema, type ForgotPasswordInput } from '@/lib/schemas/auth'
+import { getForgotPasswordSchema, type ForgotPasswordInput } from '@/lib/schemas/auth'
 
 export function ForgotPasswordForm() {
   const t = useTranslations('auth')
   const [pending, startTransition] = React.useTransition()
   const [sent, setSent] = React.useState(false)
 
+  const schema = getForgotPasswordSchema((key) => t(key))
   const form = useForm<ForgotPasswordInput>({
-    resolver: zodResolver(forgotPasswordSchema),
+    resolver: zodResolver(schema),
     defaultValues: { email: '' },
     mode: 'onBlur',
   })
