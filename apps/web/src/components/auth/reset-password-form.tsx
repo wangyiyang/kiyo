@@ -36,7 +36,7 @@ export function ResetPasswordForm() {
     if (!code) {
       setError(t('resetPassword.invalidLink'))
     }
-  }, [code])
+  }, [code, t])
 
   const schema = getResetPasswordSchema((key) => t(key))
   const form = useForm<ResetPasswordInput>({
