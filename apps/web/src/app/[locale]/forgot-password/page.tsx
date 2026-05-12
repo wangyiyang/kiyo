@@ -21,19 +21,20 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ForgotPasswordPage() {
+  const t = await getTranslations('auth')
   return (
     <AuthGuard>
       <div className="container mx-auto flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl">Reset password</CardTitle>
-          <CardDescription>We&apos;ll send you a link to reset your password</CardDescription>
+          <CardTitle className="text-2xl">{t('forgotPassword.title')}</CardTitle>
+          <CardDescription>{t('forgotPassword.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
           <ForgotPasswordForm />
           <p className="mt-4 text-center text-sm text-muted-foreground">
             <Link href="/login" className="font-medium text-foreground hover:underline">
-              Back to log in
+              {t('forgotPassword.backToLogin')}
             </Link>
           </p>
         </CardContent>

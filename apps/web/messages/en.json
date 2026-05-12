@@ -62,7 +62,9 @@
       },
       "noAccount": "No account?",
       "registerLink": "Sign up",
-      "forgotPassword": "Forgot password?"
+      "forgotPassword": "Forgot password?",
+      "hidePassword": "Hide password",
+      "orSeparator": "or"
     },
     "register": {
       "title": "Sign up for Kiyo",
@@ -90,7 +92,10 @@
       "submitting": "Signing up…",
       "success": "Account created! Please check your email to verify your account.",
       "hasAccount": "Already have an account?",
-      "loginLink": "Log in"
+      "loginLink": "Log in",
+      "hidePassword": "Hide password",
+      "orSeparator": "or",
+      "termsLabel": "I have read and agree to the <privacy>Privacy Policy</privacy> and <terms>Terms of Service</terms>"
     },
     "forgotPassword": {
       "title": "Reset password",
@@ -116,7 +121,10 @@
       },
       "submit": "Update password",
       "submitting": "Updating…",
-      "success": "Password updated! Please log in with your new password."
+      "success": "Password updated! Please log in with your new password.",
+      "hidePassword": "Hide password",
+      "invalidLink": "Invalid or expired reset link.",
+      "requestNewLink": "Request new link"
     },
     "userMenu": {
       "mySongs": "My songs",
@@ -140,7 +148,12 @@
       "passwordMatch": "Passwords do not match",
       "invalidCredentials": "Invalid email or password",
       "emailNotConfirmed": "Please verify your email first",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "termsRequired": "Please read and agree to the Privacy Policy and Terms of Service"
+    },
+    "common": {
+      "show": "Show",
+      "hide": "Hide"
     }
   },
   "header": {

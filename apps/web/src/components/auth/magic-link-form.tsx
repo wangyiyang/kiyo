@@ -18,7 +18,7 @@ import {
 } from '@kiyo/ui'
 
 import { sendMagicLink } from '@/app/actions/auth'
-import { magicLinkSchema, type MagicLinkInput } from '@/lib/schemas/auth'
+import { getMagicLinkSchema, type MagicLinkInput } from '@/lib/schemas/auth'
 
 interface MagicLinkFormProps {
   onBack: () => void
@@ -29,8 +29,9 @@ export function MagicLinkForm({ onBack }: MagicLinkFormProps) {
   const [pending, startTransition] = React.useTransition()
   const [sent, setSent] = React.useState(false)
 
+  const schema = getMagicLinkSchema((key) => t(key))
   const form = useForm<MagicLinkInput>({
-    resolver: zodResolver(magicLinkSchema),
+    resolver: zodResolver(schema),
     defaultValues: { email: '' },
     mode: 'onBlur',
   })
