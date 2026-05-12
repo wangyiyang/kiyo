@@ -55,9 +55,7 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
 
   useEffect(() => {
     if (track.cover_file_path) {
-      getSignedCoverUrl(track.cover_file_path).then((url) => {
-        setCoverUrl(url || track.cover_url)
-      })
+      getSignedCoverUrl(track.cover_file_path).then(setCoverUrl)
     } else {
       setCoverUrl(track.cover_url)
     }

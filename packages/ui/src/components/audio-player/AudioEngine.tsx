@@ -66,7 +66,7 @@ export function AudioEngine() {
     async function initHowl() {
       let src = currentTrack!.audio_url
 
-      if (!src && currentTrack!.file_path) {
+      if (currentTrack!.file_path) {
         try {
           src = await fetchSignedUrl(currentTrack!.file_path)
           signedUrlRef.current = src
@@ -87,11 +87,6 @@ export function AudioEngine() {
           console.error('Failed to sign audio URL:', err)
           return
         }
-      }
-
-      if (!src) {
-        console.error('No audio source available')
-        return
       }
 
       if (cancelled) return
