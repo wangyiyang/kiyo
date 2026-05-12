@@ -9,11 +9,8 @@
     "explore": "探索",
     "language": "语言",
     "theme": "主题",
-<<<<<<< HEAD
-    "dashboard": "控制台"
-=======
+    "dashboard": "控制台",
     "settings": "设置"
->>>>>>> b3ef3f2283a1e2dbe7167dc287aed1bbc87411ee
   },
   "metadata": {
     "title": "Kiyo — AI 音乐创作平台",
