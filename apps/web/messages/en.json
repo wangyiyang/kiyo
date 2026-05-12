@@ -1040,5 +1040,23 @@
       "viewAll": "View All",
       "empty": "No recent activity"
     }
+  },
+  "player": {
+    "prev": "Previous",
+    "next": "Next",
+    "play": "Play",
+    "pause": "Pause",
+    "shuffle": "Shuffle",
+    "repeat": "Repeat",
+    "repeatOne": "Repeat one",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "volume": "Volume",
+    "expand": "Expand player",
+    "collapse": "Collapse player",
+    "close": "Close player",
+    "playlist": "Playlist",
+    "playSong": "Play {title}",
+    "playingIndicator": "Playing {title}"
   }
 }
