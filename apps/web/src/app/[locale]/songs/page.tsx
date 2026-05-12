@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { EmptyState, SongCard, Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@kiyo/ui'
 import { Link, useRouter } from '@/i18n/navigation'
+import { AuthGuardButton } from '@/components/auth/auth-guard-button'
 import { Plus, Wand2, Mic2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
@@ -106,13 +107,13 @@ export default function SongsPage() {
             <Mic2 className="h-4 w-4" />
             {t('list.cover')}
           </Link>
-          <Link
+          <AuthGuardButton
             href="/songs/new"
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
             {t('list.new')}
-          </Link>
+          </AuthGuardButton>
         </div>
       </div>
 
