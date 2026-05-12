@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { EmptyState, SongCard, Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@kiyo/ui'
 import { Link, useRouter } from '@/i18n/navigation'
+import { AuthGuardButton } from '@/components/auth/auth-guard-button'
 import { Wand2, Mic2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
@@ -92,13 +93,13 @@ export default function SongsPage() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t('list.title')}</h1>
         <div className="flex items-center gap-3">
-          <Link
+          <AuthGuardButton
             href="/songs/new"
             className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
           >
             <Wand2 className="h-4 w-4" />
             {t('list.generate')}
-          </Link>
+          </AuthGuardButton>
           <Link
             href="/songs/cover"
             className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"

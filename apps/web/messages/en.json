@@ -480,6 +480,8 @@
       "loadFailed": "Failed to load",
       "saveFailed": "Failed to save",
       "createFailed": "Failed to create",
+      "unauthorized": "Please log in first to continue",
+      "validationError": "Please check your input",
       "deleteFailed": "Failed to delete",
       "exportFailed": "Export failed, please try again later",
       "uploadFailed": "Upload failed: {message}",

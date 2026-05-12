@@ -14,6 +14,7 @@ import {
 import { SongSelector } from './SongSelector'
 import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { createBrowserClient } from '@kiyo/supabase'
 
 interface AlbumFormDialogProps {
   mode: 'create' | 'edit'
@@ -27,6 +28,7 @@ interface AlbumFormDialogProps {
 
 export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) {
   const [open, setOpen] = useState(false)
+  const [authChecked, setAuthChecked] = useState(false)
   const [title, setTitle] = useState(album?.title ?? '')
   const [description, setDescription] = useState(album?.description ?? '')
   const [selectedSongIds, setSelectedSongIds] = useState<string[]>([])
@@ -55,21 +57,43 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error?.message ?? tCommon('errors.unknown'))
+        const errorData = await response.json()
+        const errorMap: Record<string, string> = {
+          UNAUTHORIZED: tCommon('errors.unauthorized'),
+          VALIDATION_ERROR: tCommon('errors.validationError'),
+        }
+        const message = errorMap[errorData.error?.code] || errorData.error?.message || tCommon('errors.unknown')
+        throw new Error(message)
       }
 
       setOpen(false)
       router.refresh()
     } catch (err) {
-      alert(err instanceof Error ? err.message : tCommon('errors.unknown'))
+      if (err instanceof Error) {
+        alert(err.message || tCommon('errors.unknown'))
+      } else {
+        alert(tCommon('errors.unknown'))
+      }
     } finally {
       setSubmitting(false)
     }
   }
 
+  const handleOpenChange = async (newOpen: boolean) => {
+    if (newOpen && mode === 'create' && !authChecked) {
+      const supabase = createBrowserClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        router.push('/login?redirectTo=/albums')
+        return
+      }
+      setAuthChecked(true)
+    }
+    setOpen(newOpen)
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>

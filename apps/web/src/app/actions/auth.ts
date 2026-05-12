@@ -63,13 +63,15 @@ export async function signOut(): Promise<AuthResult> {
   return { ok: true }
 }
 
-export async function sendMagicLink(email: string): Promise<AuthResult> {
+export async function sendMagicLink(email: string, next?: string): Promise<AuthResult> {
   const supabase = await createServerClient()
+  const baseRedirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/auth/callback`
+  const emailRedirectTo = next
+    ? `${baseRedirectTo}?next=${encodeURIComponent(next)}`
+    : baseRedirectTo
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/auth/callback`,
-    },
+    options: { emailRedirectTo },
   })
 
   if (error) {
@@ -118,13 +120,15 @@ export async function updatePassword(password: string): Promise<AuthResult> {
   return { ok: true, message: 'Password updated successfully.' }
 }
 
-export async function signInWithOAuth(provider: 'github' | 'google'): Promise<never> {
+export async function signInWithOAuth(provider: 'github' | 'google', next?: string): Promise<never> {
   const supabase = await createServerClient()
+  const baseRedirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
+  const redirectTo = next
+    ? `${baseRedirectTo}?next=${encodeURIComponent(next)}`
+    : baseRedirectTo
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
-    options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-    },
+    options: { redirectTo },
   })
 
   if (error || !data.url) {

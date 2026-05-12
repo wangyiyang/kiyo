@@ -480,6 +480,8 @@
       "loadFailed": "加载失败",
       "saveFailed": "保存失败",
       "createFailed": "创建失败",
+      "unauthorized": "请先登录后再进行操作",
+      "validationError": "请检查输入内容是否正确",
       "deleteFailed": "删除失败",
       "exportFailed": "导出失败，请稍后重试",
       "uploadFailed": "上传失败：{message}",
