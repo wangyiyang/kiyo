@@ -19,6 +19,7 @@ import { LocaleSwitcher } from './LocaleSwitcher'
 import { ThemeToggle } from './theme-toggle'
 
 const navLinks = [
+  { href: '/dashboard', key: 'dashboard' },
   { href: '/explore', key: 'explore' },
   { href: '/songs', key: 'songs' },
   { href: '/albums', key: 'albums' },

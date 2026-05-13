@@ -6,7 +6,17 @@ import { Play, Pause, SkipBack, SkipForward, ChevronUp, ChevronDown, X, Music2 }
 import { PlaylistPanel } from './PlaylistPanel'
 import { ProgressBar } from './ProgressBar'
 
-export function MiniPlayer() {
+export interface MiniPlayerLabels {
+  prev?: string
+  next?: string
+  play?: string
+  pause?: string
+  expand?: string
+  collapse?: string
+  close?: string
+}
+
+export function MiniPlayer({ labels = {} }: { labels?: MiniPlayerLabels } = {}) {
   const currentTrack = usePlayerStore((s) => s.currentTrack)
   const isPlaying = usePlayerStore((s) => s.isPlaying)
   const isVisible = usePlayerStore((s) => s.isMiniPlayerVisible)
@@ -27,6 +37,7 @@ export function MiniPlayer() {
         <button
           onClick={() => setMiniPlayerExpanded(!isExpanded)}
           className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-white/5"
+          aria-label={isExpanded ? (labels.collapse ?? 'Collapse player') : (labels.expand ?? 'Expand player')}
         >
           {currentTrack.cover_url ? (
             <Image
@@ -62,18 +73,21 @@ export function MiniPlayer() {
           <button
             onClick={prev}
             className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition hover:text-white"
+            aria-label={labels.prev ?? 'Previous'}
           >
             <SkipBack size={16} />
           </button>
           <button
             onClick={togglePlay}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black transition hover:scale-105"
+            aria-label={isPlaying ? (labels.pause ?? 'Pause') : (labels.play ?? 'Play')}
           >
             {isPlaying ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
           </button>
           <button
             onClick={next}
             className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition hover:text-white"
+            aria-label={labels.next ?? 'Next'}
           >
             <SkipForward size={16} />
           </button>
@@ -89,12 +103,14 @@ export function MiniPlayer() {
           <button
             onClick={() => setMiniPlayerExpanded(!isExpanded)}
             className="flex h-8 w-8 items-center justify-center rounded-full text-white/40 transition hover:text-white"
+            aria-label={isExpanded ? (labels.collapse ?? 'Collapse player') : (labels.expand ?? 'Expand player')}
           >
             {isExpanded ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
           </button>
           <button
             onClick={stopAndHide}
             className="flex h-8 w-8 items-center justify-center rounded-full text-white/40 transition hover:text-white"
+            aria-label={labels.close ?? 'Close player'}
           >
             <X size={16} />
           </button>

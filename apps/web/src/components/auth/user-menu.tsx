@@ -11,6 +11,7 @@ import {
 	Disc,
 	FileText,
 	MessageSquare,
+	LayoutDashboard,
 } from "lucide-react";
 
 import { useFeedback } from "@/lib/feedback-context";
@@ -91,6 +92,13 @@ export function UserMenu({ user }: UserMenuProps) {
 					<Link href="/lyrics">
 						<FileText className="mr-2 h-4 w-4" />
 						{t("userMenu.myLyrics")}
+					</Link>
+				</DropdownMenuItem>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem asChild>
+					<Link href="/dashboard">
+						<LayoutDashboard className="mr-2 h-4 w-4" />
+						{t("userMenu.dashboard")}
 					</Link>
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />

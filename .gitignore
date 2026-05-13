@@ -38,6 +38,9 @@ Thumbs.db
 /explore-page.png
 /showcase-home.png
 
+# MiniMax generated songs / covers / metadata
+generated/minimax/
+
 # Supabase
 supabase-local/.branches
 supabase-local/.temp
@@ -54,8 +57,11 @@ supabase-local/functions/**/.env
 .ant-colony/
 .superpowers/
 /.pi/
+/.pi-lens/
 /.playwright-mcp/
 .vercel
 .worktrees/
 recovery/
 .env*.local
+
+health-plan.md

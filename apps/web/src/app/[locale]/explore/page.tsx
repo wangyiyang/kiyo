@@ -1,38 +1,12 @@
 import { Metadata } from "next"
-import { createServerClient } from "@kiyo/supabase/server"
-import { EmptyState, cn } from "@kiyo/ui"
-import { Link } from "@/i18n/navigation"
 import { getTranslations } from "next-intl/server"
-import { ShowcaseCard } from "@/components/sections/showcase-card"
+import { createServerClient } from "@kiyo/supabase/server"
+import { cn } from "@kiyo/ui"
+import { Link } from "@/i18n/navigation"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-
-export const metadata: Metadata = {
-  title: "Explore Songs",
-  description: "Discover AI-generated music",
-}
-
-interface FeaturedTrack {
-  id: string
-  title: string
-  genre: string | null
-  mood: string | null
-  cover_url: string | null
-  cover_file_path: string | null
-  audio_url: string | null
-  file_path: string | null
-  duration: number | null
-}
-
-const trackGradients = [
-  "from-indigo-500 to-cyan-400",
-  "from-amber-400 to-pink-400",
-  "from-rose-500 to-violet-500",
-  "from-sky-500 to-emerald-400",
-  "from-fuchsia-500 to-orange-400",
-  "from-purple-400 to-pink-300",
-]
+import { ExploreSongGrid } from "@/components/explore-song-grid"
 
 export default async function ExplorePage({
   searchParams,
@@ -44,33 +18,7 @@ export default async function ExplorePage({
 
   const supabase = await createServerClient()
 
-  // Query 1: Get all songs (with optional filters)
-  let query = supabase
-    .from("songs")
-    .select("id, title, genre, mood, cover_url, cover_file_path, audio_url, file_path, duration")
-    .eq("is_public", true)
-
-  if (genre) {
-    query = query.eq("genre", genre)
-  }
-  if (mood) {
-    query = query.eq("mood", mood)
-  }
-
-  const { data: songs, error } = await query.order("created_at", { ascending: false })
-
-  if (error) {
-    console.error("Error fetching songs:", error)
-  }
-
-  // Sort: songs with cover first, then by created_at desc
-  const sortedSongs = (songs ?? []).sort((a: any, b: any) => {
-    const aHasCover = (a.cover_url || a.cover_file_path) ? 1 : 0
-    const bHasCover = (b.cover_url || b.cover_file_path) ? 1 : 0
-    return bHasCover - aHasCover
-  })
-
-  // Query 2: Get all genre and mood options from all songs
+  // Query: Get all genre and mood options from all songs
   const { data: allSongs } = await supabase
     .from("songs")
     .select("genre, mood")
@@ -91,8 +39,6 @@ export default async function ExplorePage({
     const qs = sp.toString()
     return `/explore${qs ? `?${qs}` : ""}`
   }
-
-  const tracks: FeaturedTrack[] = sortedSongs
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -183,27 +129,7 @@ export default async function ExplorePage({
           </ScrollReveal>
 
           {/* Songs Grid */}
-          {tracks.length > 0 ? (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {tracks.map((track, index) => (
-                <ScrollReveal key={track.id} delay={(index % 3) * 0.08}>
-                  <ShowcaseCard
-                    track={track}
-                    index={index}
-                    playlist={tracks}
-                    gradient={trackGradients[index % trackGradients.length]}
-                  />
-                </ScrollReveal>
-              ))}
-            </div>
-          ) : (
-            <ScrollReveal>
-              <EmptyState
-                title={t("empty.title")}
-                description={t("empty.description")}
-              />
-            </ScrollReveal>
-          )}
+          <ExploreSongGrid genre={genre} mood={mood} />
         </section>
       </main>
       <SiteFooter />

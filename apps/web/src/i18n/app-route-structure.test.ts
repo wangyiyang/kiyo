@@ -32,7 +32,6 @@ const localizedRouteFiles = [
   'songs/page.tsx',
   'songs/loading.tsx',
   'songs/cover/page.tsx',
-  'songs/generate/page.tsx',
   'songs/new/page.tsx',
   'songs/[id]/page.tsx',
   'songs/[id]/edit/page.tsx',

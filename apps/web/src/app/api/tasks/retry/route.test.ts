@@ -48,9 +48,10 @@ describe('POST /api/tasks/retry', () => {
   })
 
   it('returns 404 if no failed task found', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({ song_id: 's1' }))
 
@@ -60,9 +61,10 @@ describe('POST /api/tasks/retry', () => {
   })
 
   it('returns 400 if song_id missing', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({}))
 
@@ -72,9 +74,10 @@ describe('POST /api/tasks/retry', () => {
   })
 
   it('returns 401 when not authenticated', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({ song_id: 's1' }))
 

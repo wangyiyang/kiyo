@@ -11,6 +11,23 @@ import { VolumeControl } from './VolumeControl'
 import { SpectrumVisualizer } from './SpectrumVisualizer'
 import { PlaylistPanel } from './PlaylistPanel'
 
+export interface AudioPlayerLabels {
+  play?: string
+  pause?: string
+  playlist?: string
+  prev?: string
+  next?: string
+  shuffle?: string
+  repeat?: string
+  repeatOne?: string
+  mute?: string
+  unmute?: string
+  volume?: string
+  empty?: string
+  playSong?: string
+  playingIndicator?: string
+}
+
 export interface AudioPlayerProps {
   src: string
   filePath?: string | null
@@ -30,6 +47,7 @@ export interface AudioPlayerProps {
     album?: string | null
   }>
   className?: string
+  labels?: AudioPlayerLabels
 }
 
 export function AudioPlayer({
@@ -43,23 +61,26 @@ export function AudioPlayer({
   songId,
   playlist,
   className,
+  labels = {},
 }: AudioPlayerProps) {
   const store = usePlayerStore()
   const [showPlaylist, setShowPlaylist] = useState(false)
   const [resolvedCoverUrl, setResolvedCoverUrl] = useState<string | null>(coverUrl || null)
 
   useEffect(() => {
-    if (coverFilePath) {
+    if (coverUrl) {
+      setResolvedCoverUrl(coverUrl)
+    } else if (coverFilePath) {
       fetch('/api/storage/sign', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bucket: 'covers', path: coverFilePath }),
       })
         .then((res) => res.json())
-        .then((data) => setResolvedCoverUrl(data.signedUrl))
-        .catch(() => setResolvedCoverUrl(coverUrl || null))
+        .then((data) => setResolvedCoverUrl(data.signedUrl || null))
+        .catch(() => setResolvedCoverUrl(null))
     } else {
-      setResolvedCoverUrl(coverUrl || null)
+      setResolvedCoverUrl(null)
     }
   }, [coverFilePath, coverUrl])
 
@@ -122,6 +143,7 @@ export function AudioPlayer({
           <button
             onClick={handlePlay}
             className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition hover:opacity-100"
+            aria-label={isPlaying ? (labels.pause ?? 'Pause') : (labels.play ?? 'Play')}
           >
             {isPlaying ? <Pause size={24} /> : <Play size={24} className="ml-1" />}
           </button>
@@ -146,12 +168,29 @@ export function AudioPlayer({
 
       {/* Controls */}
       <div className="mb-4">
-        <PlayerControls size="lg" />
+        <PlayerControls
+          size="lg"
+          labels={{
+            shuffle: labels.shuffle,
+            prev: labels.prev,
+            next: labels.next,
+            play: labels.play,
+            pause: labels.pause,
+            repeat: labels.repeat,
+            repeatOne: labels.repeatOne,
+          }}
+        />
       </div>
 
       {/* Bottom row: Volume + Playlist toggle */}
       <div className="flex items-center justify-between">
-        <VolumeControl />
+        <VolumeControl
+          labels={{
+            mute: labels.mute,
+            unmute: labels.unmute,
+            volume: labels.volume,
+          }}
+        />
         {playlist && playlist.length > 0 && (
           <button
             onClick={() => setShowPlaylist(!showPlaylist)}
@@ -161,6 +200,7 @@ export function AudioPlayer({
                 ? 'bg-white/10 text-white'
                 : 'text-white/50 hover:bg-white/5 hover:text-white/80'
             )}
+            aria-label={labels.playlist ?? 'Playlist'}
           >
             <ListMusic size={16} />
             播放列表 ({playlist.length})
@@ -171,7 +211,13 @@ export function AudioPlayer({
       {/* Playlist */}
       {showPlaylist && playlist && playlist.length > 0 && (
         <div className="mt-4 rounded-lg bg-white/5">
-          <PlaylistPanel />
+          <PlaylistPanel
+            labels={{
+              empty: labels.empty,
+              playSong: labels.playSong,
+              playingIndicator: labels.playingIndicator,
+            }}
+          />
         </div>
       )}
     </div>

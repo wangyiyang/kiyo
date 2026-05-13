@@ -20,7 +20,7 @@ import {
 } from '@kiyo/ui'
 
 import { signInWithPassword } from '@/app/actions/auth'
-import { loginSchema, type LoginInput } from '@/lib/schemas/auth'
+import { getLoginSchema, type LoginInput } from '@/lib/schemas/auth'
 
 export function PasswordLoginForm() {
   const t = useTranslations('auth')
@@ -29,8 +29,9 @@ export function PasswordLoginForm() {
   const [pending, startTransition] = React.useTransition()
   const [showPassword, setShowPassword] = React.useState(false)
 
+  const schema = getLoginSchema((key) => t(key))
   const form = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(schema),
     defaultValues: { email: '', password: '', rememberMe: false },
     mode: 'onBlur',
   })
@@ -104,7 +105,7 @@ export function PasswordLoginForm() {
                     onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? 'Hide' : 'Show'}
+                    {showPassword ? t('common.hide') : t('common.show')}
                   </button>
                 </div>
               </FormControl>
