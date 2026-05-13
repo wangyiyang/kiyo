@@ -38,6 +38,9 @@ Thumbs.db
 /explore-page.png
 /showcase-home.png
 
+# MiniMax generated songs / covers / metadata
+generated/minimax/
+
 # Supabase
 supabase-local/.branches
 supabase-local/.temp
