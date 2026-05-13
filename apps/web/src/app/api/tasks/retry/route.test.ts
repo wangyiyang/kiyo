@@ -7,6 +7,7 @@ vi.mock('@kiyo/supabase/server', async () => {
   return {
     ...actual,
     createServerClient: vi.fn(),
+    createServiceRoleClient: vi.fn(),
   }
 })
 
@@ -24,7 +25,7 @@ function createRequest(body: Record<string, unknown>) {
 
 describe('POST /api/tasks/retry', () => {
   it('resets failed task to pending and updates song status (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       { id: 's1', user_id: 'user-1', status: 'failed', title: 'Song 1' },
@@ -33,6 +34,7 @@ describe('POST /api/tasks/retry', () => {
       { id: 't1', song_id: 's1', user_id: 'user-1', status: 'failed', type: 'music', retry_count: 3, max_retries: 3 },
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({ song_id: 's1' }))
 

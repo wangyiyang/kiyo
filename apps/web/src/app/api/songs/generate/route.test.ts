@@ -7,6 +7,7 @@ vi.mock('@kiyo/supabase/server', async () => {
   return {
     ...actual,
     createServerClient: vi.fn(),
+    createServiceRoleClient: vi.fn(),
   }
 })
 
@@ -24,9 +25,10 @@ function createRequest(body: Record<string, unknown>) {
 
 describe('POST /api/songs/generate (async)', () => {
   it('auto_lyrics mode returns 202 and creates song + task', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'A happy pop song',
@@ -62,9 +64,10 @@ describe('POST /api/songs/generate (async)', () => {
   })
 
   it('instrumental mode returns 202', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'Epic orchestral background',
@@ -80,12 +83,13 @@ describe('POST /api/songs/generate (async)', () => {
   })
 
   it('existing_lyric mode returns 202', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
       { id: 'l1', title: 'Lyric 1', user_id: 'user-1', content: 'Line 1\nLine 2' },
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'A rock ballad',

@@ -230,5 +230,9 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
     return Promise.resolve({ data: null, error: null })
   }
 
-  return { from, auth, dataStore, chain, storage, uploadedFiles, rpc }
+  const functions = {
+    invoke: vi.fn().mockResolvedValue({ data: { processed: 1 }, error: null }),
+  }
+
+  return { from, auth, dataStore, chain, storage, uploadedFiles, rpc, functions }
 }
