@@ -7,21 +7,7 @@ vi.mock('@kiyo/supabase/server', async () => {
   return {
     ...actual,
     createServerClient: vi.fn(),
-    createServiceRoleClient: () => ({
-      from: () => ({
-        delete: () => ({
-          lt: () => ({ then: async (resolve: any) => resolve({ error: null }) }),
-        }),
-        select: () => ({
-          eq: () => ({
-            eq: () => ({
-              gte: () => ({ then: async (resolve: any) => resolve({ count: 0, error: null }) }),
-            }),
-          }),
-        }),
-        insert: () => ({ then: async (resolve: any) => resolve({ error: null }) }),
-      }),
-    }) as any,
+    createServiceRoleClient: vi.fn(),
   }
 })
 
@@ -39,9 +25,10 @@ function createRequest(body: Record<string, unknown>) {
 
 describe('POST /api/songs/generate (async)', () => {
   it('auto_lyrics mode returns 202 and creates song + task', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'A happy pop song',
@@ -77,9 +64,10 @@ describe('POST /api/songs/generate (async)', () => {
   })
 
   it('instrumental mode returns 202', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'Epic orchestral background',
@@ -95,12 +83,13 @@ describe('POST /api/songs/generate (async)', () => {
   })
 
   it('existing_lyric mode returns 202', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
       { id: 'l1', title: 'Lyric 1', user_id: 'user-1', content: 'Line 1\nLine 2' },
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'A rock ballad',
@@ -116,9 +105,10 @@ describe('POST /api/songs/generate (async)', () => {
   })
 
   it('invalid mode returns 400', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'test',
@@ -131,9 +121,10 @@ describe('POST /api/songs/generate (async)', () => {
   })
 
   it('existing_lyric missing lyric_id returns 400', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'test',
@@ -146,12 +137,13 @@ describe('POST /api/songs/generate (async)', () => {
   })
 
   it('lyric owned by another user returns 403', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.lyrics = [
       { id: 'l1', title: 'Lyric 1', user_id: 'user-2', content: 'Secret lyrics' },
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'test',
@@ -180,7 +172,7 @@ describe('POST /api/songs/generate (async)', () => {
   })
 
   it('returns 500 if task creation fails', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
 
     // Override generation_tasks insert to simulate failure
@@ -204,6 +196,7 @@ describe('POST /api/songs/generate (async)', () => {
     }
 
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
       prompt: 'A song',

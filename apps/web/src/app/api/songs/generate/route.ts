@@ -1,4 +1,4 @@
-import { createServerClient } from '@kiyo/supabase/server'
+import { createServerClient, createServiceRoleClient } from '@kiyo/supabase/server'
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 
@@ -162,6 +162,13 @@ export async function POST(request: Request) {
   if (notifyError) {
     console.error('Failed to create started notification:', notifyError)
   }
+
+  // Fire-and-forget: trigger immediate processing
+  void createServiceRoleClient()
+    .functions.invoke('process-generation-task')
+    .catch((err) => {
+      console.error('Failed to trigger generation worker:', err)
+    })
 
   return NextResponse.json(
     { song, task },

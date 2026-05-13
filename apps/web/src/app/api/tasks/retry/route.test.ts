@@ -7,21 +7,7 @@ vi.mock('@kiyo/supabase/server', async () => {
   return {
     ...actual,
     createServerClient: vi.fn(),
-    createServiceRoleClient: () => ({
-      from: () => ({
-        delete: () => ({
-          lt: () => ({ then: async (resolve: any) => resolve({ error: null }) }),
-        }),
-        select: () => ({
-          eq: () => ({
-            eq: () => ({
-              gte: () => ({ then: async (resolve: any) => resolve({ count: 0, error: null }) }),
-            }),
-          }),
-        }),
-        insert: () => ({ then: async (resolve: any) => resolve({ error: null }) }),
-      }),
-    }) as any,
+    createServiceRoleClient: vi.fn(),
   }
 })
 
@@ -39,7 +25,7 @@ function createRequest(body: Record<string, unknown>) {
 
 describe('POST /api/tasks/retry', () => {
   it('resets failed task to pending and updates song status (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       { id: 's1', user_id: 'user-1', status: 'failed', title: 'Song 1' },
@@ -48,6 +34,7 @@ describe('POST /api/tasks/retry', () => {
       { id: 't1', song_id: 's1', user_id: 'user-1', status: 'failed', type: 'music', retry_count: 3, max_retries: 3 },
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({ song_id: 's1' }))
 
@@ -61,9 +48,10 @@ describe('POST /api/tasks/retry', () => {
   })
 
   it('returns 404 if no failed task found', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({ song_id: 's1' }))
 
@@ -73,9 +61,10 @@ describe('POST /api/tasks/retry', () => {
   })
 
   it('returns 400 if song_id missing', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({}))
 
@@ -85,9 +74,10 @@ describe('POST /api/tasks/retry', () => {
   })
 
   it('returns 401 when not authenticated', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: undefined })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({ song_id: 's1' }))
 
