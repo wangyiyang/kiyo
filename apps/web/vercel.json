@@ -1,5 +1,11 @@
 {
   "buildCommand": "cd ../.. && pnpm build --filter=web",
   "installCommand": "cd ../.. && corepack enable && pnpm install --frozen-lockfile",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "crons": [
+    {
+      "path": "/api/tasks/worker",
+      "schedule": "* * * * *"
+    }
+  ]
 }
