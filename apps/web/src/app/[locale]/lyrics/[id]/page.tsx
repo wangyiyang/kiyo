@@ -93,7 +93,7 @@ export default async function LyricDetailPage({
         </Link>
       </div>
 
-      <StructuredBlockEditor blocks={blocks} onChange={() => {}} readOnly />
+      <StructuredBlockEditor blocks={blocks} readOnly />
 
       <div className="mt-8">
         <h2 className="mb-4 text-lg font-semibold">{t('linkedSongs')}</h2>
