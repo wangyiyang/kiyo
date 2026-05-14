@@ -1,6 +1,6 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { Link } from '@/i18n/navigation'
-import { StructuredBlockEditor, textToBlocks, Button, SongStatusBadge } from '@kiyo/ui'
+import { StructuredBlockViewer, textToBlocks, Button, SongStatusBadge } from '@kiyo/ui'
 import { Pencil, ArrowLeft } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
 import { GenerateSongDialog } from './generate-song-dialog'
@@ -93,7 +93,7 @@ export default async function LyricDetailPage({
         </Link>
       </div>
 
-      <StructuredBlockEditor blocks={blocks} readOnly />
+      <StructuredBlockViewer blocks={blocks} />
 
       <div className="mt-8">
         <h2 className="mb-4 text-lg font-semibold">{t('linkedSongs')}</h2>
