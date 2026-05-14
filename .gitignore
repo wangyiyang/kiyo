@@ -57,8 +57,11 @@ supabase-local/functions/**/.env
 .ant-colony/
 .superpowers/
 /.pi/
+/.pi-lens/
 /.playwright-mcp/
 .vercel
 .worktrees/
 recovery/
 .env*.local
+
+health-plan.md

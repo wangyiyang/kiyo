@@ -51,17 +51,22 @@ async function getSignedCoverUrl(filePath: string | null): Promise<string | null
 export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardProps) {
   const play = usePlayerStore((s) => s.play)
   const t = useTranslations('common')
+  const tExplore = useTranslations('explore')
   const [coverUrl, setCoverUrl] = useState<string | null>(track.cover_url)
 
   useEffect(() => {
+    // API already pre-signed the cover_url — use it directly
+    if (track.cover_url) {
+      setCoverUrl(track.cover_url)
+      return
+    }
+    // Fallback: client-side signing for legacy/un-signed tracks
     if (track.cover_file_path) {
       getSignedCoverUrl(track.cover_file_path).then((url) => {
-        setCoverUrl(url || track.cover_url)
+        setCoverUrl(url || null)
       })
-    } else {
-      setCoverUrl(track.cover_url)
     }
-  }, [track.cover_file_path, track.cover_url])
+  }, [track.cover_url, track.cover_file_path])
 
   const handlePlay = () => {
     if (!track.audio_url && !track.file_path) return
@@ -138,13 +143,13 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
 
       <div className="absolute inset-x-0 bottom-0 p-5 text-white">
         <p className="text-xs uppercase tracking-wider opacity-80">
-          {track.genre ?? 'Music'}
+          {track.genre ?? tExplore('defaultGenre')}
         </p>
         <h3 className="mt-1 text-lg font-semibold tracking-tight">
           {track.title}
         </h3>
         <p className="mt-1 text-xs opacity-75">
-          {track.mood ?? 'Various'} · {formatDuration(track.duration)}
+          {track.mood ?? tExplore('defaultMood')} · {formatDuration(track.duration)}
         </p>
       </div>
     </article>

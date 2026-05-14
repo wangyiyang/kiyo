@@ -14,7 +14,7 @@ const DEFAULT_TAGS = ['Intro', 'Verse', 'Pre-Chorus', 'Chorus', 'Bridge', 'Outro
 
 export interface StructuredBlockEditorProps {
   blocks: Block[]
-  onChange: (blocks: Block[]) => void
+  onChange?: (blocks: Block[]) => void
   availableTags?: string[]
   readOnly?: boolean
 }
@@ -26,11 +26,13 @@ export function StructuredBlockEditor({
   readOnly = false,
 }: StructuredBlockEditorProps) {
   const updateBlock = (index: number, updates: Partial<Block>) => {
+    if (!onChange) return
     const next = blocks.map((b, i) => (i === index ? { ...b, ...updates } : b))
     onChange(next)
   }
 
   const addBlock = (index: number) => {
+    if (!onChange) return
     const next = [...blocks]
     next.splice(index + 1, 0, {
       id: generateId(),
@@ -41,12 +43,13 @@ export function StructuredBlockEditor({
   }
 
   const removeBlock = (index: number) => {
-    if (blocks.length <= 1) return
+    if (!onChange || blocks.length <= 1) return
     const next = blocks.filter((_, i) => i !== index)
     onChange(next)
   }
 
   const moveBlock = (index: number, direction: -1 | 1) => {
+    if (!onChange) return
     const newIndex = index + direction
     if (newIndex < 0 || newIndex >= blocks.length) return
     const next = [...blocks]

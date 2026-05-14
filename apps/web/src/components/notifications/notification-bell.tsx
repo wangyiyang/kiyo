@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { Bell } from 'lucide-react'
 import { cn } from '@kiyo/ui'
+import { useTranslations } from 'next-intl'
 import { useNotifications } from '@/hooks/use-notifications'
 import { NotificationPanel } from './notification-panel'
 
@@ -13,6 +14,7 @@ interface NotificationBellProps {
 export function NotificationBell({ userId }: NotificationBellProps) {
   const [isOpen, setIsOpen] = React.useState(false)
   const containerRef = React.useRef<HTMLDivElement>(null)
+  const t = useTranslations('nav')
   const { notifications, unreadCount, isLoading, markAsRead, markAllAsRead } =
     useNotifications(userId)
 
@@ -39,7 +41,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="relative flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-        aria-label="Notifications"
+        aria-label={t('notification')}
       >
         <Bell className="h-[18px] w-[18px]" />
         {unreadCount > 0 && (

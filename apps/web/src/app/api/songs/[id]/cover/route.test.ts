@@ -7,21 +7,7 @@ vi.mock('@kiyo/supabase/server', async () => {
   return {
     ...actual,
     createServerClient: vi.fn(),
-    createServiceRoleClient: () => ({
-      from: () => ({
-        delete: () => ({
-          lt: () => ({ then: async (resolve: any) => resolve({ error: null }) }),
-        }),
-        select: () => ({
-          eq: () => ({
-            eq: () => ({
-              gte: () => ({ then: async (resolve: any) => resolve({ count: 0, error: null }) }),
-            }),
-          }),
-        }),
-        insert: () => ({ then: async (resolve: any) => resolve({ error: null }) }),
-      }),
-    }) as any,
+    createServiceRoleClient: vi.fn(),
   }
 })
 
@@ -82,12 +68,13 @@ describe('POST /api/songs/[id]/cover', () => {
   })
 
   it('creates generation task and returns 202 for async generate', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       { id: 's1', title: 'My Song', genre: 'Pop', mood: 'Happy', user_id: 'user-1', cover_status: 'none' },
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const request = new Request('http://localhost/api/songs/s1/cover?action=generate', { method: 'POST' })
     const response = await POST(request, { params: Promise.resolve({ id: 's1' }) })

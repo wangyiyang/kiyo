@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
 
 import {
   Button,
@@ -26,6 +27,8 @@ interface MagicLinkFormProps {
 
 export function MagicLinkForm({ onBack }: MagicLinkFormProps) {
   const t = useTranslations('auth')
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo') ?? undefined
   const [pending, startTransition] = React.useTransition()
   const [sent, setSent] = React.useState(false)
 
@@ -38,7 +41,7 @@ export function MagicLinkForm({ onBack }: MagicLinkFormProps) {
 
   const onSubmit = (values: MagicLinkInput) => {
     startTransition(async () => {
-      const result = await sendMagicLink(values.email)
+      const result = await sendMagicLink(values.email, redirectTo)
       if (result.ok) {
         setSent(true)
         toast.success(t('login.magicLink.success'))

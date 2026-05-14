@@ -1,19 +1,22 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
 import { signInWithOAuth } from '@/app/actions/auth'
 import { Button } from '@kiyo/ui'
 import { Github, Chrome } from 'lucide-react'
 
 export function OAuthButtons() {
 	const t = useTranslations('auth')
+	const searchParams = useSearchParams()
+	const redirectTo = searchParams.get('redirectTo') ?? undefined
 
 	const handleGitHubSignIn = () => {
-		signInWithOAuth('github')
+		signInWithOAuth('github', redirectTo)
 	}
 
 	const handleGoogleSignIn = () => {
-		signInWithOAuth('google')
+		signInWithOAuth('google', redirectTo)
 	}
 
 	return (
