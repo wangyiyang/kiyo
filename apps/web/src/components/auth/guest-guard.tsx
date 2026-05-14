@@ -1,15 +1,15 @@
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@kiyo/supabase/server'
 
-interface AuthGuardProps {
+interface GuestGuardProps {
   children: React.ReactNode
   redirectTo?: string
 }
 
-export async function AuthGuard({
+export async function GuestGuard({
   children,
   redirectTo = '/',
-}: AuthGuardProps) {
+}: GuestGuardProps) {
   const supabase = await createServerClient()
   const {
     data: { user },

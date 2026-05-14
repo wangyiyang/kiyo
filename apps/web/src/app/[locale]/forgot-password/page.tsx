@@ -11,7 +11,7 @@ import {
 } from '@kiyo/ui'
 
 import { ForgotPasswordForm } from '@/components/auth/forgot-password-form'
-import { AuthGuard } from '@/components/auth/auth-guard'
+import { GuestGuard } from '@/components/auth/guest-guard'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('auth')
@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ForgotPasswordPage() {
   const t = await getTranslations('auth')
   return (
-    <AuthGuard>
+    <GuestGuard>
       <div className="container mx-auto flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
@@ -40,6 +40,6 @@ export default async function ForgotPasswordPage() {
         </CardContent>
       </Card>
       </div>
-    </AuthGuard>
+    </GuestGuard>
   )
 }
