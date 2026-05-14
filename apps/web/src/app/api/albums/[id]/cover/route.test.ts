@@ -98,6 +98,10 @@ describe('POST /api/albums/[id]/cover', () => {
     expect(task.album_id).toBe('a1')
     expect(task.user_id).toBe('user-1')
     expect(task.payload.title).toBe('My Album')
+    expect(task.payload.prompt).toContain('基于专辑主题"My Album"的视觉封面设计')
+    expect(task.payload.prompt).toContain('A great album的意境')
+    expect(task.payload.prompt).toContain('画面中不得出现任何文字、字母、数字、符号或语言字符')
+    expect(task.payload.prompt).not.toContain('专辑:')
   })
 
   it('uploads cover successfully (200)', async () => {
