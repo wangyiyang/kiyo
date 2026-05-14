@@ -111,3 +111,5 @@ export { textToBlocks, blocksToText } from "./src/lib/blocks";
 export type { Block } from "./src/lib/blocks";
 export { StructuredBlockEditor } from "./src/components/structured-block-editor";
 export type { StructuredBlockEditorProps } from "./src/components/structured-block-editor";
+export { StructuredBlockViewer } from "./src/components/structured-block-viewer";
+export type { StructuredBlockViewerProps } from "./src/components/structured-block-viewer";
