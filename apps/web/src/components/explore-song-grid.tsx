@@ -34,6 +34,7 @@ const trackGradients = [
 
 export function ExploreSongGrid({ genre, mood }: ExploreSongGridProps) {
   const t = useTranslations('explore')
+  const tCommon = useTranslations('common')
   const [songs, setSongs] = useState<Track[]>([])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
@@ -66,11 +67,11 @@ export function ExploreSongGrid({ genre, mood }: ExploreSongGridProps) {
       setHasMore(pagination.hasMore)
       setPage((prev) => prev + 1)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
+      setError(err instanceof Error ? err.message : tCommon('errors.unknown'))
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, hasMore, page, genre, mood])
+  }, [isLoading, hasMore, page, genre, mood, tCommon])
 
   // Reset state when genre or mood changes
   useEffect(() => {

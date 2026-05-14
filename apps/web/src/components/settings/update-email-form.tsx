@@ -21,18 +21,26 @@ import {
 import { createBrowserClient } from '@kiyo/supabase'
 import { signInWithPassword } from '@/app/actions/auth'
 
-const updateEmailSchema = z.object({
-  newEmail: z.string().email('Please enter a valid email'),
-  currentPassword: z.string().min(1, 'Current password is required'),
-})
-
-type UpdateEmailInput = z.infer<typeof updateEmailSchema>
+type UpdateEmailInput = {
+  newEmail: string
+  currentPassword: string
+}
 
 export function UpdateEmailForm() {
   const t = useTranslations('settings')
   const authT = useTranslations('auth')
+  const tCommon = useTranslations('common')
   const [pending, startTransition] = React.useTransition()
   const [showPassword, setShowPassword] = React.useState(false)
+
+  const updateEmailSchema = React.useMemo(
+    () =>
+      z.object({
+        newEmail: z.string().email(authT('errors.invalidEmail')),
+        currentPassword: z.string().min(1, tCommon('errors.required')),
+      }),
+    [authT, tCommon]
+  )
 
   const form = useForm<UpdateEmailInput>({
     resolver: zodResolver(updateEmailSchema),
@@ -117,7 +125,7 @@ export function UpdateEmailForm() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? 'Hide' : 'Show'}
+                    {showPassword ? tCommon('actions.hide') : tCommon('actions.show')}
                   </button>
                 </div>
               </FormControl>
@@ -127,7 +135,7 @@ export function UpdateEmailForm() {
         />
 
         <Button type="submit" disabled={pending}>
-          {pending ? 'Updating...' : t('emailSection.submit')}
+          {pending ? tCommon('states.updating') : t('emailSection.submit')}
         </Button>
       </form>
     </Form>

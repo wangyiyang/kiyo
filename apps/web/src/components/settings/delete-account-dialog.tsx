@@ -26,6 +26,7 @@ interface DeleteAccountDialogProps {
 
 export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
   const t = useTranslations('settings')
+  const tCommon = useTranslations('common')
   const [open, setOpen] = React.useState(false)
   const [step, setStep] = React.useState<Step>('warn')
   const [password, setPassword] = React.useState('')
@@ -133,7 +134,7 @@ export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
             </DialogHeader>
             <DialogFooter>
               <Button variant="outline" onClick={() => setOpen(false)}>
-                Cancel
+                {tCommon('actions.cancel')}
               </Button>
               <Button variant="destructive" onClick={() => setStep('verify')}>
                 {t('dangerZone.deleteAccount.dialog.continue')}
@@ -153,7 +154,7 @@ export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
             <div className="space-y-4 py-4">
               <Input
                 type="password"
-                placeholder="Current password"
+                placeholder={t('dangerZone.deleteAccount.dialog.verifyPlaceholder')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => {
@@ -164,7 +165,7 @@ export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setStep('warn')}>
-                Back
+                {tCommon('actions.back')}
               </Button>
               <Button variant="destructive" onClick={handleVerify}>
                 {t('dangerZone.deleteAccount.dialog.continue')}
@@ -194,7 +195,7 @@ export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setStep('verify')}>
-                Back
+                {tCommon('actions.back')}
               </Button>
               <Button variant="destructive" onClick={handleDelete}>
                 {t('dangerZone.deleteAccount.dialog.confirmButton')}
@@ -218,7 +219,7 @@ export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
               <DialogTitle>{t('dangerZone.deleteAccount.dialog.success')}</DialogTitle>
             </DialogHeader>
             <DialogFooter>
-              <Button onClick={() => router.push('/')}>Done</Button>
+              <Button onClick={() => router.push('/')}>{tCommon('actions.done')}</Button>
             </DialogFooter>
           </>
         )}
