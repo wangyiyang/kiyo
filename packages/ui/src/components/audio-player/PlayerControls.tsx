@@ -18,9 +18,10 @@ interface PlayerControlsProps {
   className?: string
   size?: 'sm' | 'md' | 'lg'
   labels?: PlayerControlsLabels
+  onPlayPause?: () => void
 }
 
-export function PlayerControls({ className, size = 'md', labels = {} }: PlayerControlsProps) {
+export function PlayerControls({ className, size = 'md', labels = {}, onPlayPause }: PlayerControlsProps) {
   const isPlaying = usePlayerStore((s) => s.isPlaying)
   const repeatMode = usePlayerStore((s) => s.repeatMode)
   const isShuffle = usePlayerStore((s) => s.isShuffle)
@@ -69,7 +70,7 @@ export function PlayerControls({ className, size = 'md', labels = {} }: PlayerCo
       </button>
 
       <button
-        onClick={togglePlay}
+        onClick={onPlayPause ?? togglePlay}
         className={cn(
           'flex items-center justify-center rounded-full bg-white text-black shadow-lg transition hover:scale-105',
           playSize

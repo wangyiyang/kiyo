@@ -84,7 +84,10 @@ export function AudioPlayer({
     }
   }, [coverFilePath, coverUrl])
 
-  const isCurrentTrack = store.currentTrack?.audio_url === src || (filePath ? store.currentTrack?.file_path === filePath : false)
+  const isCurrentTrack =
+    (songId ? store.currentTrack?.id === songId : false) ||
+    (filePath ? store.currentTrack?.file_path === filePath : false) ||
+    (!!src && store.currentTrack?.audio_url === src)
   const isPlaying = isCurrentTrack && store.isPlaying
 
   const handlePlay = () => {
@@ -170,6 +173,7 @@ export function AudioPlayer({
       <div className="mb-4">
         <PlayerControls
           size="lg"
+          onPlayPause={handlePlay}
           labels={{
             shuffle: labels.shuffle,
             prev: labels.prev,
