@@ -50,11 +50,18 @@ export async function POST(request: Request) {
     )
   }
 
-  const { prompt, mode, genre, mood, language, lyric_id } = body
+  const { prompt, mode, genre, mood, language, lyric_id, title } = body
 
   if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
     return NextResponse.json(
       { error: { code: 'VALIDATION_ERROR', message: 'Prompt is required' } },
+      { status: 400 }
+    )
+  }
+
+  if (!title || typeof title !== 'string' || title.trim() === '') {
+    return NextResponse.json(
+      { error: { code: 'VALIDATION_ERROR', message: 'Title is required' } },
       { status: 400 }
     )
   }
@@ -105,7 +112,7 @@ export async function POST(request: Request) {
   const { data: song, error: insertError } = await supabase
     .from('songs')
     .insert({
-      title: prompt.trim().slice(0, 100),
+      title: title.trim().slice(0, 100),
       lyric_id: mode === 'existing_lyric' && typeof lyric_id === 'string' ? lyric_id : null,
       genre: typeof genre === 'string' ? genre : null,
       mood: typeof mood === 'string' ? mood : null,

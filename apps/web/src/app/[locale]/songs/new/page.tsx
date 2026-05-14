@@ -15,6 +15,7 @@ export default function NewSongPage() {
   const tLocale = useTranslations('localeSwitcher')
 
   const [generating, setGenerating] = React.useState(false)
+  const [title, setTitle] = React.useState('')
   const [prompt, setPrompt] = React.useState('')
   const [genre, setGenre] = React.useState('')
   const [mood, setMood] = React.useState('')
@@ -43,6 +44,10 @@ export default function NewSongPage() {
   }, [])
 
   const handleGenerate = async () => {
+    if (!title.trim()) {
+      setError(t('error.emptyTitle'))
+      return
+    }
     if (!prompt.trim()) {
       setError(t('error.emptyPrompt'))
       return
@@ -60,6 +65,7 @@ export default function NewSongPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          title: title.trim(),
           prompt: prompt.trim(),
           genre: genre || undefined,
           mood: mood || undefined,
@@ -106,6 +112,16 @@ export default function NewSongPage() {
       <h1 className="mb-6 text-2xl font-bold">{t('title')}</h1>
 
       <div className="mb-6 space-y-6">
+        <div>
+          <Label htmlFor="title">{t('fields.title')} *</Label>
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder={t('placeholders.title')}
+          />
+        </div>
+
         <div>
           <Label htmlFor="prompt">{t('fields.prompt')} *</Label>
           <Textarea
