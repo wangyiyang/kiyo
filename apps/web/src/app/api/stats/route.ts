@@ -45,6 +45,16 @@ export async function GET() {
     .select('*', { count: 'exact', head: true })
     .eq('user_id', user.id)
 
+  const { data: albumsWithSongCounts } = await supabase
+    .from('albums')
+    .select('album_songs(count)')
+    .eq('user_id', user.id)
+
+  const totalAlbumSongs = (albumsWithSongCounts ?? []).reduce(
+    (sum, a) => sum + (a.album_songs?.[0]?.count ?? 0),
+    0
+  )
+
   return NextResponse.json({
     songs: {
       total: totalSongs ?? 0,
@@ -56,7 +66,8 @@ export async function GET() {
       composed: composedLyrics ?? 0
     },
     albums: {
-      total: totalAlbums ?? 0
+      total: totalAlbums ?? 0,
+      totalSongs: totalAlbumSongs
     }
   })
 }
