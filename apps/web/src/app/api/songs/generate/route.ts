@@ -1,6 +1,7 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { triggerGenerationWorker } from '@/lib/generation-worker'
+import { normalizeTag } from '@/lib/tag-normalization'
 import { NextResponse } from 'next/server'
 
 const VALID_MODES = ['instrumental', 'auto_lyrics', 'existing_lyric'] as const
@@ -102,6 +103,9 @@ export async function POST(request: Request) {
     }
   }
 
+  const normalizedGenre = normalizeTag(typeof genre === 'string' ? genre : null)
+  const normalizedMood = normalizeTag(typeof mood === 'string' ? mood : null)
+
   const fullPrompt = buildPrompt(
     prompt.trim(),
     typeof language === 'string' ? language : undefined,
@@ -114,8 +118,8 @@ export async function POST(request: Request) {
     .insert({
       title: title.trim().slice(0, 100),
       lyric_id: mode === 'existing_lyric' && typeof lyric_id === 'string' ? lyric_id : null,
-      genre: typeof genre === 'string' ? genre : null,
-      mood: typeof mood === 'string' ? mood : null,
+      genre: normalizedGenre,
+      mood: normalizedMood,
       ai_prompt: fullPrompt,
       status: 'generating',
       source: 'ai_generated',
@@ -141,8 +145,8 @@ export async function POST(request: Request) {
       max_retries: 3,
       payload: {
         prompt: fullPrompt,
-        genre: typeof genre === 'string' ? genre : null,
-        mood: typeof mood === 'string' ? mood : null,
+        genre: normalizedGenre,
+        mood: normalizedMood,
         mode: mode as string,
         lyric_id: mode === 'existing_lyric' && typeof lyric_id === 'string' ? lyric_id : null,
         language: typeof language === 'string' ? language : null,
