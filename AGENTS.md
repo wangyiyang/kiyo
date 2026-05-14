@@ -20,6 +20,16 @@ Vitest is used for unit and API route tests. Web tests match `apps/web/src/**/*.
 
 Use Conventional Commit style seen in history, for example `feat(auth): add magic link login`, `fix(i18n): unify locale navigation`, or `chore(deploy): configure Vercel`. This repository follows GitHub Flow: branch from `main`, open a PR, and never commit directly to `main`. PRs should include purpose, change summary, risks, verification results, linked issues, and screenshots for UI changes.
 
+### Issue 绑定规则
+
+每个修复或实现特定 issue 的 PR 必须绑定对应的 GitHub Issue：
+
+- **PR 描述中必须包含 issue 关闭关键字**，例如 `Closes #194`、`Fixes #194` 或 `Resolves #194`，确保合并后 issue 自动关闭
+- **提交 PR 后验证绑定状态**：使用 `gh pr view <pr-number> --json closingIssuesReferences` 确认 issue 已正确关联
+- **关联后检查**：如果 `closingIssuesReferences` 为空，使用 `gh pr edit <pr-number> --body` 重新添加 `Closes #<issue-number>` 到 PR 描述中
+- **多 issue 关联**：如果 PR 涉及多个 issue，分别列出，如 `Closes #123, fixes #124`
+- 只有不关联任何 issue 的常规维护或独立 feature PR 可以例外
+
 ## Security & Agent-Specific Instructions
 
 Do not commit secrets. Copy `.env.local.example` for local setup and configure production or preview variables in the hosting provider. All schema changes must be migration files under `supabase-local/migrations`. Agent-facing communication, analysis, issue text, and PR descriptions should be written in Simplified Chinese unless an external template explicitly requires another language.
