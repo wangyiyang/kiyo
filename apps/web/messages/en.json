@@ -2,6 +2,7 @@
   "nav": {
     "menu": "Menu",
     "openMenu": "Open navigation menu",
+    "closeMenu": "Close menu",
     "home": "Home",
     "songs": "Songs",
     "albums": "Albums",
@@ -10,7 +11,11 @@
     "language": "Language",
     "theme": "Theme",
     "dashboard": "Dashboard",
-    "settings": "Settings"
+    "settings": "Settings",
+    "newSong": "New Song",
+    "newLyric": "New Lyric",
+    "logout": "Log out",
+    "notification": "Notifications"
   },
   "metadata": {
     "title": "Kiyo — AI Music Creation Platform",
@@ -29,7 +34,9 @@
   "localeSwitcher": {
     "label": "Language",
     "en": "English",
-    "zh": "中文"
+    "zh": "中文",
+    "ja": "Japanese",
+    "ko": "Korean"
   },
   "notFound": {
     "title": "Page Not Found",
@@ -223,7 +230,33 @@
     "subtitle": "Have questions or suggestions? We're here to help.",
     "email": "Email",
     "faq": {
-      "title": "FAQ"
+      "title": "FAQ",
+      "items": [
+        {
+          "question": "What should I do if generation fails?",
+          "answer": "Check that your network connection is stable. Some models may queue during peak hours, so please try again later. If failures persist, submit via the feedback form and we'll investigate as soon as possible."
+        },
+        {
+          "question": "What audio formats are supported?",
+          "answer": "Currently MP3 and WAV export are supported. Song covers support JPG and PNG."
+        },
+        {
+          "question": "How do I delete a work?",
+          "answer": "Go to the song/album detail page and click the delete button. Once deleted, the work cannot be recovered, so please proceed with caution."
+        },
+        {
+          "question": "How long does it take to generate a song?",
+          "answer": "Depending on song length and current queue status, it usually takes 2-5 minutes. Complex arrangements may take longer, so please be patient."
+        },
+        {
+          "question": "Who owns the copyright of generated music?",
+          "answer": "You own the copyright to songs generated using Kiyo. Please comply with local laws and regulations and do not use them for illegal purposes."
+        },
+        {
+          "question": "How do I contact support?",
+          "answer": "Send an email to wangyiyang.kk@gmail.com, or submit an issue via the feedback form at the bottom of the page."
+        }
+      ]
     }
   },
   "hero": {
@@ -354,7 +387,9 @@
       "description": "No songs found with the current filters. Try other filters."
     },
     "retry": "Retry",
-    "allLoaded": "All songs loaded"
+    "allLoaded": "All songs loaded",
+    "defaultGenre": "Music",
+    "defaultMood": "Various"
   },
   "finalCta": {
     "headline": {
@@ -444,7 +479,8 @@
       "search": "Search...",
       "viewFull": "View full",
       "optional": "optional",
-      "login": "Log in"
+      "login": "Log in",
+      "done": "Done"
     },
     "ariaLabels": {
       "pageLoading": "Page loading",
@@ -473,6 +509,7 @@
       "exporting": "Exporting...",
       "uploading": "Uploading...",
       "adding": "Adding...",
+      "updating": "Updating...",
       "retry": "Retry"
     },
     "errors": {
@@ -522,12 +559,16 @@
         "genre": "Genre (optional)",
         "mood": "Mood (optional)",
         "language": "Language (optional)",
-        "mode": "Composition Mode"
+        "mode": "Composition Mode",
+        "lyric": "Linked Lyric",
+        "noLyric": "None",
+        "aiPrompt": "AI Generation Prompt"
       },
       "placeholders": {
         "prompt": "Describe the music you want, e.g. A pop song about summer",
         "genre": "e.g. Pop",
-        "mood": "e.g. Cheerful"
+        "mood": "e.g. Cheerful",
+        "aiPrompt": "Describe the prompt used to generate this song"
       },
       "mode": {
         "instrumental": {
@@ -585,10 +626,15 @@
         "failed": {
           "title": "Music generation failed",
           "desc": "Please check and retry",
-          "action": "Retry"
+          "action": "Retry",
+          "error": "Generation failed, please retry"
         },
         "generating": {
-          "title": "Generating music, please wait..."
+          "title": "Generating music, please wait...",
+          "hint": "This usually takes a few minutes, please be patient"
+        },
+        "errors": {
+          "network": "Network error, please retry"
         }
       },
       "source": {
@@ -1034,6 +1080,7 @@
           "continue": "I understand the risk, continue",
           "verifyTitle": "Verify Password",
           "verifyDescription": "Please enter your current password to verify your identity",
+          "verifyPlaceholder": "Current password",
           "confirmTitle": "Confirm Deletion",
           "confirmDescription": "Type DELETE to confirm permanent account deletion",
           "confirmPlaceholder": "DELETE",
@@ -1094,6 +1141,7 @@
     "close": "Close player",
     "playlist": "Playlist",
     "playSong": "Play {title}",
-    "playingIndicator": "Playing {title}"
+    "playingIndicator": "Playing {title}",
+    "empty": "No audio"
   }
 }

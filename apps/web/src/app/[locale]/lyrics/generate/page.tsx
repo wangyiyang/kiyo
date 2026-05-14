@@ -10,6 +10,7 @@ export default function LyricGeneratePage() {
   const router = useRouter()
   const t = useTranslations('lyrics.generate')
   const tCommon = useTranslations('common')
+  const tLocale = useTranslations('localeSwitcher')
 
   const [prompt, setPrompt] = React.useState('')
   const [language, setLanguage] = React.useState('zh')
@@ -19,10 +20,10 @@ export default function LyricGeneratePage() {
   const [error, setError] = React.useState('')
 
   const LANGUAGES = [
-    { value: 'zh', label: '中文' },
-    { value: 'en', label: 'English' },
-    { value: 'ja', label: '日本語' },
-    { value: 'ko', label: '한국어' },
+    { value: 'zh', label: tLocale('zh') },
+    { value: 'en', label: tLocale('en') },
+    { value: 'ja', label: tLocale('ja') },
+    { value: 'ko', label: tLocale('ko') },
   ]
 
   const handleSubmit = async (e: React.FormEvent) => {

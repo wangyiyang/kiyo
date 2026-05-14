@@ -32,6 +32,7 @@ export function GenerateSongDialog({
   const router = useRouter()
   const t = useTranslations('lyrics.generateSong')
   const tCommon = useTranslations('common')
+  const tLocale = useTranslations('localeSwitcher')
 
   const [open, setOpen] = React.useState(false)
   const [generating, setGenerating] = React.useState(false)
@@ -45,9 +46,9 @@ export function GenerateSongDialog({
 
   const LANGUAGE_OPTIONS = [
     { value: '', label: tCommon('actions.optional') },
-    { value: 'zh', label: '中文' },
-    { value: 'en', label: 'English' },
-    { value: 'ja', label: '日本語' },
+    { value: 'zh', label: tLocale('zh') },
+    { value: 'en', label: tLocale('en') },
+    { value: 'ja', label: tLocale('ja') },
   ]
 
   const handleGenerate = async () => {

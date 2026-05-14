@@ -47,25 +47,34 @@ function strengthLabel(score: number): { key: string; color: string } {
   }
 }
 
-const changePasswordSchema = z
-  .object({
-    currentPassword: z.string().min(1, 'Current password is required'),
-    newPassword: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
-
-type ChangePasswordInput = z.infer<typeof changePasswordSchema>
+type ChangePasswordInput = {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
+}
 
 export function ChangePasswordForm() {
   const t = useTranslations('settings')
   const authT = useTranslations('auth')
+  const tCommon = useTranslations('common')
   const [pending, startTransition] = React.useTransition()
   const [showCurrentPassword, setShowCurrentPassword] = React.useState(false)
   const [showNewPassword, setShowNewPassword] = React.useState(false)
+
+  const changePasswordSchema = React.useMemo(
+    () =>
+      z
+        .object({
+          currentPassword: z.string().min(1, tCommon('errors.required')),
+          newPassword: z.string().min(6, authT('errors.passwordMin')),
+          confirmPassword: z.string().min(1, tCommon('errors.required')),
+        })
+        .refine((data) => data.newPassword === data.confirmPassword, {
+          message: authT('errors.passwordMatch'),
+          path: ['confirmPassword'],
+        }),
+    [tCommon, authT]
+  )
 
   const form = useForm<ChangePasswordInput>({
     resolver: zodResolver(changePasswordSchema),
@@ -136,7 +145,7 @@ export function ChangePasswordForm() {
                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
                   >
-                    {showCurrentPassword ? 'Hide' : 'Show'}
+                    {showCurrentPassword ? tCommon('actions.hide') : tCommon('actions.show')}
                   </button>
                 </div>
               </FormControl>
@@ -164,7 +173,7 @@ export function ChangePasswordForm() {
                     onClick={() => setShowNewPassword(!showNewPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
                   >
-                    {showNewPassword ? 'Hide' : 'Show'}
+                    {showNewPassword ? tCommon('actions.hide') : tCommon('actions.show')}
                   </button>
                 </div>
               </FormControl>
@@ -210,7 +219,7 @@ export function ChangePasswordForm() {
         />
 
         <Button type="submit" disabled={pending}>
-          {pending ? 'Updating...' : t('passwordSection.submit')}
+          {pending ? tCommon('states.updating') : t('passwordSection.submit')}
         </Button>
       </form>
     </Form>

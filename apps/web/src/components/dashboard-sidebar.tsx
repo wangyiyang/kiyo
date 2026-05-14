@@ -37,6 +37,7 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({ children }: DashboardSidebarProps) {
 	const pathname = usePathname();
 	const router = useRouter();
+	const tNav = useTranslations("nav");
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
@@ -99,7 +100,7 @@ export function DashboardSidebar({ children }: DashboardSidebarProps) {
 					<button
 						onClick={() => setMobileOpen(true)}
 						className="p-2 rounded-lg hover:bg-muted"
-						aria-label="Open menu"
+						aria-label={tNav('openMenu')}
 					>
 						<Menu className="h-5 w-5" />
 					</button>
@@ -143,7 +144,7 @@ function SidebarContent({
 					<button
 						onClick={onClose}
 						className="ml-auto p-2 rounded-lg hover:bg-muted"
-						aria-label="Close menu"
+						aria-label={tNav('closeMenu')}
 					>
 						<X className="h-5 w-5" />
 					</button>
@@ -159,7 +160,7 @@ function SidebarContent({
 						className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-white/50 dark:hover:bg-black/10"
 					>
 						<Plus className="h-4 w-4 text-kiyo-purple" />
-						<span>新建歌曲</span>
+						<span>{tNav('newSong')}</span>
 					</Link>
 					<Link
 						href="/lyrics/new"
@@ -167,7 +168,7 @@ function SidebarContent({
 						className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium hover:bg-white/50 dark:hover:bg-black/10"
 					>
 						<PenLine className="h-4 w-4 text-kiyo-cyan" />
-						<span>新建歌词</span>
+						<span>{tNav('newLyric')}</span>
 					</Link>
 				</div>
 			</div>
@@ -222,7 +223,7 @@ function SidebarContent({
 							className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
 						>
 							<LogOut className="h-4 w-4" />
-							<span>退出登录</span>
+							<span>{tNav('logout')}</span>
 						</button>
 					)}
 				</div>

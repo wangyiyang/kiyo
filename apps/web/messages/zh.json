@@ -2,6 +2,7 @@
   "nav": {
     "menu": "菜单",
     "openMenu": "打开导航菜单",
+    "closeMenu": "关闭菜单",
     "home": "首页",
     "songs": "歌曲库",
     "albums": "专辑",
@@ -10,7 +11,11 @@
     "language": "语言",
     "theme": "主题",
     "dashboard": "控制台",
-    "settings": "设置"
+    "settings": "设置",
+    "newSong": "新建歌曲",
+    "newLyric": "新建歌词",
+    "logout": "退出登录",
+    "notification": "通知"
   },
   "metadata": {
     "title": "Kiyo — AI 音乐创作平台",
@@ -29,7 +34,9 @@
   "localeSwitcher": {
     "label": "语言",
     "en": "English",
-    "zh": "中文"
+    "zh": "中文",
+    "ja": "日本語",
+    "ko": "한국어"
   },
   "notFound": {
     "title": "页面未找到",
@@ -223,7 +230,33 @@
     "subtitle": "遇到问题或有建议？我们随时为您服务",
     "email": "邮箱",
     "faq": {
-      "title": "常见问题"
+      "title": "常见问题",
+      "items": [
+        {
+          "question": "生成失败怎么办？",
+          "answer": "检查网络连接是否稳定。部分模型可能在高峰期排队，建议稍后重试。如果持续失败，通过反馈表单提交，我们会尽快排查。"
+        },
+        {
+          "question": "支持哪些音频格式？",
+          "answer": "目前支持 MP3、WAV 格式导出。歌曲封面支持 JPG、PNG。"
+        },
+        {
+          "question": "如何删除作品？",
+          "answer": "进入歌曲/专辑详情页，点击删除按钮即可。删除后作品将无法恢复，请谨慎操作。"
+        },
+        {
+          "question": "生成一首歌曲需要多长时间？",
+          "answer": "根据歌曲长度和当前队列状态，通常需要 2-5 分钟。复杂编曲可能需要更长时间，请耐心等待。"
+        },
+        {
+          "question": "生成的音乐版权归谁？",
+          "answer": "您使用 Kiyo 生成的歌曲版权归您所有。请遵守当地法律法规，不要用于非法用途。"
+        },
+        {
+          "question": "如何联系客服？",
+          "answer": "发送邮件至 wangyiyang.kk@gmail.com，或通过页面底部的反馈表单提交问题。"
+        }
+      ]
     }
   },
   "hero": {
@@ -354,7 +387,9 @@
       "description": "当前筛选条件下没有找到歌曲，试试其他筛选条件吧"
     },
     "retry": "重试",
-    "allLoaded": "已显示全部歌曲"
+    "allLoaded": "已显示全部歌曲",
+    "defaultGenre": "音乐",
+    "defaultMood": "多种风格"
   },
   "finalCta": {
     "headline": {
@@ -444,7 +479,8 @@
       "search": "搜索...",
       "viewFull": "查看完整",
       "optional": "可选",
-      "login": "登录"
+      "login": "登录",
+      "done": "完成"
     },
     "ariaLabels": {
       "pageLoading": "页面加载中",
@@ -473,6 +509,7 @@
       "exporting": "导出中...",
       "uploading": "上传中...",
       "adding": "添加中...",
+      "updating": "更新中...",
       "retry": "重试"
     },
     "errors": {
@@ -522,12 +559,16 @@
         "genre": "风格（可选）",
         "mood": "情绪（可选）",
         "language": "语言（可选）",
-        "mode": "创作模式"
+        "mode": "创作模式",
+        "lyric": "关联歌词",
+        "noLyric": "无",
+        "aiPrompt": "AI 生成描述"
       },
       "placeholders": {
         "prompt": "描述你想要的音乐，如：一首关于夏天的流行歌曲",
         "genre": "如：流行",
-        "mood": "如：欢快"
+        "mood": "如：欢快",
+        "aiPrompt": "描述 AI 生成这首歌曲的提示词"
       },
       "mode": {
         "instrumental": {
@@ -585,10 +626,15 @@
         "failed": {
           "title": "音乐生成失败",
           "desc": "请检查后重试",
-          "action": "重新生成"
+          "action": "重新生成",
+          "error": "生成失败，请重试"
         },
         "generating": {
-          "title": "音乐生成中，请稍候..."
+          "title": "音乐生成中，请稍候...",
+          "hint": "通常需要几分钟，请耐心等待"
+        },
+        "errors": {
+          "network": "网络错误，请重试"
         }
       },
       "source": {
@@ -1034,6 +1080,7 @@
           "continue": "我已了解风险，继续",
           "verifyTitle": "验证密码",
           "verifyDescription": "请输入当前密码以验证身份",
+          "verifyPlaceholder": "当前密码",
           "confirmTitle": "确认删除",
           "confirmDescription": "请输入 DELETE 以确认永久删除账户",
           "confirmPlaceholder": "DELETE",
@@ -1094,6 +1141,7 @@
     "close": "关闭播放器",
     "playlist": "播放列表",
     "playSong": "播放 {title}",
-    "playingIndicator": "正在播放 {title}"
+    "playingIndicator": "正在播放 {title}",
+    "empty": "暂无音频"
   }
 }
