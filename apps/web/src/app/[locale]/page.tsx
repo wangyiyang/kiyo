@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
+import { createServerClient } from "@kiyo/supabase/server";
+
 import { Features } from "@/components/sections/features";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
@@ -25,7 +27,10 @@ export async function generateMetadata(): Promise<Metadata> {
 	};
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+	const supabase = await createServerClient();
+	const { data: { user } } = await supabase.auth.getUser();
+	const isAuthenticated = !!user;
 	const jsonLd = {
 		"@context": "https://schema.org",
 		"@graph": [
@@ -65,11 +70,11 @@ export default function HomePage() {
 			<div className="flex min-h-screen flex-col">
 				<SiteHeader />
 				<main className="flex-1">
-					<Hero />
+					<Hero isAuthenticated={isAuthenticated} />
 					<Features />
 					<HowItWorks />
 					<Showcase />
-					<FinalCta />
+					<FinalCta isAuthenticated={isAuthenticated} />
 				</main>
 				<SiteFooter />
 			</div>
