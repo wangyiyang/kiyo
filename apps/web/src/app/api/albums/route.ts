@@ -135,7 +135,7 @@ export async function GET(request: Request) {
 
   const { data: albums, error } = await supabase
     .from('albums')
-    .select('*')
+    .select('*, album_songs(count)')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .range(from, to)
