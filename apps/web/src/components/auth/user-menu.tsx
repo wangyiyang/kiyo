@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Link } from "@/i18n/navigation";
-import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import {
 	LogOut,
@@ -37,13 +36,14 @@ interface UserMenuProps {
 
 export function UserMenu({ user }: UserMenuProps) {
 	const t = useTranslations("auth");
-	const router = useRouter();
 	const { show: showFeedback } = useFeedback();
 	const supabase = React.useMemo(() => createBrowserClient(), []);
 
 	const handleLogout = async () => {
 		await supabase.auth.signOut();
-		router.refresh();
+		// 强制导航到首页以确保 Server Component 重新获取最新状态
+		// 避免 router.refresh() 因缓存导致仍展示旧登录状态 (gh-194)
+		window.location.href = "/";
 	};
 
 	if (!user) {
