@@ -1,4 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
+import type { Database } from '@kiyo/supabase'
 import { NextResponse } from 'next/server'
 
 const MAX_TITLE_LENGTH = 200
@@ -140,7 +141,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   const { data: song, error } = await supabase
     .from('songs')
-    .update(updates)
+    .update(updates as Database['public']['Tables']['songs']['Update'])
     .eq('id', params.id)
     .eq('user_id', user.id)
     .select()
@@ -183,6 +184,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
   const storagePath = existing.file_path || (() => {
     try {
+      if (!existing.audio_url) return null
       const url = new URL(existing.audio_url)
       const pathParts = url.pathname.split('/')
       return pathParts.slice(pathParts.indexOf('audio') + 1).join('/')

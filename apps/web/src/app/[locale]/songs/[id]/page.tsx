@@ -86,7 +86,7 @@ export default async function SongDetailPage({
         <div>
           <h1 className="text-2xl font-bold">{song.title}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <SongStatusBadge status={song.status} label={statusLabelMap[song.status] ?? song.status} />
+            <SongStatusBadge status={song.status as 'draft' | 'generating' | 'completed' | 'failed'} label={statusLabelMap[song.status] ?? song.status} />
             {song.genre && <span>{song.genre}</span>}
             {song.mood && <span>{song.mood}</span>}
             {song.duration && (

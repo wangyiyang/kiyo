@@ -1,4 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
+import type { Database } from '@kiyo/supabase'
 import { NextResponse } from 'next/server'
 
 const MAX_TITLE_LENGTH = 200
@@ -127,7 +128,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   const { data: lyric, error } = await supabase
     .from('lyrics')
-    .update(updates)
+    .update(updates as Database['public']['Tables']['lyrics']['Update'])
     .eq('id', params.id)
     .eq('user_id', user.id)
     .select()

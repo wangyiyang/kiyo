@@ -107,7 +107,11 @@ async function getRecentItems() {
     ...(albums.data ?? []).map(a => ({ type: 'album' as const, ...a }))
   ]
 
-  return items.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 6)
+  return items.sort((a, b) => {
+    const aTime = a.created_at ? new Date(a.created_at).getTime() : 0
+    const bTime = b.created_at ? new Date(b.created_at).getTime() : 0
+    return bTime - aTime
+  }).slice(0, 6)
 }
 
 export default async function DashboardPage() {

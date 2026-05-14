@@ -30,7 +30,7 @@ interface SongRow {
   audio_url: string | null
   file_path: string | null
   duration: number | null
-  created_at: string
+  created_at: string | null
 }
 
 export async function GET(request: Request) {
@@ -71,7 +71,9 @@ export async function GET(request: Request) {
     if (bHasCover !== aHasCover) {
       return bHasCover - aHasCover
     }
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    const bTime = b.created_at ? new Date(b.created_at).getTime() : 0
+    const aTime = a.created_at ? new Date(a.created_at).getTime() : 0
+    return bTime - aTime
   })
 
   const total = allSongs.length

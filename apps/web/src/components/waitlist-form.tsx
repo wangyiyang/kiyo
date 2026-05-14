@@ -66,14 +66,14 @@ export function WaitlistForm({ mode, collapsible, onSuccess }: WaitlistFormProps
         return
       }
 
-      const description =
+      const title =
         result.code === 'DUPLICATE'
           ? t('toast.duplicate')
           : result.code === 'INVALID'
             ? t('toast.invalid')
             : t('toast.unknown')
 
-      toast.error(result.message, { description })
+      toast.error(title)
     })
   }
 

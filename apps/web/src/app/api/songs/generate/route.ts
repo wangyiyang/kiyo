@@ -136,7 +136,7 @@ export async function POST(request: Request) {
         prompt: fullPrompt,
         genre: typeof genre === 'string' ? genre : null,
         mood: typeof mood === 'string' ? mood : null,
-        mode,
+        mode: mode as string,
         lyric_id: mode === 'existing_lyric' && typeof lyric_id === 'string' ? lyric_id : null,
         language: typeof language === 'string' ? language : null,
       },
