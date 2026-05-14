@@ -107,7 +107,15 @@ export function AudioEngine() {
           if (!cancelled) setDuration(howl.duration())
         },
         onend: () => {
-          if (!cancelled) next()
+          if (cancelled) return
+          // Guard against premature onend (e.g. html5 streaming hiccups)
+          const played = howl.seek() as number
+          const total = howl.duration()
+          if (total > 0 && played < total - 1) {
+            console.warn('Premature onend detected, skipping next()', { played, total })
+            return
+          }
+          next()
         },
         onloaderror: (_id, err) => {
           console.error('Howl load error:', err)
@@ -132,12 +140,10 @@ export function AudioEngine() {
         refreshTimerRef.current = null
       }
       howlRef.current?.unload()
-      cancelAnimationFrame(rafRef.current)
-      if (progressIntervalRef.current) {
-        clearInterval(progressIntervalRef.current)
-      }
+      stopProgressLoop()
+      stopVisualizer()
     }
-  }, [currentTrack?.audio_url, currentTrack?.file_path])
+  }, [currentTrack?.audio_url, currentTrack?.file_path, isPlaying, volume, setDuration, next, setAnalyserData])
 
   // Sync play / pause
   useEffect(() => {
