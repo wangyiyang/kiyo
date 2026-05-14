@@ -15,6 +15,7 @@ interface Album {
   cover_url: string | null
   cover_file_path: string | null
   created_at: string
+  album_songs?: { count: number }[]
 }
 
 interface Pagination {
@@ -30,7 +31,6 @@ export default function AlbumsPage() {
   const tCommon = useTranslations('common')
 
   const [albums, setAlbums] = useState<Album[]>([])
-  const [songCounts, setSongCounts] = useState<Record<string, number>>({})
   const [pagination, setPagination] = useState<Pagination>({ page: 1, limit: 20, total: 0, totalPages: 0 })
   const [loading, setLoading] = useState(true)
 
@@ -45,25 +45,8 @@ export default function AlbumsPage() {
       const fetchedAlbums: Album[] = data.albums ?? []
       setAlbums(fetchedAlbums)
       setPagination(data.pagination ?? { page: 1, limit: 20, total: 0, totalPages: 0 })
-
-      // Fetch song counts for visible albums
-      if (fetchedAlbums.length > 0) {
-        const albumIds = fetchedAlbums.map((a) => a.id)
-        const countRes = await fetch('/api/albums/song-counts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ albumIds }),
-        })
-        if (countRes.ok) {
-          const countData = await countRes.json()
-          setSongCounts(countData.counts ?? {})
-        }
-      } else {
-        setSongCounts({})
-      }
     } catch {
       setAlbums([])
-      setSongCounts({})
     } finally {
       setLoading(false)
     }
@@ -111,7 +94,7 @@ export default function AlbumsPage() {
                   <AlbumCard
                     title={album.title}
                     description={album.description}
-                    songCount={songCounts[album.id] ?? 0}
+                    songCount={album.album_songs?.[0]?.count ?? 0}
                     coverUrl={album.cover_url}
                     coverFilePath={album.cover_file_path}
                   />
