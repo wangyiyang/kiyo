@@ -83,7 +83,6 @@ describe('waitlist action', () => {
     expect(result).toEqual({
       ok: false,
       code: 'UNKNOWN',
-      message: '提交失败，请稍后再试',
     })
     expect(insert).toHaveBeenCalledWith({
       email: 'listener@example.com',
@@ -110,7 +109,6 @@ describe('waitlist action', () => {
     expect(result).toEqual({
       ok: false,
       code: 'DUPLICATE',
-      message: '该邮箱已在 Waitlist 中，感谢支持',
     })
   })
 })

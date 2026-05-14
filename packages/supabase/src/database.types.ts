@@ -79,6 +79,7 @@ export type Database = {
           description: string | null
           genre: string | null
           id: string
+          is_public: boolean
           status: string
           title: string
           updated_at: string | null
@@ -92,6 +93,7 @@ export type Database = {
           description?: string | null
           genre?: string | null
           id?: string
+          is_public?: boolean
           status?: string
           title: string
           updated_at?: string | null
@@ -105,6 +107,7 @@ export type Database = {
           description?: string | null
           genre?: string | null
           id?: string
+          is_public?: boolean
           status?: string
           title?: string
           updated_at?: string | null
@@ -347,6 +350,7 @@ export type Database = {
           genre: string | null
           id: string
           is_featured: boolean | null
+          is_public: boolean
           lyric_id: string | null
           mood: string | null
           original_song_id: string | null
@@ -369,6 +373,7 @@ export type Database = {
           genre?: string | null
           id?: string
           is_featured?: boolean | null
+          is_public?: boolean
           lyric_id?: string | null
           mood?: string | null
           original_song_id?: string | null
@@ -391,6 +396,7 @@ export type Database = {
           genre?: string | null
           id?: string
           is_featured?: boolean | null
+          is_public?: boolean
           lyric_id?: string | null
           mood?: string | null
           original_song_id?: string | null
@@ -423,24 +429,33 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          interests: string[] | null
           role: string | null
+          role_new: string | null
           source: string | null
+          use_scenes: string[] | null
           user_agent: string | null
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
+          interests?: string[] | null
           role?: string | null
+          role_new?: string | null
           source?: string | null
+          use_scenes?: string[] | null
           user_agent?: string | null
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          interests?: string[] | null
           role?: string | null
+          role_new?: string | null
           source?: string | null
+          use_scenes?: string[] | null
           user_agent?: string | null
         }
         Relationships: []

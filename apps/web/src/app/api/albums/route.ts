@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 
   const { data: album, error: albumError } = await supabase
     .from('albums')
-    .insert({ title, user_id: user.id })
+    .insert({ title: title!, user_id: user.id })
     .select()
     .single()
 

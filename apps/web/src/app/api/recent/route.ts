@@ -49,7 +49,11 @@ export async function GET(request: Request) {
     ...(recentLyrics ?? []).map(l => ({ type: 'lyric' as const, ...l })),
     ...(recentAlbums ?? []).map(a => ({ type: 'album' as const, ...a }))
   ]
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .sort((a, b) => {
+      const aTime = a.created_at ? new Date(a.created_at).getTime() : 0
+      const bTime = b.created_at ? new Date(b.created_at).getTime() : 0
+      return bTime - aTime
+    })
     .slice(0, limit)
 
   return NextResponse.json({ items })
