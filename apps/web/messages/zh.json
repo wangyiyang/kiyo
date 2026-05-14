@@ -840,7 +840,8 @@
         "content": "在此输入歌词内容，支持 [Verse]、[Chorus] 等标签..."
       },
       "error": {
-        "empty": "标题和内容不能为空"
+        "emptyTitle": "标题不能为空",
+        "emptyContent": "内容不能为空"
       }
     },
     "detail": {
