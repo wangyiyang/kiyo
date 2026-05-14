@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const getLyricCreateSchema = (t: (key: string) =>> string) =>
+export const getLyricCreateSchema = (t: (key: string) => string) =>
   z.object({
     title: z.string().min(1, t('error.emptyTitle')),
     content: z.string().min(1, t('error.emptyContent')),
