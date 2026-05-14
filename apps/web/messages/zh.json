@@ -271,6 +271,7 @@
     "description": "Kiyo 把灵感、编曲、人声与混音串到同一条时间线上 —— 每一步都由创作者主导。",
     "cta": {
       "primary": "加入 Waitlist",
+      "primaryAuthenticated": "进入控制台",
       "secondary": "看看它能做什么"
     },
     "stats": {
@@ -403,6 +404,11 @@
     "cta": {
       "primary": "加入 Waitlist",
       "secondary": "看看它能做什么"
+    },
+    "authenticated": {
+      "headline": "欢迎回来，继续创作",
+      "description": "你的下一段旋律在等你。",
+      "cta": "进入控制台"
     }
   },
   "waitlist": {

@@ -271,6 +271,7 @@
     "description": "Kiyo connects inspiration, arrangement, vocals, and mixing on one timeline — every step keeps the creator in charge.",
     "cta": {
       "primary": "Join Waitlist",
+      "primaryAuthenticated": "Go to Dashboard",
       "secondary": "See what it does"
     },
     "stats": {
@@ -403,6 +404,11 @@
     "cta": {
       "primary": "Join Waitlist",
       "secondary": "See what it does"
+    },
+    "authenticated": {
+      "headline": "Welcome back, keep creating",
+      "description": "Your next melody is waiting.",
+      "cta": "Go to Dashboard"
     }
   },
   "waitlist": {
