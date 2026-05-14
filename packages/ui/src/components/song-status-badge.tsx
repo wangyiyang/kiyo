@@ -16,7 +16,7 @@ const statusClassName: Record<SongStatus, string> = {
 
 export function SongStatusBadge({ status, label }: SongStatusBadgeProps) {
   return (
-    <span className={cn('rounded-full px-2 py-0.5 text-xs font-medium', statusClassName[status])}>
+    <span className={cn('rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap shrink-0', statusClassName[status])}>
       {label}
     </span>
   )
