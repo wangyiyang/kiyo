@@ -5,5 +5,5 @@ export default async function CoverSongLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <RequireAuth>{children}</RequireAuth>
+  return <RequireAuth redirectTo="/login?redirectTo=/songs/cover">{children}</RequireAuth>
 }

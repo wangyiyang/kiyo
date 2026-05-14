@@ -18,7 +18,7 @@ export default async function SongDetailPage({
 }) {
   const { locale, id } = params
   return (
-    <RequireAuth>
+    <RequireAuth redirectTo={`/login?redirectTo=/songs/${id}`}>
       <SongDetailContent locale={locale} id={id} />
     </RequireAuth>
   )

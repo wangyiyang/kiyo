@@ -16,7 +16,7 @@ interface AlbumDetailPageProps {
 export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) {
   const { locale, id } = await params
   return (
-    <RequireAuth>
+    <RequireAuth redirectTo={`/login?redirectTo=/albums/${id}`}>
       <AlbumDetailContent locale={locale} id={id} />
     </RequireAuth>
   )

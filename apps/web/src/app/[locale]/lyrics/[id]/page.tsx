@@ -13,7 +13,7 @@ export default async function LyricDetailPage({
   params: { id: string }
 }) {
   return (
-    <RequireAuth>
+    <RequireAuth redirectTo={`/login?redirectTo=/lyrics/${params.id}`}>
       <LyricDetailContent params={params} />
     </RequireAuth>
   )
