@@ -48,8 +48,9 @@ describe('LocaleSwitcher', () => {
   it('does not call router.replace when the current locale is selected', () => {
     render(<LocaleSwitcher />)
 
-    const zhButton = screen.getByRole('button', { name: /中文/i })
-    fireEvent.click(zhButton)
+    const zhButtons = screen.getAllByRole('button', { name: /中文/i })
+    // 第一个为 trigger button，第二个为 dropdown item
+    fireEvent.click(zhButtons[1])
 
     expect(mockReplace).not.toHaveBeenCalled()
   })
