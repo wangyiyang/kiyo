@@ -7,6 +7,7 @@ import { CoverSection } from '@/components/CoverSection'
 import { AddSongsDialog } from './_components/AddSongsDialog'
 import { ShareButton } from '@/components/share-button'
 import { getTranslations } from 'next-intl/server'
+import { RequireAuth } from '@/components/auth/require-auth'
 
 interface AlbumDetailPageProps {
   params: Promise<{ locale: string; id: string }>
@@ -14,6 +15,14 @@ interface AlbumDetailPageProps {
 
 export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) {
   const { locale, id } = await params
+  return (
+    <RequireAuth>
+      <AlbumDetailContent locale={locale} id={id} />
+    </RequireAuth>
+  )
+}
+
+async function AlbumDetailContent({ locale, id }: { locale: string; id: string }) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
