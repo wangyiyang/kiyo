@@ -47,7 +47,7 @@ export function LocaleProvider({
 				// Load new locale messages dynamically
 				const newMessages =
 					MESSAGES_CACHE[newLocale] ||
-					(await import(`../../../messages/${newLocale}.json`)).default
+					(await import(`../../messages/${newLocale}.json`)).default
 
 				MESSAGES_CACHE[newLocale] = newMessages
 				MESSAGES_CACHE[locale] = messages
