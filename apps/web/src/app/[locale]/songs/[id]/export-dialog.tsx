@@ -27,12 +27,19 @@ export function ExportDialog({ songId, songTitle, disabled }: ExportDialogProps)
 
   const handleExport = async () => {
     setExporting(true)
+    let objectUrl: string | null = null
     try {
       const res = await fetch(`/api/songs/${songId}/export`)
       const data = await res.json()
       if (res.ok && data.downloadUrl) {
+        const audioRes = await fetch(data.downloadUrl)
+        if (!audioRes.ok) {
+          throw new Error('Failed to download audio')
+        }
+        const blob = await audioRes.blob()
+        objectUrl = URL.createObjectURL(blob)
         const link = document.createElement('a')
-        link.href = data.downloadUrl
+        link.href = objectUrl
         link.download = data.filename
         document.body.appendChild(link)
         link.click()
@@ -46,6 +53,7 @@ export function ExportDialog({ songId, songTitle, disabled }: ExportDialogProps)
     } catch {
       toast.error(tCommon('errors.exportFailed'))
     } finally {
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
       setExporting(false)
     }
   }
