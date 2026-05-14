@@ -40,7 +40,8 @@
   },
   "notFound": {
     "title": "页面未找到",
-    "description": "您访问的页面不存在。"
+    "description": "您访问的页面不存在。",
+    "backToHome": "返回首页"
   },
   "auth": {
     "login": {
