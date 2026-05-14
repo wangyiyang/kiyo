@@ -93,7 +93,7 @@ export function SongCard({ id, title, status, statusLabel, duration, lyricTitle,
         </div>
 
         <div className="mb-2 flex items-center gap-2">
-          <h3 className="font-semibold">{title}</h3>
+          <h3 className="font-semibold min-w-0 truncate">{title}</h3>
           <SongStatusBadge status={status} label={statusLabel} />
         </div>
 
