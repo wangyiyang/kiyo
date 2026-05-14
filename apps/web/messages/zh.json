@@ -381,6 +381,12 @@
   "explore": {
     "title": "探索歌曲",
     "description": "发现 AI 生成的精选音乐作品",
+    "search": {
+      "label": "搜索歌曲",
+      "placeholder": "搜索歌曲名",
+      "submit": "搜索",
+      "clear": "清除搜索"
+    },
     "filters": {
       "genre": "风格",
       "mood": "情绪",
@@ -388,7 +394,9 @@
     },
     "empty": {
       "title": "暂无歌曲",
-      "description": "当前筛选条件下没有找到歌曲，试试其他筛选条件吧"
+      "description": "当前筛选条件下没有找到歌曲，试试其他筛选条件吧",
+      "searchTitle": "没有找到匹配歌曲",
+      "searchDescription": "没有与“{query}”匹配的公开歌曲，换个关键词试试"
     },
     "retry": "重试",
     "allLoaded": "已显示全部歌曲",

@@ -89,9 +89,11 @@ export function PlaylistPanel({ className, labels = {} }: PlaylistPanelProps) {
               </div>
 
               <div className="min-w-0 flex-1">
-                <div className="truncate text-sm">{song.title}</div>
+                <div className="line-clamp-2 text-sm sm:truncate" title={song.title}>
+                  {song.title}
+                </div>
                 {song.album && (
-                  <div className="truncate text-xs text-white/40">{song.album}</div>
+                  <div className="truncate text-xs text-white/40" title={song.album}>{song.album}</div>
                 )}
               </div>
 

@@ -1,7 +1,7 @@
-import { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 import { createServerClient } from "@kiyo/supabase/server"
-import { cn } from "@kiyo/ui"
+import { Button, Input, cn } from "@kiyo/ui"
+import { Search, X } from "lucide-react"
 import { Link } from "@/i18n/navigation"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { ExploreSongGrid } from "@/components/explore-song-grid"
@@ -9,10 +9,11 @@ import { ExploreSongGrid } from "@/components/explore-song-grid"
 export default async function ExplorePage({
   searchParams,
 }: {
-  searchParams: Promise<{ genre?: string; mood?: string }>
+  searchParams: Promise<{ genre?: string; mood?: string; q?: string }>
 }) {
   const t = await getTranslations("explore")
-  const { genre, mood } = await searchParams
+  const { genre, mood, q } = await searchParams
+  const query = q?.trim() || undefined
 
   const supabase = await createServerClient()
 
@@ -30,10 +31,11 @@ export default async function ExplorePage({
     new Set(allSongs?.map((s) => s.mood).filter(Boolean) as string[])
   ).sort()
 
-  const buildUrl = (g?: string, m?: string) => {
+  const buildUrl = (g?: string, m?: string, search: string | null | undefined = query) => {
     const sp = new URLSearchParams()
     if (g) sp.set("genre", g)
     if (m) sp.set("mood", m)
+    if (search) sp.set("q", search)
     const qs = sp.toString()
     return `/explore${qs ? `?${qs}` : ""}`
   }
@@ -57,6 +59,40 @@ export default async function ExplorePage({
 
         {/* Filters */}
         <section className="container mx-auto px-4 py-8">
+          <ScrollReveal delay={0.05}>
+            <form action="/explore" method="get" className="mb-8">
+              {genre && <input type="hidden" name="genre" value={genre} />}
+              {mood && <input type="hidden" name="mood" value={mood} />}
+              <label htmlFor="explore-search" className="sr-only">
+                {t("search.label")}
+              </label>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <div className="relative flex-1">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="explore-search"
+                    name="q"
+                    defaultValue={query}
+                    placeholder={t("search.placeholder")}
+                    className="pl-10"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button type="submit" size="icon" aria-label={t("search.submit")}>
+                    <Search className="h-4 w-4" />
+                  </Button>
+                  {query && (
+                    <Button variant="outline" size="icon" asChild>
+                      <Link href={buildUrl(genre, mood, null)} aria-label={t("search.clear")}>
+                        <X className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </form>
+          </ScrollReveal>
+
           {/* Genre filter */}
           <ScrollReveal delay={0.1}>
             <div className="mb-6">
@@ -126,7 +162,7 @@ export default async function ExplorePage({
           </ScrollReveal>
 
           {/* Songs Grid */}
-          <ExploreSongGrid genre={genre} mood={mood} />
+          <ExploreSongGrid genre={genre} mood={mood} query={query} />
         </section>
       </main>
     </div>

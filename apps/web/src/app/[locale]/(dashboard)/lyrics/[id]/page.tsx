@@ -63,7 +63,7 @@ async function LyricDetailContent({
   }
 
   return (
-    <div className="container mx-auto max-w-3xl py-8">
+    <div className="container mx-auto max-w-3xl px-4 py-8">
       <div className="mb-6 flex items-center gap-4">
         <Link
           href="/lyrics"
@@ -74,10 +74,10 @@ async function LyricDetailContent({
         </Link>
       </div>
 
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{lyric.title}</h1>
-          <div className="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <h1 className="break-words text-2xl font-bold leading-tight">{lyric.title}</h1>
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <span
               className={`rounded-full px-2 py-0.5 text-xs ${
                 lyric.source === 'ai_generated'
@@ -92,18 +92,20 @@ async function LyricDetailContent({
             {lyric.mood && <span>{lyric.mood}</span>}
           </div>
         </div>
-        <GenerateSongDialog
-          lyricId={lyric.id}
-          lyricTitle={lyric.title}
-          lyricContent={lyric.content}
-          lyricLanguage={lyric.language}
-        />
-        <Link href={`/lyrics/${lyric.id}/edit`}>
-          <Button variant="outline" size="sm">
-            <Pencil className="mr-1 h-4 w-4" />
-            {t('edit')}
-          </Button>
-        </Link>
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          <GenerateSongDialog
+            lyricId={lyric.id}
+            lyricTitle={lyric.title}
+            lyricContent={lyric.content}
+            lyricLanguage={lyric.language}
+          />
+          <Link href={`/lyrics/${lyric.id}/edit`}>
+            <Button variant="outline" size="sm">
+              <Pencil className="mr-1 h-4 w-4" />
+              {t('edit')}
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <StructuredBlockViewer blocks={blocks} />

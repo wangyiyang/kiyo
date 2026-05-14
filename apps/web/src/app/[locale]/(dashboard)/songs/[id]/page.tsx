@@ -69,7 +69,7 @@ async function SongDetailContent({ locale, id }: { locale: string; id: string })
   }
 
   return (
-    <div className="container mx-auto max-w-3xl py-8">
+    <div className="container mx-auto max-w-3xl px-4 py-8">
       <div className="mb-6 flex items-center gap-4">
         <Link
           href="/songs"
@@ -91,9 +91,9 @@ async function SongDetailContent({ locale, id }: { locale: string; id: string })
         mood={song.mood}
       />
 
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{song.title}</h1>
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <h1 className="break-words text-2xl font-bold leading-tight">{song.title}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <SongStatusBadge status={song.status as 'draft' | 'generating' | 'completed' | 'failed'} label={statusLabelMap[song.status] ?? song.status} />
             {song.genre && <span>{song.genre}</span>}
@@ -117,7 +117,7 @@ async function SongDetailContent({ locale, id }: { locale: string; id: string })
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           {song.status === 'completed' && (song.audio_url || song.file_path) && (
             <>
               <ExportDialog
