@@ -31,6 +31,15 @@ BEGIN
     cleaned := trim(split_part(cleaned, ',', 1));
   END IF;
 
+  -- 拆分后再次检查中文映射
+  IF cleaned = '伤感' THEN RETURN 'sentimental'; END IF;
+  IF cleaned = '流行' THEN RETURN 'pop'; END IF;
+  IF cleaned = '悲伤' THEN RETURN 'melancholic'; END IF;
+  IF cleaned = '快乐' THEN RETURN 'happy'; END IF;
+  IF cleaned = '兴奋' THEN RETURN 'energetic'; END IF;
+  IF cleaned = '安静' THEN RETURN 'peaceful'; END IF;
+  IF cleaned = '温柔' THEN RETURN 'warm'; END IF;
+
   -- 去除多余空格
   cleaned := regexp_replace(cleaned, '[[:space:]]+', ' ', 'g');
 

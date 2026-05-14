@@ -25,6 +25,11 @@ describe('normalizeTag', () => {
     expect(normalizeTag('  Pop, Dance, Electronic  ')).toBe('pop')
   })
 
+  it('maps Chinese tag even when part of a compound list', () => {
+    expect(normalizeTag('伤感,流行')).toBe('sentimental')
+    expect(normalizeTag('  流行, 摇滚  ')).toBe('pop')
+  })
+
   it('collapses extra whitespace', () => {
     expect(normalizeTag('dreamy   pop')).toBe('dreamy pop')
   })

@@ -36,6 +36,11 @@ export function normalizeTag(tag: string | null | undefined): string | null {
     normalized = normalized.split(',')[0].trim()
   }
 
+  // 拆分后再次检查中文映射
+  if (TAG_MAPPINGS[normalized]) {
+    return TAG_MAPPINGS[normalized]
+  }
+
   // 去除多余空格
   normalized = normalized.replace(/\s+/g, ' ').trim()
 
