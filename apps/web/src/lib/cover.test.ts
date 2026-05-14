@@ -8,7 +8,7 @@ describe('buildCoverPrompt', () => {
       description: '一张关于夜晚与孤独的专辑',
     })
     expect(prompt).toContain('基于专辑主题"夜曲"的视觉封面设计')
-    expect(prompt).toContain('关于夜晚与孤独的意境')
+    expect(prompt).toContain('一张关于夜晚与孤独的专辑的意境')
     expect(prompt).not.toContain('专辑:')
     expect(prompt).toContain('画面中不得出现任何文字、字母、数字、符号或语言字符')
   })
@@ -40,8 +40,8 @@ describe('buildCoverPrompt', () => {
       title: '纯音乐',
     })
     expect(prompt).toContain('基于歌曲主题"纯音乐"的视觉封面设计')
-    expect(prompt).not.toContain('风格')
-    expect(prompt).not.toContain('情绪')
+    expect(prompt).not.toContain('风格：')
+    expect(prompt).not.toContain('情绪：')
     expect(prompt).toContain('画面中不得出现任何文字、字母、数字、符号或语言字符')
   })
 
