@@ -156,7 +156,9 @@
       "invalidCredentials": "Invalid email or password",
       "emailNotConfirmed": "Please verify your email first",
       "generic": "Something went wrong. Please try again.",
-      "termsRequired": "Please read and agree to the Privacy Policy and Terms of Service"
+      "termsRequired": "Please read and agree to the Privacy Policy and Terms of Service",
+      "oauthMissingCode": "Authorization failed. Please try again.",
+      "oauthExchangeFailed": "Login verification failed. Please check configuration or try again later."
     },
     "common": {
       "show": "Show",

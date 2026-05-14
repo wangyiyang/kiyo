@@ -156,7 +156,9 @@
       "invalidCredentials": "邮箱或密码错误",
       "emailNotConfirmed": "请先验证邮箱",
       "generic": "出错了，请重试",
-      "termsRequired": "请阅读并同意用户协议和隐私政策"
+      "termsRequired": "请阅读并同意用户协议和隐私政策",
+      "oauthMissingCode": "授权失败，请重试",
+      "oauthExchangeFailed": "登录验证失败，请检查配置或稍后重试"
     },
     "common": {
       "show": "显示",

@@ -156,6 +156,14 @@ MINIMAX_API_KEY=
 
 `NEXT_PUBLIC_SUPABASE_ANON_KEY` 仍作为旧项目 fallback 支持；新配置优先使用 Supabase Dashboard 中的 publishable key。
 
+## OAuth 社交登录
+
+本项目支持 GitHub 和 Google OAuth 登录。详细配置步骤请参阅 [docs/oauth-setup.md](docs/oauth-setup.md)。
+
+环境要求：
+- `NEXT_PUBLIC_SITE_URL` 必须设置为实际域名（本地开发用 `http://localhost:3000`）
+- Supabase Dashboard 中已开启对应 Provider 并填写 Client ID / Secret
+
 ## 贡献
 
 欢迎 Issue 和 PR。在提交代码前，请确保：
