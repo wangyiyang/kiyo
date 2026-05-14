@@ -1,17 +1,13 @@
-import { redirect } from 'next/navigation'
-import { createServerClient } from '@kiyo/supabase/server'
+import { RequireAuth } from '@/components/auth/require-auth'
 
 export default async function NewSongLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/login?redirectTo=/songs/new')
-  }
-
-  return <>{children}</>
+  return (
+    <RequireAuth redirectTo="/login?redirectTo=/songs/new">
+      {children}
+    </RequireAuth>
+  )
 }
