@@ -1,6 +1,6 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { AudioPlayer, EmptyState } from '@kiyo/ui'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { Link } from '@/i18n/navigation'
 import { DraggableSongList } from '../_components/DraggableSongList'
 import { CoverSection } from '@/components/CoverSection'
@@ -27,7 +27,7 @@ async function AlbumDetailContent({ locale, id }: { locale: string; id: string }
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    notFound()
   }
 
   const { data: album } = await supabase
