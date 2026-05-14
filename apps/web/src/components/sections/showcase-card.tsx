@@ -5,6 +5,7 @@ import { Play, VolumeX } from 'lucide-react'
 import { usePlayerStore, cn } from '@kiyo/ui'
 import { useTranslations } from 'next-intl'
 import { useState, useEffect } from 'react'
+import { normalizeTag } from '@/lib/tag-normalization'
 
 interface Track {
   id: string
@@ -144,13 +145,13 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
 
       <div className="absolute inset-x-0 bottom-0 p-5 text-white">
         <p className="text-xs uppercase tracking-wider opacity-80">
-          {track.genre ?? tExplore('defaultGenre')}
+          {normalizeTag(track.genre) ?? tExplore('defaultGenre')}
         </p>
         <h3 className="mt-1 text-lg font-semibold tracking-tight">
           {track.title}
         </h3>
         <p className="mt-1 text-xs opacity-75">
-          {track.mood ?? tExplore('defaultMood')} · {formatDuration(track.duration)}
+          {normalizeTag(track.mood) ?? tExplore('defaultMood')} · {formatDuration(track.duration)}
         </p>
       </div>
     </article>
