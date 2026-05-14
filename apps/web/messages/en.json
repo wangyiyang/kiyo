@@ -482,7 +482,9 @@
       "viewFull": "View full",
       "optional": "optional",
       "login": "Log in",
-      "done": "Done"
+      "done": "Done",
+      "hide": "Hide",
+      "show": "Show"
     },
     "ariaLabels": {
       "pageLoading": "Page loading",
@@ -558,6 +560,7 @@
       "title": "AI Compose",
       "fields": {
         "prompt": "Theme Description",
+        "title": "Song Title",
         "genre": "Genre (optional)",
         "mood": "Mood (optional)",
         "language": "Language (optional)",
@@ -568,6 +571,7 @@
       },
       "placeholders": {
         "prompt": "Describe the music you want, e.g. A pop song about summer",
+        "title": "Enter song title",
         "genre": "e.g. Pop",
         "mood": "e.g. Cheerful",
         "aiPrompt": "Describe the prompt used to generate this song"
@@ -591,6 +595,7 @@
       "noLyrics": "No lyrics available, please create one first",
       "error": {
         "emptyPrompt": "Theme description cannot be empty",
+        "emptyTitle": "Song title cannot be empty",
         "noLyricSelected": "Please select a linked lyric"
       },
       "submit": "Start Composing"
@@ -795,6 +800,8 @@
     "cover": {
       "generating": "Generating...",
       "regenerate": "Regenerate",
+      "upload": "Upload Cover",
+      "replace": "Replace Cover",
       "retry": "Retry",
       "generate": "Generate Cover",
       "error": "Generation failed, please retry"

@@ -482,7 +482,9 @@
       "viewFull": "查看完整",
       "optional": "可选",
       "login": "登录",
-      "done": "完成"
+      "done": "完成",
+      "hide": "隐藏",
+      "show": "显示"
     },
     "ariaLabels": {
       "pageLoading": "页面加载中",
@@ -558,6 +560,7 @@
       "title": "AI 作曲",
       "fields": {
         "prompt": "主题描述",
+        "title": "歌曲名称",
         "genre": "风格（可选）",
         "mood": "情绪（可选）",
         "language": "语言（可选）",
@@ -568,6 +571,7 @@
       },
       "placeholders": {
         "prompt": "描述你想要的音乐，如：一首关于夏天的流行歌曲",
+        "title": "输入歌曲名称",
         "genre": "如：流行",
         "mood": "如：欢快",
         "aiPrompt": "描述 AI 生成这首歌曲的提示词"
@@ -591,6 +595,7 @@
       "noLyrics": "暂无可选歌词，请先创建歌词",
       "error": {
         "emptyPrompt": "主题描述不能为空",
+        "emptyTitle": "歌曲名称不能为空",
         "noLyricSelected": "请选择关联歌词"
       },
       "submit": "开始创作"
@@ -795,6 +800,8 @@
     "cover": {
       "generating": "生成中...",
       "regenerate": "重新生成",
+      "upload": "上传封面",
+      "replace": "更换封面",
       "retry": "重试",
       "generate": "生成封面",
       "error": "生成失败，请重试"
