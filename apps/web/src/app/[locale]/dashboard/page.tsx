@@ -1,5 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { Link } from '@/i18n/navigation'
 import { getTranslations } from 'next-intl/server'
 import { Music, FileText, Disc, Wand2, Mic2, Plus, ArrowRight } from 'lucide-react'
@@ -127,15 +127,11 @@ async function DashboardContent() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user) {
-    redirect('/login')
-  }
-
   const t = await getTranslations('dashboard')
   const [stats, recentItems] = await Promise.all([getStats(), getRecentItems()])
 
   if (!stats) {
-    redirect('/login')
+    notFound()
   }
 
   return (
