@@ -48,10 +48,11 @@ async function getStats() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const [songsRes, lyricsRes, albumsRes] = await Promise.all([
+  const [songsRes, lyricsRes, albumsRes, albumsWithSongCounts] = await Promise.all([
     supabase.from('songs').select('status', { count: 'exact', head: true }).eq('user_id', user.id),
     supabase.from('lyrics').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
-    supabase.from('albums').select('id', { count: 'exact', head: true }).eq('user_id', user.id)
+    supabase.from('albums').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
+    supabase.from('albums').select('album_songs(count)').eq('user_id', user.id)
   ])
 
   const completedSongsRes = await supabase
@@ -82,8 +83,12 @@ async function getStats() {
       total: lyricsRes.count ?? 0, 
       composed: composedLyricsRes.count ?? 0 
     },
-    albums: { 
-      total: albumsRes.count ?? 0 
+    albums: {
+      total: albumsRes.count ?? 0,
+      totalSongs: (albumsWithSongCounts?.data ?? []).reduce(
+        (sum, a) => sum + (a.album_songs?.[0]?.count ?? 0),
+        0
+      )
     }
   }
 }
@@ -161,7 +166,7 @@ async function DashboardContent() {
               icon={<Disc className="h-6 w-6 text-primary" />}
               label={t('stats.albums.label')}
               primary={stats.albums.total}
-              secondary={t('stats.albums.totalSongs', { count: 0 })}
+              secondary={t('stats.albums.totalSongs', { count: stats.albums.totalSongs })}
               href="/albums"
             />
             <StatCard
