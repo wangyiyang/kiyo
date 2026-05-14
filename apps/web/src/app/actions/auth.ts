@@ -120,9 +120,16 @@ export async function updatePassword(password: string): Promise<AuthResult> {
   return { ok: true, message: 'Password updated successfully.' }
 }
 
-export async function signInWithOAuth(provider: 'github' | 'google', next?: string): Promise<never> {
+/**
+ * 发起 OAuth 登录流程，直接重定向到 Provider 授权页。
+ * 注意：此函数通过 `redirect()` 跳转，不会正常返回。
+ */
+export async function signInWithOAuth(
+  provider: 'github' | 'google',
+  next?: string
+): Promise<never> {
   const supabase = await createServerClient()
-  const baseRedirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
+  const baseRedirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/auth/callback`
   const redirectTo = next
     ? `${baseRedirectTo}?next=${encodeURIComponent(next)}`
     : baseRedirectTo
