@@ -4,8 +4,6 @@ import { createServerClient } from "@kiyo/supabase/server"
 import { cn } from "@kiyo/ui"
 import { Link } from "@/i18n/navigation"
 import { ScrollReveal } from "@/components/scroll-reveal"
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
 import { ExploreSongGrid } from "@/components/explore-song-grid"
 
 export default async function ExplorePage({
@@ -42,7 +40,6 @@ export default async function ExplorePage({
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <SiteHeader />
       <main className="flex-1">
         {/* Header */}
         <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 to-background pt-24 pb-16">
@@ -132,7 +129,6 @@ export default async function ExplorePage({
           <ExploreSongGrid genre={genre} mood={mood} />
         </section>
       </main>
-      <SiteFooter />
     </div>
   )
 }

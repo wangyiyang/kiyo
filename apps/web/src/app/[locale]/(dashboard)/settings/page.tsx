@@ -8,7 +8,6 @@ import { ChangePasswordForm } from '@/components/settings/change-password-form'
 import { UpdateEmailForm } from '@/components/settings/update-email-form'
 import { DeleteAccountDialog } from '@/components/settings/delete-account-dialog'
 import { RequireAuth } from '@/components/auth/require-auth'
-import { SiteHeader } from '@/components/site-header'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('settings')
@@ -31,9 +30,7 @@ async function SettingsPageContent() {
   const t = await getTranslations('settings')
 
   return (
-    <>
-      <SiteHeader />
-      <div className="container mx-auto max-w-2xl px-4 py-12">
+    <div className="container mx-auto max-w-2xl px-4 py-12">
         <div className="mb-8">
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           {user?.email && (
@@ -74,7 +71,6 @@ async function SettingsPageContent() {
             </div>
           </SettingsSection>
         </div>
-      </div>
-    </>
+    </div>
   )
 }

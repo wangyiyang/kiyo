@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -48,10 +48,36 @@ const rootRouteFiles = [
   'sitemap.ts',
 ]
 
+/**
+ * Find all immediate subdirectories of a directory.
+ * Used to discover Route Groups like (site) and (dashboard).
+ */
+function getSubdirs(dir: string): string[] {
+  if (!existsSync(dir)) return []
+  return readdirSync(dir).filter((name) => {
+    const full = path.join(dir, name)
+    return statSync(full).isDirectory() && !name.startsWith('_')
+  })
+}
+
+/**
+ * Check if a route file exists under app/[locale] or any of its Route Group subdirectories.
+ * Route Groups (directories wrapped in parentheses) do not affect the URL.
+ */
+function localizedRouteExists(routeFile: string): boolean {
+  if (existsSync(path.join(localizedAppDir, routeFile))) return true
+
+  const subdirs = getSubdirs(localizedAppDir)
+  for (const subdir of subdirs) {
+    if (existsSync(path.join(localizedAppDir, subdir, routeFile))) return true
+  }
+  return false
+}
+
 describe('i18n app route structure', () => {
   it('keeps public page routes under app/[locale] for internal locale rewrites', () => {
     const missingRoutes = localizedRouteFiles.filter(
-      (routeFile) => !existsSync(path.join(localizedAppDir, routeFile)),
+      (routeFile) => !localizedRouteExists(routeFile),
     )
 
     expect(missingRoutes).toEqual([])
