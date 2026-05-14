@@ -4,8 +4,6 @@ import { Link } from '@/i18n/navigation'
 import { getTranslations } from 'next-intl/server'
 import { Music, FileText, Disc, Wand2, Mic2, Plus, ArrowRight } from 'lucide-react'
 
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { Button } from '@kiyo/ui'
 import { RequireAuth } from '@/components/auth/require-auth'
 
@@ -140,10 +138,7 @@ async function DashboardContent() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <SiteHeader />
-      <main className="flex-1">
-        <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8">
           <h1 className="mb-8 text-3xl font-bold">{t('title')}</h1>
 
           {/* Stats Grid */}
@@ -228,9 +223,6 @@ async function DashboardContent() {
               <p className="text-muted-foreground">{t('recent.empty')}</p>
             )}
           </section>
-        </div>
-      </main>
-      <SiteFooter />
     </div>
   )
 }

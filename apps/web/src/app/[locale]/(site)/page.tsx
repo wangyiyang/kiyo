@@ -8,9 +8,6 @@ import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
 import { HowItWorks } from "@/components/sections/how-it-works";
 import { Showcase } from "@/components/sections/showcase";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
-
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kiyo.ai";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -68,7 +65,6 @@ export default async function HomePage() {
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 			/>
 			<div className="flex min-h-screen flex-col">
-				<SiteHeader />
 				<main className="flex-1">
 					<Hero isAuthenticated={isAuthenticated} />
 					<Features />
@@ -76,7 +72,6 @@ export default async function HomePage() {
 					<Showcase />
 					<FinalCta isAuthenticated={isAuthenticated} />
 				</main>
-				<SiteFooter />
 			</div>
 		</>
 	);
