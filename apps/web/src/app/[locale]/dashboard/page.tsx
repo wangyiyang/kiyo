@@ -117,7 +117,7 @@ async function getRecentItems() {
 
 export default async function DashboardPage() {
   return (
-    <RequireAuth>
+    <RequireAuth redirectTo="/login?redirectTo=/dashboard">
       <DashboardContent />
     </RequireAuth>
   )
