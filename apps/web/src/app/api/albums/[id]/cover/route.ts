@@ -1,5 +1,6 @@
-import { createServerClient, createServiceRoleClient } from '@kiyo/supabase/server'
+import { createServerClient } from '@kiyo/supabase/server'
 import { captureAppException } from '@/lib/monitoring'
+import { triggerGenerationWorker } from '@/lib/generation-worker'
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 import { buildCoverPrompt } from '@/lib/cover'
@@ -106,11 +107,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     }
 
     // Fire-and-forget: trigger immediate processing
-    void createServiceRoleClient()
-      .functions.invoke('process-generation-task')
-      .catch((err) => {
-        console.error('Failed to trigger generation worker:', err)
-      })
+    triggerGenerationWorker()
 
     return NextResponse.json(
       { task, coverStatus: 'generating' },
