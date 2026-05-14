@@ -114,6 +114,7 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
           fill
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onError={() => setCoverUrl(null)}
         />
       ) : (
         <div
