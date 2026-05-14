@@ -31,6 +31,7 @@ describe('POST /api/songs/generate (async)', () => {
     vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
+      title: 'Test Song',
       prompt: 'A happy pop song',
       mode: 'auto_lyrics',
       genre: 'pop',
@@ -70,6 +71,7 @@ describe('POST /api/songs/generate (async)', () => {
     vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
+      title: 'Test Song',
       prompt: 'Epic orchestral background',
       mode: 'instrumental',
       genre: 'orchestral',
@@ -92,6 +94,7 @@ describe('POST /api/songs/generate (async)', () => {
     vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
+      title: 'Test Song',
       prompt: 'A rock ballad',
       mode: 'existing_lyric',
       lyric_id: 'l1',
@@ -111,6 +114,7 @@ describe('POST /api/songs/generate (async)', () => {
     vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
+      title: 'Test Song',
       prompt: 'test',
       mode: 'invalid_mode',
     }))
@@ -127,6 +131,7 @@ describe('POST /api/songs/generate (async)', () => {
     vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
+      title: 'Test Song',
       prompt: 'test',
       mode: 'existing_lyric',
     }))
@@ -146,6 +151,7 @@ describe('POST /api/songs/generate (async)', () => {
     vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
+      title: 'Test Song',
       prompt: 'test',
       mode: 'existing_lyric',
       lyric_id: 'l1',
@@ -162,6 +168,7 @@ describe('POST /api/songs/generate (async)', () => {
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
     const response = await POST(createRequest({
+      title: 'Test Song',
       prompt: 'test',
       mode: 'auto_lyrics',
     }))
@@ -199,6 +206,7 @@ describe('POST /api/songs/generate (async)', () => {
     vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
 
     const response = await POST(createRequest({
+      title: 'Test Song',
       prompt: 'A song',
       mode: 'auto_lyrics',
     }))
@@ -206,5 +214,21 @@ describe('POST /api/songs/generate (async)', () => {
     expect(response.status).toBe(500)
     const json = await response.json()
     expect(json.error.code).toBe('INTERNAL_ERROR')
+  })
+
+  it('missing title returns 400', async () => {
+    const { createServerClient, createServiceRoleClient } = await import('@kiyo/supabase/server')
+    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(createServiceRoleClient).mockReturnValue(mockClient as any)
+
+    const response = await POST(createRequest({
+      prompt: 'A happy pop song',
+      mode: 'auto_lyrics',
+    }))
+
+    expect(response.status).toBe(400)
+    const json = await response.json()
+    expect(json.error.code).toBe('VALIDATION_ERROR')
   })
 })

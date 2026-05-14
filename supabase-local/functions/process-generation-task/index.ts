@@ -33,6 +33,9 @@ async function fetchWithTimeout(
   }
 }
 
+const NEGATIVE_INSTRUCTION = '画面中不得出现任何文字、字母、数字、符号或语言字符'
+const FORMAT_CONSTRAINT = '正方形专辑封面，高细节，艺术插画风格'
+
 function buildCoverPrompt(
   type: 'album' | 'song',
   data: {
@@ -42,15 +45,28 @@ function buildCoverPrompt(
     mood?: string | null
   }
 ): string {
+  const entityLabel = type === 'album' ? '专辑' : '歌曲'
+  const parts: string[] = [
+    `基于${entityLabel}主题"${data.title}"的视觉封面设计`,
+  ]
+
   if (type === 'album') {
-    return data.description
-      ? `专辑: ${data.title}。${data.description}`
-      : `专辑: ${data.title}`
+    if (data.description) {
+      parts.push(`${data.description}的意境`)
+    }
+  } else {
+    const styleParts: string[] = []
+    if (data.genre) styleParts.push(`${data.genre}风格`)
+    if (data.mood) styleParts.push(`${data.mood}情绪`)
+    if (styleParts.length > 0) {
+      parts.push(styleParts.join('，'))
+    }
   }
-  const parts = [`歌曲: ${data.title}`]
-  if (data.genre) parts.push(`风格：${data.genre}`)
-  if (data.mood) parts.push(`情绪：${data.mood}`)
-  return parts.join('，')
+
+  parts.push(FORMAT_CONSTRAINT)
+  parts.push(NEGATIVE_INSTRUCTION)
+
+  return parts.join('。')
 }
 
 async function downloadImage(url: string, timeoutMs: number): Promise<ArrayBuffer> {

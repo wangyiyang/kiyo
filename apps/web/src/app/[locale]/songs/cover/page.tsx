@@ -29,6 +29,13 @@ export default function CoverSongPage() {
   const [generating, setGenerating] = React.useState(false)
   const [error, setError] = React.useState('')
 
+  const hasAudioSource =
+    sourceMode === 'existing'
+      ? songs.some((s) => s.id === selectedSongId && (s.file_path || s.audio_url))
+      : !!uploadedUrl
+
+  const canSubmit = hasAudioSource && !!selectedStyle && !uploading
+
   const styleOptions = [
     { icon: '🎸', label: t('style.options.0.label'), prompt: t('style.options.0.prompt') },
     { icon: '🎷', label: t('style.options.1.label'), prompt: t('style.options.1.prompt') },
@@ -280,7 +287,7 @@ export default function CoverSongPage() {
         <Link href="/songs">
           <Button variant="outline" disabled={generating}>{tCommon('actions.cancel')}</Button>
         </Link>
-        <Button onClick={handleGenerate} disabled={generating || uploading}>
+        <Button onClick={handleGenerate} disabled={generating || !canSubmit}>
           {generating ? tCommon('states.generating') : t('submit')}
         </Button>
       </div>

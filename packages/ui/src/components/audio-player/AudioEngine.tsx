@@ -174,7 +174,7 @@ export function AudioEngine() {
 
     // If Howl does not exist yet (race condition or first play), create it now
     if (!howl) {
-      let src = currentTrack.audio_url
+      const src = currentTrack.audio_url
       if (!src && currentTrack.file_path) {
         // Need to fetch signed URL synchronously - skip for now, let currentTrack effect handle it
         return

@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl'
 
 import { Button } from '@kiyo/ui'
 
+import { Link } from '@/i18n/navigation'
 import { useWaitlist } from '@/lib/waitlist-context'
 
 const HeroWaveform = dynamic(
@@ -19,7 +20,11 @@ const HeroWaveform = dynamic(
 
 const statKeys = ['models', 'genres', 'cycle'] as const
 
-export function Hero() {
+export interface HeroProps {
+  isAuthenticated?: boolean
+}
+
+export function Hero({ isAuthenticated = false }: HeroProps) {
   const t = useTranslations('hero')
   const reduce = useReducedMotion()
   const { show } = useWaitlist()
@@ -67,10 +72,19 @@ export function Hero() {
               transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
             >
-              <Button size="lg" onClick={show} className="group">
-                {t('cta.primary')}
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </Button>
+              {isAuthenticated ? (
+                <Button size="lg" asChild className="group">
+                  <Link href="/dashboard">
+                    {t('cta.primaryAuthenticated')}
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                </Button>
+              ) : (
+                <Button size="lg" onClick={show} className="group">
+                  {t('cta.primary')}
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Button>
+              )}
               <Button size="lg" variant="ghost" asChild>
                 <a href="#features">{t('cta.secondary')}</a>
               </Button>
