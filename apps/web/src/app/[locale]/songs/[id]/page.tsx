@@ -9,6 +9,7 @@ import { CoverSection } from '@/components/CoverSection'
 import { getTranslations } from 'next-intl/server'
 import { DeleteButton } from './delete-button'
 import { ShareButton } from '@/components/share-button'
+import { RequireAuth } from '@/components/auth/require-auth'
 
 export default async function SongDetailPage({
   params,
@@ -16,6 +17,14 @@ export default async function SongDetailPage({
   params: { locale: string; id: string }
 }) {
   const { locale, id } = params
+  return (
+    <RequireAuth>
+      <SongDetailContent locale={locale} id={id} />
+    </RequireAuth>
+  )
+}
+
+async function SongDetailContent({ locale, id }: { locale: string; id: string }) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 

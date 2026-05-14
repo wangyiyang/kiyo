@@ -7,6 +7,7 @@ import { Music, FileText, Disc, Wand2, Mic2, Plus, ArrowRight } from 'lucide-rea
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { Button } from '@kiyo/ui'
+import { RequireAuth } from '@/components/auth/require-auth'
 
 interface StatCardProps {
   icon: React.ReactNode
@@ -115,9 +116,17 @@ async function getRecentItems() {
 }
 
 export default async function DashboardPage() {
+  return (
+    <RequireAuth>
+      <DashboardContent />
+    </RequireAuth>
+  )
+}
+
+async function DashboardContent() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   if (!user) {
     redirect('/login')
   }

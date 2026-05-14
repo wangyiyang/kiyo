@@ -5,8 +5,21 @@ import { Pencil, ArrowLeft } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
 import { GenerateSongDialog } from './generate-song-dialog'
 import { getTranslations } from 'next-intl/server'
+import { RequireAuth } from '@/components/auth/require-auth'
 
 export default async function LyricDetailPage({
+  params,
+}: {
+  params: { id: string }
+}) {
+  return (
+    <RequireAuth>
+      <LyricDetailContent params={params} />
+    </RequireAuth>
+  )
+}
+
+async function LyricDetailContent({
   params,
 }: {
   params: { id: string }

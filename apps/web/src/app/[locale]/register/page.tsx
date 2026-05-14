@@ -11,7 +11,7 @@ import {
 } from '@kiyo/ui'
 
 import { RegisterForm } from '@/components/auth/register-form'
-import { AuthGuard } from '@/components/auth/auth-guard'
+import { GuestGuard } from '@/components/auth/guest-guard'
 import { SiteHeader } from '@/components/site-header'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -26,7 +26,7 @@ export default async function RegisterPage() {
   return (
     <>
       <SiteHeader />
-      <AuthGuard>
+      <GuestGuard>
         <div className="container mx-auto flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
           <Card className="w-full max-w-md">
             <CardHeader className="space-y-1 text-center">
@@ -44,7 +44,7 @@ export default async function RegisterPage() {
             </CardContent>
           </Card>
         </div>
-      </AuthGuard>
+      </GuestGuard>
     </>
   )
 }

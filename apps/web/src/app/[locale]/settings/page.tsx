@@ -7,7 +7,7 @@ import { SettingsSection } from '@/components/settings/settings-section'
 import { ChangePasswordForm } from '@/components/settings/change-password-form'
 import { UpdateEmailForm } from '@/components/settings/update-email-form'
 import { DeleteAccountDialog } from '@/components/settings/delete-account-dialog'
-import { AuthGuard } from '@/components/auth/auth-guard'
+import { RequireAuth } from '@/components/auth/require-auth'
 import { SiteHeader } from '@/components/site-header'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,7 +24,7 @@ export default async function SettingsPage() {
   return (
     <>
       <SiteHeader />
-      <AuthGuard>
+      <RequireAuth>
         <div className="container mx-auto max-w-2xl px-4 py-12">
           <div className="mb-8">
             <h1 className="text-3xl font-bold">
@@ -69,7 +69,7 @@ export default async function SettingsPage() {
             </SettingsSection>
           </div>
         </div>
-      </AuthGuard>
+      </RequireAuth>
     </>
   )
 }
