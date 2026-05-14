@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
 
 import { Separator } from '@kiyo/ui'
 
@@ -14,10 +15,26 @@ type Mode = 'password' | 'magicLink'
 
 export function LoginForm() {
   const t = useTranslations('auth')
+  const searchParams = useSearchParams()
+  const oauthError = searchParams.get('error')
+
+  const oauthErrorMessage = oauthError
+    ? oauthError === 'missing_code'
+      ? t('errors.oauthMissingCode')
+      : oauthError === 'oauth_exchange_failed'
+        ? t('errors.oauthExchangeFailed')
+        : null
+    : null
+
   const [mode, setMode] = React.useState<Mode>('password')
 
   return (
     <div className="space-y-4">
+      {oauthErrorMessage && (
+        <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {oauthErrorMessage}
+        </div>
+      )}
       <OAuthButtons />
       <div className="flex items-center gap-3">
         <Separator className="flex-1" />
