@@ -28,6 +28,7 @@ interface PlayerState {
   isMiniPlayerVisible: boolean
   isMiniPlayerExpanded: boolean
   analyserData: Uint8Array | null
+  isSeeking: boolean
 
   play: (song: PlayerSong, playlist?: PlayerSong[]) => void
   pause: () => void
@@ -41,6 +42,7 @@ interface PlayerState {
   toggleMute: () => void
   toggleShuffle: () => void
   cycleRepeatMode: () => void
+  endSeek: () => void
   setMiniPlayerExpanded: (expanded: boolean) => void
   updatePlaylistOrder: (songs: PlayerSong[]) => void
   setAnalyserData: (data: Uint8Array | null) => void
@@ -70,6 +72,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   isMiniPlayerVisible: false,
   isMiniPlayerExpanded: false,
   analyserData: null,
+  isSeeking: false,
 
   play: (song, playlist) => {
     const pl = playlist ?? get().playlist
@@ -96,8 +99,10 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   seek: (time) => {
     const { duration } = get()
     const clamped = Math.max(0, Math.min(time, duration))
-    set({ currentTime: clamped })
+    set({ currentTime: clamped, isSeeking: true })
   },
+
+  endSeek: () => set({ isSeeking: false }),
 
   setCurrentTime: (time) => set({ currentTime: time }),
 

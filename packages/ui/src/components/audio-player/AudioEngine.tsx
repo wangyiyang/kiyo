@@ -231,6 +231,13 @@ export function AudioEngine() {
     const howl = howlRef.current
     if (!howl || !currentTrack) return
 
+    // User-initiated seek: sync immediately, bypass debounce
+    if (usePlayerStore.getState().isSeeking) {
+      howl.seek(currentTime)
+      lastSeekTime.current = Date.now()
+      return
+    }
+
     const now = Date.now()
     if (now - lastSeekTime.current < SEEK_DEBOUNCE_MS) return
     lastSeekTime.current = now
@@ -246,6 +253,7 @@ export function AudioEngine() {
     progressIntervalRef.current = setInterval(() => {
       const howl = howlRef.current
       if (!howl || !howl.playing()) return
+      if (usePlayerStore.getState().isSeeking) return
       const seek = howl.seek() as number
       setCurrentTime(seek)
     }, 250)
