@@ -59,7 +59,7 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
     value: SongCreateInput['mode']
     labelKey: string
     descKey: string
-    emoji: string
+    emoji: '🎵' | '✍️' | '📝'
   }[] = [
     {
       value: 'instrumental',
