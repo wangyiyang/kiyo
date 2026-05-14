@@ -6,7 +6,31 @@ interface MinimaxResponse {
 }
 
 interface MinimaxImageResponse {
-  data?: { image?: { url?: string } }
+  data?: { image?: { url?: string }; image_urls?: string[] }
+}
+
+async function fetchWithTimeout(
+  input: string,
+  init: RequestInit,
+  timeoutMs: number,
+  label: string
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), timeoutMs)
+
+  try {
+    return await fetch(input, {
+      ...init,
+      signal: controller.signal,
+    })
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      throw new Error(`${label} timed out after ${timeoutMs}ms`)
+    }
+    throw err
+  } finally {
+    clearTimeout(timeout)
+  }
 }
 
 function buildCoverPrompt(
@@ -29,8 +53,8 @@ function buildCoverPrompt(
   return parts.join('，')
 }
 
-async function downloadImage(url: string): Promise<ArrayBuffer> {
-  const res = await fetch(url)
+async function downloadImage(url: string, timeoutMs: number): Promise<ArrayBuffer> {
+  const res = await fetchWithTimeout(url, {}, timeoutMs, 'Image download')
   if (!res.ok) {
     throw new Error('Failed to download generated image')
   }
@@ -52,11 +76,11 @@ async function uploadToCovers(
 
 Deno.serve(async (_req) => {
   const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? 'http://host.docker.internal:54321'
-  const serviceRoleKey = Deno.env.get('SERVICE_ROLE_KEY')
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? Deno.env.get('SERVICE_ROLE_KEY')
 
   if (!serviceRoleKey) {
     return new Response(
-      JSON.stringify({ error: 'Missing SERVICE_ROLE_KEY' }),
+      JSON.stringify({ error: 'Missing SUPABASE_SERVICE_ROLE_KEY' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }
@@ -84,15 +108,15 @@ Deno.serve(async (_req) => {
     )
   }
 
-  const minimaxApiKey = Deno.env.get('MINIMAX_API_KEY')
-  if (!minimaxApiKey) {
-    return new Response(
-      JSON.stringify({ error: 'Missing MINIMAX_API_KEY', task_id: task.id }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    )
-  }
-
   try {
+    const minimaxApiKey = Deno.env.get('MINIMAX_API_KEY')
+    if (!minimaxApiKey) {
+      throw new Error('Missing MINIMAX_API_KEY')
+    }
+    const minimaxBaseUrl = (Deno.env.get('MINIMAX_BASE_URL') ?? 'https://api.minimaxi.com').replace(/\/+$/, '')
+    const minimaxTimeoutMs = Number(Deno.env.get('MINIMAX_TIMEOUT_MS') ?? '120000')
+    const assetDownloadTimeoutMs = Number(Deno.env.get('ASSET_DOWNLOAD_TIMEOUT_MS') ?? '60000')
+
     // ── MUSIC GENERATION ──
     if (task.type === 'music') {
       const payload = task.payload as {
@@ -138,14 +162,19 @@ Deno.serve(async (_req) => {
         if (lyric?.content) minimaxBody.lyrics = lyric.content
       }
 
-      const minimaxRes = await fetch('https://api.minimax.chat/v1/music_generation', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${minimaxApiKey}`,
-          'Content-Type': 'application/json',
+      const minimaxRes = await fetchWithTimeout(
+        `${minimaxBaseUrl}/v1/music_generation`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${minimaxApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(minimaxBody),
         },
-        body: JSON.stringify(minimaxBody),
-      })
+        minimaxTimeoutMs,
+        'Minimax music generation'
+      )
 
       if (!minimaxRes.ok) {
         throw new Error(`Minimax API error: ${minimaxRes.status}`)
@@ -160,7 +189,7 @@ Deno.serve(async (_req) => {
         throw new Error('Minimax response missing audio URL')
       }
 
-      const audioRes = await fetch(audioUrl)
+      const audioRes = await fetchWithTimeout(audioUrl, {}, assetDownloadTimeoutMs, 'Audio download')
       if (!audioRes.ok) throw new Error('Failed to download audio')
       const audioBuffer = await audioRes.arrayBuffer()
 
@@ -210,32 +239,38 @@ Deno.serve(async (_req) => {
         mood: payload.mood,
       })
 
-      const minimaxRes = await fetch('https://api.minimax.chat/v1/image_generation', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${minimaxApiKey}`,
-          'Content-Type': 'application/json',
+      const minimaxRes = await fetchWithTimeout(
+        `${minimaxBaseUrl}/v1/image_generation`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${minimaxApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'image-01',
+            prompt,
+            aspect_ratio: '1:1',
+            response_format: 'url',
+            n: 1,
+          }),
         },
-        body: JSON.stringify({
-          model: 'image-01',
-          prompt,
-          aspect_ratio: '1:1',
-          response_format: 'url',
-        }),
-      })
+        minimaxTimeoutMs,
+        'Minimax image generation'
+      )
 
       if (!minimaxRes.ok) {
         throw new Error(`Minimax image API error: ${minimaxRes.status}`)
       }
 
       const minimaxData = (await minimaxRes.json()) as MinimaxImageResponse
-      const imageUrl = minimaxData.data?.image?.url
+      const imageUrl = minimaxData.data?.image?.url ?? minimaxData.data?.image_urls?.[0]
 
       if (!imageUrl) {
         throw new Error('Minimax response missing image URL')
       }
 
-      const imageBuffer = await downloadImage(imageUrl)
+      const imageBuffer = await downloadImage(imageUrl, assetDownloadTimeoutMs)
 
       const entityId = task.type === 'album_cover' ? task.album_id : task.song_id
       const filePath = `${task.user_id}/${entityId}/${Date.now()}.png`
@@ -283,6 +318,7 @@ Deno.serve(async (_req) => {
           status: 'pending',
           retry_count: retryCount,
           error_message: message,
+          started_at: null,
           created_at: retryAt.toISOString(),
         })
         .eq('id', task.id)

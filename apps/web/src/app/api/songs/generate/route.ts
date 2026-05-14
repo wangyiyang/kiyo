@@ -1,5 +1,6 @@
-import { createServerClient, createServiceRoleClient } from '@kiyo/supabase/server'
+import { createServerClient } from '@kiyo/supabase/server'
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
+import { triggerGenerationWorker } from '@/lib/generation-worker'
 import { NextResponse } from 'next/server'
 
 const VALID_MODES = ['instrumental', 'auto_lyrics', 'existing_lyric'] as const
@@ -164,11 +165,7 @@ export async function POST(request: Request) {
   }
 
   // Fire-and-forget: trigger immediate processing
-  void createServiceRoleClient()
-    .functions.invoke('process-generation-task')
-    .catch((err) => {
-      console.error('Failed to trigger generation worker:', err)
-    })
+  triggerGenerationWorker()
 
   return NextResponse.json(
     { song, task },
