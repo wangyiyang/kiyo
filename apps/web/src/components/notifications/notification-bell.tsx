@@ -9,14 +9,26 @@ import { NotificationPanel } from './notification-panel'
 
 interface NotificationBellProps {
   userId: string | undefined
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
-export function NotificationBell({ userId }: NotificationBellProps) {
-  const [isOpen, setIsOpen] = React.useState(false)
+export function NotificationBell({ userId, open, onOpenChange }: NotificationBellProps) {
+  const [internalOpen, setInternalOpen] = React.useState(false)
   const containerRef = React.useRef<HTMLDivElement>(null)
   const t = useTranslations('nav')
   const { notifications, unreadCount, isLoading, markAsRead, markAllAsRead } =
     useNotifications(userId)
+  const isOpen = open ?? internalOpen
+  const setOpen = React.useCallback(
+    (nextOpen: boolean) => {
+      if (open === undefined) {
+        setInternalOpen(nextOpen)
+      }
+      onOpenChange?.(nextOpen)
+    },
+    [onOpenChange, open]
+  )
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -24,7 +36,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false)
+        setOpen(false)
       }
     }
 
@@ -32,14 +44,14 @@ export function NotificationBell({ userId }: NotificationBellProps) {
       document.addEventListener('mousedown', handleClickOutside)
     }
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isOpen])
+  }, [isOpen, setOpen])
 
   if (!userId) return null
 
   return (
     <div ref={containerRef} className="relative">
       <button
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => setOpen(!isOpen)}
         className="relative flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         aria-label={t('notification')}
       >

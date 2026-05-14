@@ -145,7 +145,10 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
         <p className="text-xs uppercase tracking-wider opacity-80">
           {track.genre ?? tExplore('defaultGenre')}
         </p>
-        <h3 className="mt-1 text-lg font-semibold tracking-tight">
+        <h3
+          className="mt-1 line-clamp-2 text-lg font-semibold tracking-tight"
+          title={track.title}
+        >
           {track.title}
         </h3>
         <p className="mt-1 text-xs opacity-75">

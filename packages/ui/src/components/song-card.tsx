@@ -92,8 +92,10 @@ export function SongCard({ id, title, status, statusLabel, duration, lyricTitle,
           )}
         </div>
 
-        <div className="mb-2 flex items-center gap-2">
-          <h3 className="font-semibold min-w-0 truncate">{title}</h3>
+        <div className="mb-2 flex items-start gap-2">
+          <h3 className="min-w-0 flex-1 line-clamp-2 font-semibold leading-tight" title={title}>
+            {title}
+          </h3>
           <SongStatusBadge status={status} label={statusLabel} />
         </div>
 
@@ -104,7 +106,7 @@ export function SongCard({ id, title, status, statusLabel, duration, lyricTitle,
               {formatDuration(duration)}
             </span>
           )}
-          {lyricTitle && <span>歌词: {lyricTitle}</span>}
+          {lyricTitle && <span className="truncate" title={lyricTitle}>歌词: {lyricTitle}</span>}
           <span className="ml-auto">
             {status === 'completed' ? '可播放' : status === 'failed' ? '生成失败' : '待生成'}
           </span>

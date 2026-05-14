@@ -32,14 +32,16 @@ interface UserMenuProps {
 	user: {
 		email: string;
 	} | null;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
 }
 
-export function UserMenu({ user }: UserMenuProps) {
+export function UserMenu({ user, open, onOpenChange }: UserMenuProps) {
 	const t = useTranslations("auth");
 	const { show: showFeedback } = useFeedback();
-	const supabase = React.useMemo(() => createBrowserClient(), []);
 
 	const handleLogout = async () => {
+		const supabase = createBrowserClient();
 		await supabase.auth.signOut();
 		// 强制导航到首页以确保 Server Component 重新获取最新状态
 		// 避免 router.refresh() 因缓存导致仍展示旧登录状态 (gh-194)
@@ -57,7 +59,7 @@ export function UserMenu({ user }: UserMenuProps) {
 	const initials = user.email.slice(0, 2).toUpperCase();
 
 	return (
-		<DropdownMenu>
+		<DropdownMenu open={open} onOpenChange={onOpenChange}>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" className="relative h-8 w-8 rounded-full">
 					<Avatar className="h-8 w-8">
