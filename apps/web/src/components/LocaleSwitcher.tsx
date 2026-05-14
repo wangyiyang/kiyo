@@ -10,20 +10,22 @@ import {
 import { Button } from '@kiyo/ui'
 import { Globe } from 'lucide-react'
 
-import { useSetLocale } from '@/i18n/client'
+import { usePathname, useRouter } from '@/i18n/navigation'
 
 const locales = [
-	{ code: 'en', label: 'English' },
-	{ code: 'zh', label: '中文' },
+	{ code: 'en' as const, label: 'English' },
+	{ code: 'zh' as const, label: '中文' },
 ] as const
 
 export function LocaleSwitcher() {
 	const currentLocale = useLocale()
-	const setLocale = useSetLocale()
+	const router = useRouter()
+	const pathname = usePathname()
 	const t = useTranslations('localeSwitcher')
 
 	const handleChange = (nextLocale: 'en' | 'zh') => {
-		setLocale(nextLocale)
+		if (nextLocale === currentLocale) return
+		router.replace(pathname, { locale: nextLocale })
 	}
 
 	const currentLabel = locales.find((l) => l.code === currentLocale)?.label ?? currentLocale
