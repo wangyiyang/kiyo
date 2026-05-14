@@ -7,14 +7,16 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get('next') ?? '/'
 
   if (!code) {
-    return NextResponse.redirect(`${origin}/login?error=callback_failed`)
+    console.error('[OAuth Callback] Missing authorization code')
+    return NextResponse.redirect(`${origin}/login?error=missing_code`)
   }
 
   const supabase = await createServerClient()
   const { error } = await supabase.auth.exchangeCodeForSession(code)
 
   if (error) {
-    return NextResponse.redirect(`${origin}/login?error=callback_failed`)
+    console.error('[OAuth Callback] Exchange failed:', error.message)
+    return NextResponse.redirect(`${origin}/login?error=oauth_exchange_failed`)
   }
 
   return NextResponse.redirect(`${origin}${next}`)
