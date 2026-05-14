@@ -840,7 +840,8 @@
         "content": "Enter lyrics here, supports [Verse], [Chorus] tags..."
       },
       "error": {
-        "empty": "Title and content cannot be empty"
+        "emptyTitle": "Title is required",
+        "emptyContent": "Content is required"
       }
     },
     "detail": {
