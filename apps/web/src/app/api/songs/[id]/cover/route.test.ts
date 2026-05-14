@@ -99,6 +99,11 @@ describe('POST /api/songs/[id]/cover', () => {
     expect(task.user_id).toBe('user-1')
     expect(task.payload.title).toBe('My Song')
     expect(task.payload.genre).toBe('Pop')
+    expect(task.payload.prompt).toContain('基于歌曲主题"My Song"的视觉封面设计')
+    expect(task.payload.prompt).toContain('Pop风格')
+    expect(task.payload.prompt).toContain('Happy情绪')
+    expect(task.payload.prompt).toContain('画面中不得出现任何文字、字母、数字、符号或语言字符')
+    expect(task.payload.prompt).not.toContain('歌曲:')
   })
 
   it('uploads cover successfully (200)', async () => {
