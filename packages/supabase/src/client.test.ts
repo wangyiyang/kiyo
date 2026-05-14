@@ -26,6 +26,12 @@ describe('createBrowserClient', () => {
     expect(createBrowser).toHaveBeenCalledWith(
       'https://project.supabase.co',
       'sb_publishable_test',
+      expect.objectContaining({
+        cookies: expect.objectContaining({
+          getAll: expect.any(Function),
+          setAll: expect.any(Function),
+        }),
+      }),
     )
   })
 
@@ -40,6 +46,12 @@ describe('createBrowserClient', () => {
     expect(createBrowser).toHaveBeenCalledWith(
       'https://project.supabase.co',
       'legacy-anon-key',
+      expect.objectContaining({
+        cookies: expect.objectContaining({
+          getAll: expect.any(Function),
+          setAll: expect.any(Function),
+        }),
+      }),
     )
   })
 
@@ -55,6 +67,12 @@ describe('createBrowserClient', () => {
     expect(createBrowser).toHaveBeenCalledWith(
       'https://project.supabase.co',
       'sb_publishable_test',
+      expect.objectContaining({
+        cookies: expect.objectContaining({
+          getAll: expect.any(Function),
+          setAll: expect.any(Function),
+        }),
+      }),
     )
   })
 })
