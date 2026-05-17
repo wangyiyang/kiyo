@@ -4,7 +4,8 @@ import * as React from 'react'
 import { useRouter, Link } from '@/i18n/navigation'
 import { useSearchParams } from 'next/navigation'
 import { Button, Input, Label } from '@kiyo/ui'
-import { ArrowLeft, Mic2, Upload } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@kiyo/ui'
+import { ArrowLeft, Mic2, Upload, Music } from 'lucide-react'
 import { createBrowserClient } from '@kiyo/supabase'
 import { useTranslations } from 'next-intl'
 
@@ -175,79 +176,68 @@ export default function CoverSongPage() {
       <h1 className="mb-6 text-2xl font-bold">{t('title')}</h1>
 
       <div className="mb-6 space-y-4">
-        <div>
-          <Label>{t('source.label')}</Label>
-          <div className="mt-2 flex gap-2">
-            <button
-              type="button"
-              onClick={() => setSourceMode('existing')}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-lg border p-3 transition-colors ${
-                sourceMode === 'existing'
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border hover:bg-muted/50'
-              }`}
-            >
-              <Mic2 className="h-4 w-4" />
-              {t('source.existing')}
-            </button>
-            <button
-              type="button"
-              onClick={() => setSourceMode('upload')}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-lg border p-3 transition-colors ${
-                sourceMode === 'upload'
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border hover:bg-muted/50'
-              }`}
-            >
-              <Upload className="h-4 w-4" />
-              {t('source.upload')}
-            </button>
+        {/* 参考音频区域 - 默认展开歌曲选择 */}
+        <div className="rounded-lg border bg-card p-4">
+          <div className="mb-4 flex items-center gap-2">
+            <Music className="h-5 w-5 text-primary" />
+            <Label className="text-base font-medium">{t('source.label')}</Label>
           </div>
-        </div>
 
-        {sourceMode === 'existing' && (
-          <div>
-            <Label htmlFor="song-select">{t('selectSong')}</Label>
-            <select
-              id="song-select"
-              value={selectedSongId}
-              onChange={(e) => setSelectedSongId(e.target.value)}
-              className="mt-1 block w-full rounded-md border bg-background px-3 py-2 text-sm"
-            >
-              <option value="">{t('selectSong')}</option>
-              {songs.map((song) => (
-                <option key={song.id} value={song.id}>
-                  {song.title}
-                </option>
-              ))}
-            </select>
-            {songs.length === 0 && (
-              <p className="mt-1 text-xs text-muted-foreground">
-                {t('error.noSongs')}
+          <Tabs
+            value={sourceMode}
+            onValueChange={(v) => setSourceMode(v as SourceMode)}
+            className="w-full"
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="existing" className="gap-2">
+                <Mic2 className="h-4 w-4" />
+                {t('source.existing')}
+              </TabsTrigger>
+              <TabsTrigger value="upload" className="gap-2">
+                <Upload className="h-4 w-4" />
+                {t('source.upload')}
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="existing" className="mt-4 space-y-3">
+              <select
+                id="song-select"
+                value={selectedSongId}
+                onChange={(e) => setSelectedSongId(e.target.value)}
+                className="block w-full rounded-md border bg-background px-3 py-2 text-sm"
+              >
+                <option value="">{t('selectSong')}</option>
+                {songs.map((song) => (
+                  <option key={song.id} value={song.id}>
+                    {song.title}
+                  </option>
+                ))}
+              </select>
+              {songs.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  {t('error.noSongs')}
+                </p>
+              )}
+            </TabsContent>
+
+            <TabsContent value="upload" className="mt-4 space-y-2">
+              <input
+                id="audio-upload"
+                type="file"
+                accept="audio/mpeg,audio/wav,audio/flac"
+                onChange={handleFileUpload}
+                disabled={uploading}
+                className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-primary-foreground"
+              />
+              {uploadedUrl && (
+                <p className="text-sm text-green-600">{t('upload.success')}</p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                {t('upload.formats')}
               </p>
-            )}
-          </div>
-        )}
-
-        {sourceMode === 'upload' && (
-          <div>
-            <Label htmlFor="audio-upload">{t('upload.label')}</Label>
-            <input
-              id="audio-upload"
-              type="file"
-              accept="audio/mpeg,audio/wav,audio/flac"
-              onChange={handleFileUpload}
-              disabled={uploading}
-              className="mt-1 block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-primary-foreground"
-            />
-            {uploadedUrl && (
-              <p className="mt-1 text-xs text-green-600">{t('upload.success')}</p>
-            )}
-            <p className="mt-1 text-xs text-muted-foreground">
-              {t('upload.formats')}
-            </p>
-          </div>
-        )}
+            </TabsContent>
+          </Tabs>
+        </div>
 
         <div>
           <Label>{t('style.label')} *</Label>
