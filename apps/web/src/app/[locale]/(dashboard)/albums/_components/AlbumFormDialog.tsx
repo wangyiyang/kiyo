@@ -25,10 +25,13 @@ interface AlbumFormDialogProps {
     description: string | null
   }
   trigger: React.ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  onSuccess?: () => void
 }
 
-export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) {
-  const [open, setOpen] = useState(false)
+export function AlbumFormDialog({ mode, album, trigger, open: controlledOpen, onOpenChange, onSuccess }: AlbumFormDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false)
   const [authChecked, setAuthChecked] = useState(false)
   const [title, setTitle] = useState(album?.title ?? '')
   const [description, setDescription] = useState(album?.description ?? '')
@@ -37,6 +40,9 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
   const router = useRouter()
   const t = useTranslations('albums.form')
   const tCommon = useTranslations('common')
+
+  const open = controlledOpen ?? internalOpen
+  const setOpen = onOpenChange ?? setInternalOpen
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -70,7 +76,11 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
       setOpen(false)
       // Dispatch event to refresh albums list
       window.dispatchEvent(new Event('album-created'))
-      router.push('/albums')
+      if (onSuccess) {
+        onSuccess()
+      } else {
+        router.push('/albums')
+      }
     } catch (err) {
       if (err instanceof Error) {
         alert(err.message || tCommon('errors.unknown'))
