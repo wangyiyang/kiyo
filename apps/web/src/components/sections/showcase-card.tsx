@@ -5,6 +5,7 @@ import { Play, VolumeX } from 'lucide-react'
 import { usePlayerStore, cn, Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@kiyo/ui'
 import { useTranslations } from 'next-intl'
 import { useState, useEffect } from 'react'
+import { normalizeTag } from '@/lib/tag-normalization'
 
 interface Track {
   id: string
@@ -115,6 +116,7 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
           fill
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onError={() => setCoverUrl(null)}
         />
       ) : (
         <div
@@ -144,7 +146,7 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
 
       <div className="absolute inset-x-0 bottom-0 p-5 text-white">
         <p className="text-xs uppercase tracking-wider opacity-80">
-          {track.genre ?? tExplore('defaultGenre')}
+          {normalizeTag(track.genre) ?? tExplore('defaultGenre')}
         </p>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -157,7 +159,7 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
           </TooltipContent>
         </Tooltip>
         <p className="mt-1 text-xs opacity-75">
-          {track.mood ?? tExplore('defaultMood')} · {formatDuration(track.duration)}
+          {normalizeTag(track.mood) ?? tExplore('defaultMood')} · {formatDuration(track.duration)}
         </p>
       </div>
     </article>

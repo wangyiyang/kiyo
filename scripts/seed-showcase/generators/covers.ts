@@ -10,7 +10,7 @@ function buildAlbumCoverPrompt(album: AlbumPrompt): string {
 }
 
 function buildSongCoverPrompt(track: TrackPrompt): string {
-  return `Music cover art for a ${track.mood} ${track.genre} track titled "${track.title}". Abstract, artistic, high quality, no text.`
+  return `Music cover art for a ${track.mood} ${track.genre} track. Abstract, artistic, high quality, no text, no letters, no words, no typography, no symbols.`
 }
 
 export async function generateAlbumCovers(
