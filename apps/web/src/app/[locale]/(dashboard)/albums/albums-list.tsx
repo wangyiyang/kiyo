@@ -3,9 +3,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { EmptyState, AlbumCard } from '@kiyo/ui'
 import { Link } from '@/i18n/navigation'
-import { AlbumFormDialog } from './_components/AlbumFormDialog'
 import { DeleteConfirmDialog } from './_components/DeleteConfirmDialog'
-import { Trash2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Trash2, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
 interface Album {
@@ -84,14 +83,13 @@ export default function AlbumsList() {
           >
             {t('list.songLibrary')}
           </Link>
-          <AlbumFormDialog
-            mode="create"
-            trigger={
-              <button className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-                {t('list.new')}
-              </button>
-            }
-          />
+          <Link
+            href="/albums/new"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            <Plus className="h-4 w-4" />
+            {t('list.new')}
+          </Link>
         </div>
       </div>
 
