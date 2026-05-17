@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import { Howl, Howler } from 'howler'
 import { usePlayerStore } from '../../store/usePlayerStore'
 
@@ -105,7 +105,15 @@ export function AudioEngine() {
         html5: true,
         volume,
         onload: () => {
-          if (!cancelled) setDuration(howl.duration())
+          if (cancelled) return
+          setDuration(howl.duration())
+          // Auto-play only if store says playing and this howl isn't already
+          // playing (avoids racing with the isPlaying effect).
+          if (usePlayerStore.getState().isPlaying && !howl.playing()) {
+            howl.play()
+            startProgressLoop()
+            startVisualizer()
+          }
         },
         onend: () => {
           if (cancelled) return
@@ -124,12 +132,6 @@ export function AudioEngine() {
       })
 
       howlRef.current = howl
-
-      if (isPlaying && !cancelled) {
-        howl.play()
-        startProgressLoop()
-        startVisualizer()
-      }
     }
 
     initHowl()
@@ -147,60 +149,53 @@ export function AudioEngine() {
     }
   }, [currentTrack])
 
-  // Helper to build a Howl instance for the current track
-  const buildHowl = useCallback((src: string) => {
-    const howl = new Howl({
-      src: [src],
-      html5: true,
-      volume,
-      onload: () => {
-        setDuration(howl.duration())
-      },
-      onend: () => {
-        next()
-      },
-      onloaderror: (_id, err) => {
-        console.error('Howl load error:', err)
-      },
-    })
-    return howl
-  }, [volume, setDuration, next])
-
-  // Sync play / pause
+  // Sync play / pause — never create a Howl here; creation is owned by the
+  // currentTrack effect above. This avoids race conditions where both effects
+  // spawn overlapping Howl instances.
   useEffect(() => {
-    if (!currentTrack) return
-
-    let howl = howlRef.current
-
-    // If Howl does not exist yet (race condition or first play), create it now
-    if (!howl) {
-      const src = currentTrack.audio_url
-      if (!src && currentTrack.file_path) {
-        // Need to fetch signed URL synchronously - skip for now, let currentTrack effect handle it
-        return
-      }
-      if (!src) return
-      howl = buildHowl(src)
-      howlRef.current = howl
-    }
+    const howl = howlRef.current
+    if (!howl) return
 
     if (isPlaying) {
       if (!howl.playing()) {
         // If file_path exists and URL is stale, refresh before playing
         if (
-          currentTrack.file_path &&
+          currentTrack?.file_path &&
           Date.now() - signedAtRef.current > SIGN_URL_TTL_MS
         ) {
           fetchSignedUrl(currentTrack.file_path)
             .then((url) => {
               signedUrlRef.current = url
               signedAtRef.current = Date.now()
-              howl!.unload()
-              const newHowl = buildHowl(url)
+              // Ensure the howl hasn't been replaced by another effect while we were async
+              if (howlRef.current !== howl) return
+              howl.unload()
+              const newHowl = new Howl({
+                src: [url],
+                html5: true,
+                volume,
+                onload: () => {
+                  setDuration(newHowl.duration())
+                  if (usePlayerStore.getState().isPlaying && !newHowl.playing()) {
+                    newHowl.play()
+                    startProgressLoop()
+                    startVisualizer()
+                  }
+                },
+                onend: () => {
+                  const played = newHowl.seek() as number
+                  const total = newHowl.duration()
+                  if (total > 0 && played < total - 1) {
+                    console.warn('Premature onend detected, skipping next()', { played, total })
+                    return
+                  }
+                  next()
+                },
+                onloaderror: (_id, err) => {
+                  console.error('Howl load error:', err)
+                },
+              })
               howlRef.current = newHowl
-              newHowl.play()
-              startProgressLoop()
-              startVisualizer()
             })
             .catch((err) => {
               console.error('Failed to refresh signed URL on resume:', err)
@@ -219,7 +214,7 @@ export function AudioEngine() {
         stopVisualizer()
       }
     }
-  }, [isPlaying, currentTrack, buildHowl])
+  }, [isPlaying, currentTrack, volume, setDuration, next])
 
   // Sync volume
   useEffect(() => {

@@ -3,6 +3,7 @@ import { createServerClient } from "@kiyo/supabase/server"
 import { Button, Input, cn } from "@kiyo/ui"
 import { Search, X } from "lucide-react"
 import { Link } from "@/i18n/navigation"
+import { normalizeTagList } from "@/lib/tag-normalization"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { ExploreSongGrid } from "@/components/explore-song-grid"
 
@@ -23,13 +24,16 @@ export default async function ExplorePage({
     .select("genre, mood")
     .eq("is_public", true)
 
-  const genres = Array.from(
+  const rawGenres = Array.from(
     new Set(allSongs?.map((s) => s.genre).filter(Boolean) as string[])
   ).sort()
 
-  const moods = Array.from(
+  const rawMoods = Array.from(
     new Set(allSongs?.map((s) => s.mood).filter(Boolean) as string[])
   ).sort()
+
+  const genres = normalizeTagList(rawGenres)
+  const moods = normalizeTagList(rawMoods)
 
   const buildUrl = (g?: string, m?: string, search: string | null | undefined = query) => {
     const sp = new URLSearchParams()
