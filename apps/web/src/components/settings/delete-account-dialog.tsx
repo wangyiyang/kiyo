@@ -14,7 +14,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  cn,
 } from '@kiyo/ui'
+
+import { AlertTriangle } from 'lucide-react'
 
 import { createBrowserClient } from '@kiyo/supabase'
 
@@ -118,20 +121,36 @@ export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
     }
   }
 
+  const isDangerStep = step === 'warn' || step === 'verify' || step === 'confirm'
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">{t('dangerZone.deleteAccount.button')}</Button>
+        <Button variant="destructive" className="border-red-300 dark:border-red-800">
+          {t('dangerZone.deleteAccount.button')}
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent
+        className={cn(
+          'sm:max-w-md',
+          isDangerStep && 'border-red-200 dark:border-red-900'
+        )}
+      >
         {step === 'warn' && (
           <>
-            <DialogHeader>
-              <DialogTitle>{t('dangerZone.deleteAccount.dialog.warnTitle')}</DialogTitle>
-              <DialogDescription>
-                {t('dangerZone.deleteAccount.dialog.warnDescription')}
-              </DialogDescription>
-            </DialogHeader>
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+              </div>
+              <DialogHeader className="mb-4">
+                <DialogTitle className="text-red-600 dark:text-red-400">
+                  {t('dangerZone.deleteAccount.dialog.warnTitle')}
+                </DialogTitle>
+                <DialogDescription className="text-red-500/80 dark:text-red-400/80">
+                  {t('dangerZone.deleteAccount.dialog.warnDescription')}
+                </DialogDescription>
+              </DialogHeader>
+            </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setOpen(false)}>
                 {tCommon('actions.cancel')}
@@ -145,12 +164,19 @@ export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
 
         {step === 'verify' && (
           <>
-            <DialogHeader>
-              <DialogTitle>{t('dangerZone.deleteAccount.dialog.verifyTitle')}</DialogTitle>
-              <DialogDescription>
-                {t('dangerZone.deleteAccount.dialog.verifyDescription')}
-              </DialogDescription>
-            </DialogHeader>
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+              </div>
+              <DialogHeader className="mb-4">
+                <DialogTitle className="text-red-600 dark:text-red-400">
+                  {t('dangerZone.deleteAccount.dialog.verifyTitle')}
+                </DialogTitle>
+                <DialogDescription>
+                  {t('dangerZone.deleteAccount.dialog.verifyDescription')}
+                </DialogDescription>
+              </DialogHeader>
+            </div>
             <div className="space-y-4 py-4">
               <Input
                 type="password"
@@ -176,12 +202,19 @@ export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
 
         {step === 'confirm' && (
           <>
-            <DialogHeader>
-              <DialogTitle>{t('dangerZone.deleteAccount.dialog.confirmTitle')}</DialogTitle>
-              <DialogDescription>
-                {t('dangerZone.deleteAccount.dialog.confirmDescription')}
-              </DialogDescription>
-            </DialogHeader>
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+              </div>
+              <DialogHeader className="mb-4">
+                <DialogTitle className="text-red-600 dark:text-red-400">
+                  {t('dangerZone.deleteAccount.dialog.confirmTitle')}
+                </DialogTitle>
+                <DialogDescription className="text-red-500/80 dark:text-red-400/80">
+                  {t('dangerZone.deleteAccount.dialog.confirmDescription')}
+                </DialogDescription>
+              </DialogHeader>
+            </div>
             <div className="space-y-4 py-4">
               <Input
                 placeholder={t('dangerZone.deleteAccount.dialog.confirmPlaceholder')}
