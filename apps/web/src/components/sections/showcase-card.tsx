@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { Play, VolumeX } from 'lucide-react'
-import { usePlayerStore, cn } from '@kiyo/ui'
+import { usePlayerStore, cn, Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@kiyo/ui'
 import { useTranslations } from 'next-intl'
 import { useState, useEffect } from 'react'
 import { normalizeTag } from '@/lib/tag-normalization'
@@ -101,13 +101,14 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
   const hasAudio = !!(track.audio_url || track.file_path)
 
   return (
-    <article
-      className={cn(
-        "group relative aspect-square overflow-hidden rounded-2xl border border-border bg-card",
-        hasAudio && "cursor-pointer"
-      )}
-      onClick={handlePlay}
-    >
+    <TooltipProvider delayDuration={300}>
+      <article
+        className={cn(
+          "group relative aspect-square overflow-hidden rounded-2xl border border-border bg-card",
+          hasAudio && "cursor-pointer"
+        )}
+        onClick={handlePlay}
+      >
       {coverUrl ? (
         <Image
           src={coverUrl}
@@ -147,13 +148,21 @@ export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardP
         <p className="text-xs uppercase tracking-wider opacity-80">
           {normalizeTag(track.genre) ?? tExplore('defaultGenre')}
         </p>
-        <h3 className="mt-1 text-lg font-semibold tracking-tight">
-          {track.title}
-        </h3>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <h3 className="line-clamp-1 text-lg font-semibold tracking-tight">
+              {track.title}
+            </h3>
+          </TooltipTrigger>
+          <TooltipContent side="top" align="center" className="max-w-xs text-center">
+            {track.title}
+          </TooltipContent>
+        </Tooltip>
         <p className="mt-1 text-xs opacity-75">
           {normalizeTag(track.mood) ?? tExplore('defaultMood')} · {formatDuration(track.duration)}
         </p>
       </div>
     </article>
+    </TooltipProvider>
   )
 }

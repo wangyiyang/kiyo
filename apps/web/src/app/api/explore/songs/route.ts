@@ -20,6 +20,11 @@ function parsePaginationParams(request: Request): { page: number; limit: number 
   return { page, limit }
 }
 
+function normalizeSearchParam(value: string | null): string | undefined {
+  const normalized = value?.trim().toLowerCase()
+  return normalized || undefined
+}
+
 interface SongRow {
   id: string
   title: string
@@ -40,6 +45,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url)
   const genre = url.searchParams.get('genre') || undefined
   const mood = url.searchParams.get('mood') || undefined
+  const search = normalizeSearchParam(url.searchParams.get('q'))
 
   // 1. Query all public songs through RLS (anonymous client)
   let query = supabase
@@ -65,6 +71,10 @@ export async function GET(request: Request) {
 
   // 2. Memory sort: songs with cover (cover_url OR cover_file_path) first, then created_at desc
   const allSongs: SongRow[] = (songs ?? [])
+    .filter((song) => {
+      if (!search) return true
+      return song.title.toLowerCase().includes(search)
+    })
   allSongs.sort((a, b) => {
     const aHasCover = (a.cover_url || a.cover_file_path) ? 1 : 0
     const bHasCover = (b.cover_url || b.cover_file_path) ? 1 : 0

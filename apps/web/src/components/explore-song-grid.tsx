@@ -21,6 +21,7 @@ interface Track {
 interface ExploreSongGridProps {
   genre?: string
   mood?: string
+  query?: string
 }
 
 const trackGradients = [
@@ -32,7 +33,7 @@ const trackGradients = [
   'from-purple-400 to-pink-300',
 ]
 
-export function ExploreSongGrid({ genre, mood }: ExploreSongGridProps) {
+export function ExploreSongGrid({ genre, mood, query }: ExploreSongGridProps) {
   const t = useTranslations('explore')
   const tCommon = useTranslations('common')
   const [songs, setSongs] = useState<Track[]>([])
@@ -42,8 +43,8 @@ export function ExploreSongGrid({ genre, mood }: ExploreSongGridProps) {
   const [error, setError] = useState<string | null>(null)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
-  const loadMore = useCallback(async () => {
-    if (isLoading || !hasMore) return
+  const loadMore = useCallback(async (options?: { force?: boolean }) => {
+    if (isLoading || !hasMore || (error && !options?.force)) return
 
     setIsLoading(true)
     setError(null)
@@ -53,6 +54,7 @@ export function ExploreSongGrid({ genre, mood }: ExploreSongGridProps) {
     params.set('limit', '18')
     if (genre) params.set('genre', genre)
     if (mood) params.set('mood', mood)
+    if (query) params.set('q', query)
 
     try {
       const res = await fetch(`/api/explore/songs?${params}`)
@@ -71,16 +73,16 @@ export function ExploreSongGrid({ genre, mood }: ExploreSongGridProps) {
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, hasMore, page, genre, mood, tCommon])
+  }, [isLoading, hasMore, error, page, genre, mood, query, tCommon])
 
-  // Reset state when genre or mood changes
+  // Reset state when filters or search query change.
   useEffect(() => {
     setSongs([])
     setPage(1)
     setHasMore(true)
     setError(null)
     setIsLoading(false)
-  }, [genre, mood])
+  }, [genre, mood, query])
 
   // Trigger first load when page=1 and songs empty
   useEffect(() => {
@@ -137,7 +139,7 @@ export function ExploreSongGrid({ genre, mood }: ExploreSongGridProps) {
         <div className="flex flex-col items-center justify-center gap-3 py-8">
           <p className="text-sm text-destructive">{error}</p>
           <button
-            onClick={loadMore}
+            onClick={() => loadMore({ force: true })}
             className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             {t('retry')}
@@ -153,8 +155,8 @@ export function ExploreSongGrid({ genre, mood }: ExploreSongGridProps) {
 
       {!hasMore && songs.length === 0 && !isLoading && !error && (
         <EmptyState
-          title={t('empty.title')}
-          description={t('empty.description')}
+          title={query ? t('empty.searchTitle') : t('empty.title')}
+          description={query ? t('empty.searchDescription', { query }) : t('empty.description')}
         />
       )}
     </div>

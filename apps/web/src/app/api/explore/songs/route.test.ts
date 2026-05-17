@@ -113,6 +113,22 @@ describe('GET /api/explore/songs', () => {
     expect(json.songs[0].title).toBe('Happy Song')
   })
 
+  it('searches public songs by title', async () => {
+    await setupMockClient({
+      songs: [
+        { id: 's1', title: 'Midnight City Lights', is_public: true, created_at: '2024-01-01T00:00:00Z' },
+        { id: 's2', title: 'Morning Piano Sketch', is_public: true, created_at: '2024-01-02T00:00:00Z' },
+      ],
+    })
+
+    const request = new Request('http://localhost/api/explore/songs?q=city')
+    const response = await GET(request)
+    expect(response.status).toBe(200)
+    const json = await response.json()
+    expect(json.songs).toHaveLength(1)
+    expect(json.songs[0].title).toBe('Midnight City Lights')
+  })
+
   it('sorts songs with cover first', async () => {
     await setupMockClient({
       songs: [

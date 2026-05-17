@@ -381,6 +381,12 @@
   "explore": {
     "title": "Explore Songs",
     "description": "Discover AI-generated music",
+    "search": {
+      "label": "Search songs",
+      "placeholder": "Search by song title",
+      "submit": "Search",
+      "clear": "Clear search"
+    },
     "filters": {
       "genre": "Genre",
       "mood": "Mood",
@@ -388,7 +394,9 @@
     },
     "empty": {
       "title": "No songs yet",
-      "description": "No songs found with the current filters. Try other filters."
+      "description": "No songs found with the current filters. Try other filters.",
+      "searchTitle": "No matching songs",
+      "searchDescription": "No public songs match “{query}”. Try another keyword."
     },
     "retry": "Retry",
     "allLoaded": "All songs loaded",

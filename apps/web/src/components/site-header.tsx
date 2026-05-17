@@ -25,6 +25,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = React.useState(false)
   const [user, setUser] = React.useState<{ email: string } | null>(null)
   const [userId, setUserId] = React.useState<string | undefined>(undefined)
+  const [activeMenu, setActiveMenu] = React.useState<'notifications' | 'user' | null>(null)
   const t = useTranslations('nav')
 
   React.useEffect(() => {
@@ -52,6 +53,7 @@ export function SiteHeader() {
         } else if (event === 'SIGNED_OUT') {
           setUser(null)
           setUserId(undefined)
+          setActiveMenu(null)
         }
       }
     )
@@ -96,8 +98,24 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ThemeToggle />
-          <NotificationBell userId={userId} />
-          <UserMenu user={user} />
+          <NotificationBell
+            userId={userId}
+            open={activeMenu === 'notifications'}
+            onOpenChange={(open) => {
+              setActiveMenu((current) =>
+                open ? 'notifications' : current === 'notifications' ? null : current
+              )
+            }}
+          />
+          <UserMenu
+            user={user}
+            open={activeMenu === 'user'}
+            onOpenChange={(open) => {
+              setActiveMenu((current) =>
+                open ? 'user' : current === 'user' ? null : current
+              )
+            }}
+          />
           <MobileNavSheet />
         </div>
       </div>

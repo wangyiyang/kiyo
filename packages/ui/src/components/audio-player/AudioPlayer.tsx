@@ -152,8 +152,10 @@ export function AudioPlayer({
           </button>
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-lg font-semibold">{title || '未知歌曲'}</h3>
-          {album && <p className="truncate text-sm text-white/50">{album}</p>}
+          <h3 className="break-words text-lg font-semibold leading-tight" title={title || '未知歌曲'}>
+            {title || '未知歌曲'}
+          </h3>
+          {album && <p className="truncate text-sm text-white/50" title={album}>{album}</p>}
         </div>
       </div>
 

@@ -60,10 +60,13 @@ export function MiniPlayer({ labels = {} }: { labels?: MiniPlayerLabels } = {}) 
 
         {/* Info */}
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-white">
+          <div
+            className="line-clamp-2 text-sm font-medium leading-snug text-white sm:truncate sm:leading-normal"
+            title={currentTrack.title}
+          >
             {currentTrack.title}
           </div>
-          <div className="truncate text-xs text-white/50">
+          <div className="truncate text-xs text-white/50" title={currentTrack.album || '未知专辑'}>
             {currentTrack.album || '未知专辑'}
           </div>
         </div>

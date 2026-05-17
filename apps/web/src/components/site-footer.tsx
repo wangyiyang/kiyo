@@ -9,9 +9,9 @@ type GroupKey = (typeof groupKeys)[number];
 
 const groupLinks: Record<GroupKey, { href: string; key: string }[]> = {
 	product: [
-		{ href: "#features", key: "features" },
-		{ href: "#how", key: "howItWorks" },
-		{ href: "#showcase", key: "showcase" },
+		{ href: "/#features", key: "features" },
+		{ href: "/#how", key: "howItWorks" },
+		{ href: "/#showcase", key: "showcase" },
 	],
 	resources: [],
 	about: [
@@ -21,6 +21,7 @@ const groupLinks: Record<GroupKey, { href: string; key: string }[]> = {
 		{ href: "/terms", key: "terms" },
 	],
 };
+const visibleGroupKeys = groupKeys.filter((groupKey) => groupLinks[groupKey].length > 0);
 
 const social = [
 	{ href: "https://github.com/wangyiyang/kiyo", icon: Github, label: "GitHub" },
@@ -43,7 +44,7 @@ export function SiteFooter() {
 							{t("tagline")}
 						</p>
 					</div>
-					{groupKeys.map((groupKey) => (
+					{visibleGroupKeys.map((groupKey) => (
 						<div key={groupKey}>
 							<h3 className="text-sm font-medium">
 								{t(`groups.${groupKey}.title`)}

@@ -10,6 +10,7 @@ import { Toaster } from "@kiyo/ui";
 import { defaultLocale, type Locale } from "@/i18n/config";
 
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Providers } from "./providers";
 
@@ -77,6 +78,7 @@ export default async function RootLayout({
 					<Toaster richColors closeButton position="top-center" />
 				</Providers>
 				<Analytics />
+				<SpeedInsights />
 			</body>
 		</html>
 	);
