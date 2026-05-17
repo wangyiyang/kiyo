@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Pre-commit hook: check if lockfile is in sync with package.json changes
+
+# Get staged package.json files (in any workspace)
+PACKAGE_JSON_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep 'package\.json$' | grep -v node_modules)
+
+if [ -z "$PACKAGE_JSON_FILES" ]; then
+  # No package.json files staged, allow commit
+  exit 0
+fi
+
+# Check if pnpm-lock.yaml is staged
+LOCKFILE_STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep 'pnpm-lock\.yaml$')
+
+if [ -z "$LOCKFILE_STAGED" ]; then
+  echo ""
+  echo "❌ ERROR: package.json was modified but pnpm-lock.yaml is not staged."
+  echo ""
+  echo "Please run 'pnpm install' to update the lockfile, then add it:"
+  echo "  git add pnpm-lock.yaml"
+  echo ""
+  exit 1
+fi
+
+# Verify lockfile is up to date by checking if pnpm would modify it
+echo "🔍 Checking if lockfile is in sync with package.json..."
+
+# Run pnpm install in dry-run mode to check (suppress output)
+OUTPUT=$(cd "$(git rev-parse --show-toplevel)" && pnpm install --no-frozen-lockfile 2>&1)
+RESULT=$?
+
+if [ $RESULT -ne 0 ] && echo "$OUTPUT" | grep -q "outdated"; then
+  echo ""
+  echo "❌ ERROR: pnpm-lock.yaml is not up to date with package.json."
+  echo ""
+  echo "Please run 'pnpm install' to update the lockfile, then add it:"
+  echo "  pnpm install"
+  echo "  git add pnpm-lock.yaml"
+  echo ""
+  exit 1
+fi
+
+echo "✅ Lockfile is in sync."
+exit 0
