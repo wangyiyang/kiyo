@@ -101,6 +101,13 @@ export {
 } from "./src/components/ui/avatar";
 
 export {
+	Tooltip,
+	TooltipTrigger,
+	TooltipContent,
+	TooltipProvider,
+} from "./src/components/ui/tooltip";
+
+export {
 	Tabs,
 	TabsList,
 	TabsTrigger,
