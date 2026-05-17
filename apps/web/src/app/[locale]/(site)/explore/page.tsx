@@ -118,13 +118,26 @@ export default async function ExplorePage({
                     key={g}
                     href={buildUrl(g, mood)}
                     className={cn(
-                      "inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                      "inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors",
                       genre === g
                         ? "bg-primary text-primary-foreground"
                         : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                     )}
                   >
                     {g}
+                    {genre === g && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          window.location.href = buildUrl(undefined, mood)
+                        }}
+                        className="ml-0.5 rounded-full p-0.5 hover:bg-primary-foreground/20"
+                        aria-label={`Remove ${g} filter`}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
                   </Link>
                 ))}
               </div>
@@ -133,7 +146,7 @@ export default async function ExplorePage({
 
           {/* Mood filter */}
           <ScrollReveal delay={0.2}>
-            <div className="mb-8">
+            <div className="mb-6">
               <h3 className="mb-3 text-sm font-medium text-muted-foreground">{t("filters.mood")}</h3>
               <div className="flex flex-wrap gap-2">
                 <Link
@@ -152,18 +165,43 @@ export default async function ExplorePage({
                     key={m}
                     href={buildUrl(genre, m)}
                     className={cn(
-                      "inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                      "inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors",
                       mood === m
                         ? "bg-primary text-primary-foreground"
                         : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                     )}
                   >
                     {m}
+                    {mood === m && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          window.location.href = buildUrl(genre, undefined)
+                        }}
+                        className="ml-0.5 rounded-full p-0.5 hover:bg-primary-foreground/20"
+                        aria-label={`Remove ${m} filter`}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
                   </Link>
                 ))}
               </div>
             </div>
           </ScrollReveal>
+
+          {/* Clear all filters */}
+          {(genre || mood) && (
+            <div className="mb-8 flex justify-end">
+              <Link
+                href="/explore"
+                className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                {t("filters.clearAll")}
+              </Link>
+            </div>
+          )}
 
           {/* Songs Grid */}
           <ExploreSongGrid genre={genre} mood={mood} query={query} />
