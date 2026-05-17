@@ -922,7 +922,12 @@
       },
       "preview": "Lyric Preview",
       "noContent": "(No content)",
-      "submit": "Start Generate"
+      "submit": "Start Generate",
+      "successTitle": "Generation Successful",
+      "successDescription": "Song has been generated. You can view it or continue on the lyric page.",
+      "viewSong": "View Song",
+      "continueHere": "Stay on Lyrics Page",
+      "successMessage": "Song generated, click to view"
     }
   },
   "legal": {
