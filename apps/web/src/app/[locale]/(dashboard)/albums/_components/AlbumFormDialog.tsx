@@ -68,7 +68,9 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
       }
 
       setOpen(false)
-      router.refresh()
+      // Dispatch event to refresh albums list
+      window.dispatchEvent(new Event('album-created'))
+      router.push('/albums')
     } catch (err) {
       if (err instanceof Error) {
         alert(err.message || tCommon('errors.unknown'))
