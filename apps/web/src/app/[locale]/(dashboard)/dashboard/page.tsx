@@ -164,14 +164,16 @@ async function DashboardContent() {
               secondary={t('stats.albums.totalSongs', { count: stats.albums.totalSongs })}
               href="/albums"
             />
-            <StatCard
-              icon={<Wand2 className="h-6 w-6 text-purple-500" />}
-              label={t('stats.generating.label')}
-              primary={stats.songs.generating}
-              secondary={t('stats.generating.description')}
-              href="/songs?status=generating"
-              className={stats.songs.generating > 0 ? 'border-purple-500/50 bg-purple-500/5' : ''}
-            />
+            {stats.songs.generating > 0 && (
+              <StatCard
+                icon={<Wand2 className="h-6 w-6 text-purple-500" />}
+                label={t('stats.generating.label')}
+                primary={stats.songs.generating}
+                secondary={t('stats.generating.description')}
+                href="/songs?status=generating"
+                className="border-purple-500/50 bg-purple-500/5"
+              />
+            )}
           </div>
 
           {/* Quick Actions */}
