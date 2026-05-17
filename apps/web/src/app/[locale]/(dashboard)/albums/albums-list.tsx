@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { EmptyState, AlbumCard } from '@kiyo/ui'
 import { Link } from '@/i18n/navigation'
 import { AlbumFormDialog } from './_components/AlbumFormDialog'
@@ -33,8 +33,19 @@ export default function AlbumsList() {
   const [albums, setAlbums] = useState<Album[]>([])
   const [pagination, setPagination] = useState<Pagination>({ page: 1, limit: 20, total: 0, totalPages: 0 })
   const [loading, setLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   const page = pagination.page
+  const refreshKeyRef = useRef(refreshKey)
+
+  // Listen for album created events to refresh the list
+  useEffect(() => {
+    const handleAlbumCreated = () => {
+      setRefreshKey((k) => k + 1)
+    }
+    window.addEventListener('album-created', handleAlbumCreated)
+    return () => window.removeEventListener('album-created', handleAlbumCreated)
+  }, [])
 
   const fetchAlbums = useCallback(async () => {
     setLoading(true)
@@ -53,8 +64,9 @@ export default function AlbumsList() {
   }, [page])
 
   useEffect(() => {
+    refreshKeyRef.current = refreshKey
     fetchAlbums()
-  }, [fetchAlbums])
+  }, [fetchAlbums, refreshKey])
 
   const goToPage = (newPage: number) => {
     if (newPage < 1 || newPage > pagination.totalPages) return
