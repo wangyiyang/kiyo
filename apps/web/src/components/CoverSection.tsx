@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button, Skeleton } from '@kiyo/ui'
 import { Disc3, Music2, Upload } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { toast } from '@kiyo/ui'
 
 interface CoverSectionProps {
   entityId: string
@@ -100,10 +101,12 @@ export function CoverSection({ entityId, entityType, coverUrl, coverFilePath, co
       if (data.coverUrl) {
         setUrl(data.coverUrl)
         setStatus('completed')
+        toast.success(t('success'))
       }
     } catch (err) {
       setStatus('failed')
       setError(err instanceof Error ? err.message : t('error'))
+      toast.error(t('error'))
     } finally {
       setLoading(false)
     }
@@ -130,9 +133,11 @@ export function CoverSection({ entityId, entityType, coverUrl, coverFilePath, co
 
       setUrl(data.coverFilePath || data.coverUrl)
       setStatus('completed')
+      toast.success(t('uploadSuccess'))
     } catch (err) {
       setStatus('failed')
       setError(err instanceof Error ? err.message : t('error'))
+      toast.error(t('error'))
     } finally {
       setLoading(false)
     }

@@ -639,7 +639,9 @@
         "replace": "更换封面",
         "generating": "生成中...",
         "retry": "重试",
-        "error": "生成失败，请重试"
+        "error": "生成失败，请重试",
+        "success": "封面生成成功",
+        "uploadSuccess": "封面上传成功"
       },
       "aiPrompt": "生成描述",
       "status": {
@@ -826,7 +828,9 @@
       "replace": "更换封面",
       "retry": "重试",
       "generate": "生成封面",
-      "error": "生成失败，请重试"
+      "error": "生成失败，请重试",
+      "success": "封面生成成功",
+      "uploadSuccess": "封面上传成功"
     },
     "reorder": {
       "saving": "保存中...",
