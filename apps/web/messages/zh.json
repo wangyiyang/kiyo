@@ -817,7 +817,8 @@
       "title": "添加歌曲到专辑",
       "empty": "暂无可用歌曲",
       "selectedCount": "添加 ({count})",
-      "noSongsHint": "暂无可用歌曲"
+      "noSongsHint": "暂无可用歌曲",
+      "success": "已添加 {count} 首歌曲到专辑"
     },
     "cover": {
       "generating": "生成中...",

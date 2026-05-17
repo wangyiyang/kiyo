@@ -13,6 +13,7 @@ import { SongSelector } from '../../_components/SongSelector'
 import { Plus } from 'lucide-react'
 import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { toast } from '@kiyo/ui'
 
 interface AddSongsDialogProps {
   albumId: string
@@ -53,8 +54,9 @@ export function AddSongsDialog({ albumId, excludeIds }: AddSongsDialogProps) {
       setOpen(false)
       setSelectedIds([])
       router.refresh()
+      toast.success(t('success', { count: selectedIds.length }))
     } catch (err) {
-      alert(err instanceof Error ? err.message : tCommon('errors.addFailed'))
+      toast.error(err instanceof Error ? err.message : tCommon('errors.addFailed'))
     } finally {
       setSubmitting(false)
     }
@@ -63,7 +65,7 @@ export function AddSongsDialog({ albumId, excludeIds }: AddSongsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="gap-1.5">
+        <Button className="gap-1.5" variant="default">
           <Plus className="h-4 w-4" />
           {tCommon('actions.add')}
         </Button>

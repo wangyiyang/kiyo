@@ -817,7 +817,8 @@
       "title": "Add Songs to Album",
       "empty": "No available songs",
       "selectedCount": "Add ({count})",
-      "noSongsHint": "No songs available"
+      "noSongsHint": "No songs available",
+      "success": "{count} song(s) added to album"
     },
     "cover": {
       "generating": "Generating...",
