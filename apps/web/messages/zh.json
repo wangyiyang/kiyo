@@ -390,7 +390,8 @@
     "filters": {
       "genre": "风格",
       "mood": "情绪",
-      "all": "全部"
+      "all": "全部",
+      "clearAll": "清除所有筛选"
     },
     "empty": {
       "title": "暂无歌曲",

@@ -390,7 +390,8 @@
     "filters": {
       "genre": "Genre",
       "mood": "Mood",
-      "all": "All"
+      "all": "All",
+      "clearAll": "Clear all filters"
     },
     "empty": {
       "title": "No songs yet",
