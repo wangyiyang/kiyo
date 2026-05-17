@@ -11,6 +11,48 @@ import { DeleteButton } from './delete-button'
 import { ShareButton } from '@/components/share-button'
 import { RequireAuth } from '@/components/auth/require-auth'
 
+/**
+ * 原始歌曲类型（用于 AI 翻唱对比播放器）
+ * 只包含展示所需字段，不包含完整歌曲表结构
+ */
+interface OriginalSong {
+  id: string
+  title: string
+  audio_url: string | null
+  file_path: string | null
+  duration: number | null
+  cover_url: string | null
+  cover_file_path: string | null
+}
+
+interface OriginalSongPlayerProps {
+  originalSong: OriginalSong
+  tPlayer: (key: string) => string
+  t: (key: string) => string
+}
+
+const PLAYER_LABELS = ['play', 'pause', 'playlist', 'prev', 'next', 'shuffle', 'repeat', 'repeatOne', 'mute', 'unmute', 'volume', 'empty', 'playSong', 'playingIndicator'] as const
+
+function OriginalSongPlayer({ originalSong, tPlayer, t }: OriginalSongPlayerProps) {
+  const labels = Object.fromEntries(
+    PLAYER_LABELS.map((key) => [key, tPlayer(key)])
+  ) as Record<(typeof PLAYER_LABELS)[number], string>
+
+  return (
+    <AudioPlayer
+      src={originalSong.audio_url || ''}
+      filePath={originalSong.file_path}
+      title={originalSong.title || t('original')}
+      duration={originalSong.duration}
+      coverUrl={originalSong.cover_url}
+      coverFilePath={originalSong.cover_file_path}
+      songId={originalSong.id}
+      className="w-full"
+      labels={labels}
+    />
+  )
+}
+
 export default async function SongDetailPage({
   params,
 }: {
@@ -95,7 +137,10 @@ async function SongDetailContent({ locale, id }: { locale: string; id: string })
         <div className="min-w-0 flex-1">
           <h1 className="break-words text-2xl font-bold leading-tight">{song.title}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <SongStatusBadge status={song.status as 'draft' | 'generating' | 'completed' | 'failed'} label={statusLabelMap[song.status] ?? song.status} />
+            <SongStatusBadge
+              status={song.status as 'draft' | 'generating' | 'completed' | 'failed'}
+              label={statusLabelMap[song.status] ?? song.status}
+            />
             {song.genre && <span>{song.genre}</span>}
             {song.mood && <span>{song.mood}</span>}
             {song.duration && (
@@ -120,10 +165,7 @@ async function SongDetailContent({ locale, id }: { locale: string; id: string })
         <div className="flex shrink-0 flex-wrap items-center gap-2">
           {song.status === 'completed' && (song.audio_url || song.file_path) && (
             <>
-              <ExportDialog
-                songId={song.id}
-                songTitle={song.title}
-              />
+              <ExportDialog songId={song.id} songTitle={song.title} />
               <Link href={`/songs/cover?original_song_id=${song.id}`}>
                 <Button variant="outline" size="sm">
                   <Mic2 className="mr-1 h-4 w-4" />
@@ -190,37 +232,16 @@ async function SongDetailContent({ locale, id }: { locale: string; id: string })
         </div>
       )}
 
-      {song.source === 'ai_cover' && song.original_song_id && (
+      {song.source === 'ai_cover' && song.original_song_id && song.original_song && (
         <div className="mb-6">
           <h2 className="mb-2 text-sm font-medium">{t('compareOriginal')}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <p className="mb-1 text-xs text-muted-foreground">{t('original')}</p>
-              <AudioPlayer
-                src={(song.original_song as any)?.audio_url || ''}
-                filePath={(song.original_song as any)?.file_path}
-                title={(song.original_song as any)?.title || t('original')}
-                duration={(song.original_song as any)?.duration}
-                coverUrl={(song.original_song as any)?.cover_url}
-                coverFilePath={(song.original_song as any)?.cover_file_path}
-                songId={(song.original_song as any)?.id}
-                className="w-full"
-                labels={{
-                  play: tPlayer('play'),
-                  pause: tPlayer('pause'),
-                  playlist: tPlayer('playlist'),
-                  prev: tPlayer('prev'),
-                  next: tPlayer('next'),
-                  shuffle: tPlayer('shuffle'),
-                  repeat: tPlayer('repeat'),
-                  repeatOne: tPlayer('repeatOne'),
-                  mute: tPlayer('mute'),
-                  unmute: tPlayer('unmute'),
-                  volume: tPlayer('volume'),
-                  empty: tPlayer('empty'),
-                  playSong: tPlayer('playSong'),
-                  playingIndicator: tPlayer('playingIndicator'),
-                }}
+              <OriginalSongPlayer
+                originalSong={song.original_song}
+                tPlayer={tPlayer}
+                t={t}
               />
             </div>
             <div>
@@ -267,7 +288,10 @@ async function SongDetailContent({ locale, id }: { locale: string; id: string })
         <div className="mb-6">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-sm font-medium">{t('lyrics')}</h2>
-            <Link href={`/lyrics/${song.lyrics.id}`} className="text-xs text-primary hover:underline">
+            <Link
+              href={`/lyrics/${song.lyrics.id}`}
+              className="text-xs text-primary hover:underline"
+            >
               {t('viewFullLyrics')}
             </Link>
           </div>

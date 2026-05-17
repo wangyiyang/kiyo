@@ -27,6 +27,195 @@ interface DeleteAccountDialogProps {
   userEmail: string
 }
 
+/* ── 步骤组件 ── */
+
+function WarningStep({
+  tCommon,
+  t,
+  onContinue,
+  onCancel,
+}: {
+  tCommon: ReturnType<typeof useTranslations>
+  t: ReturnType<typeof useTranslations>
+  onContinue: () => void
+  onCancel: () => void
+}) {
+  return (
+    <>
+      <div className="flex flex-col items-center text-center">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+          <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+        </div>
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-red-600 dark:text-red-400">
+            {t('dangerZone.deleteAccount.dialog.warnTitle')}
+          </DialogTitle>
+          <DialogDescription className="text-red-500/80 dark:text-red-400/80">
+            {t('dangerZone.deleteAccount.dialog.warnDescription')}
+          </DialogDescription>
+        </DialogHeader>
+      </div>
+      <DialogFooter>
+        <Button variant="outline" onClick={onCancel}>
+          {tCommon('actions.cancel')}
+        </Button>
+        <Button variant="destructive" onClick={onContinue}>
+          {t('dangerZone.deleteAccount.dialog.continue')}
+        </Button>
+      </DialogFooter>
+    </>
+  )
+}
+
+function VerifyPasswordStep({
+  tCommon,
+  t,
+  password,
+  error,
+  onPasswordChange,
+  onSubmit,
+  onBack,
+}: {
+  tCommon: ReturnType<typeof useTranslations>
+  t: ReturnType<typeof useTranslations>
+  password: string
+  error: string
+  onPasswordChange: (v: string) => void
+  onSubmit: () => void
+  onBack: () => void
+}) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') onSubmit()
+  }
+
+  return (
+    <>
+      <div className="flex flex-col items-center text-center">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+          <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+        </div>
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-red-600 dark:text-red-400">
+            {t('dangerZone.deleteAccount.dialog.verifyTitle')}
+          </DialogTitle>
+          <DialogDescription>
+            {t('dangerZone.deleteAccount.dialog.verifyDescription')}
+          </DialogDescription>
+        </DialogHeader>
+      </div>
+      <div className="space-y-4 py-4">
+        <Input
+          type="password"
+          placeholder={t('dangerZone.deleteAccount.dialog.verifyPlaceholder')}
+          value={password}
+          onChange={(e) => onPasswordChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        {error && <p className="text-sm text-red-500">{error}</p>}
+      </div>
+      <DialogFooter>
+        <Button variant="outline" onClick={onBack}>
+          {tCommon('actions.back')}
+        </Button>
+        <Button variant="destructive" onClick={onSubmit}>
+          {t('dangerZone.deleteAccount.dialog.continue')}
+        </Button>
+      </DialogFooter>
+    </>
+  )
+}
+
+function ConfirmDeleteStep({
+  tCommon,
+  t,
+  confirmation,
+  error,
+  onConfirmationChange,
+  onSubmit,
+  onBack,
+}: {
+  tCommon: ReturnType<typeof useTranslations>
+  t: ReturnType<typeof useTranslations>
+  confirmation: string
+  error: string
+  onConfirmationChange: (v: string) => void
+  onSubmit: () => void
+  onBack: () => void
+}) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') onSubmit()
+  }
+
+  return (
+    <>
+      <div className="flex flex-col items-center text-center">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+          <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+        </div>
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-red-600 dark:text-red-400">
+            {t('dangerZone.deleteAccount.dialog.confirmTitle')}
+          </DialogTitle>
+          <DialogDescription className="text-red-500/80 dark:text-red-400/80">
+            {t('dangerZone.deleteAccount.dialog.confirmDescription')}
+          </DialogDescription>
+        </DialogHeader>
+      </div>
+      <div className="space-y-4 py-4">
+        <Input
+          placeholder={t('dangerZone.deleteAccount.dialog.confirmPlaceholder')}
+          value={confirmation}
+          onChange={(e) => onConfirmationChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        {error && <p className="text-sm text-red-500">{error}</p>}
+      </div>
+      <DialogFooter>
+        <Button variant="outline" onClick={onBack}>
+          {tCommon('actions.back')}
+        </Button>
+        <Button variant="destructive" onClick={onSubmit}>
+          {t('dangerZone.deleteAccount.dialog.confirmButton')}
+        </Button>
+      </DialogFooter>
+    </>
+  )
+}
+
+function DeletingStep({ t }: { t: ReturnType<typeof useTranslations> }) {
+  return (
+    <div className="py-8 text-center">
+      <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      <p className="text-muted-foreground">
+        {t('dangerZone.deleteAccount.dialog.deleting')}
+      </p>
+    </div>
+  )
+}
+
+function DoneStep({
+  tCommon,
+  t,
+  router,
+}: {
+  tCommon: ReturnType<typeof useTranslations>
+  t: ReturnType<typeof useTranslations>
+  router: ReturnType<typeof useRouter>
+}) {
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle>{t('dangerZone.deleteAccount.dialog.success')}</DialogTitle>
+      </DialogHeader>
+      <DialogFooter>
+        <Button onClick={() => router.push('/')}>{tCommon('actions.done')}</Button>
+      </DialogFooter>
+    </>
+  )
+}
+
+/* ── 主组件 ── */
+
 export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
   const t = useTranslations('settings')
   const tCommon = useTranslations('common')
@@ -137,125 +326,41 @@ export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
         )}
       >
         {step === 'warn' && (
-          <>
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
-              <DialogHeader className="mb-4">
-                <DialogTitle className="text-red-600 dark:text-red-400">
-                  {t('dangerZone.deleteAccount.dialog.warnTitle')}
-                </DialogTitle>
-                <DialogDescription className="text-red-500/80 dark:text-red-400/80">
-                  {t('dangerZone.deleteAccount.dialog.warnDescription')}
-                </DialogDescription>
-              </DialogHeader>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setOpen(false)}>
-                {tCommon('actions.cancel')}
-              </Button>
-              <Button variant="destructive" onClick={() => setStep('verify')}>
-                {t('dangerZone.deleteAccount.dialog.continue')}
-              </Button>
-            </DialogFooter>
-          </>
+          <WarningStep
+            tCommon={tCommon}
+            t={t}
+            onContinue={() => setStep('verify')}
+            onCancel={() => setOpen(false)}
+          />
         )}
 
         {step === 'verify' && (
-          <>
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
-              <DialogHeader className="mb-4">
-                <DialogTitle className="text-red-600 dark:text-red-400">
-                  {t('dangerZone.deleteAccount.dialog.verifyTitle')}
-                </DialogTitle>
-                <DialogDescription>
-                  {t('dangerZone.deleteAccount.dialog.verifyDescription')}
-                </DialogDescription>
-              </DialogHeader>
-            </div>
-            <div className="space-y-4 py-4">
-              <Input
-                type="password"
-                placeholder={t('dangerZone.deleteAccount.dialog.verifyPlaceholder')}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleVerify()
-                }}
-              />
-              {error && <p className="text-sm text-red-500">{error}</p>}
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setStep('warn')}>
-                {tCommon('actions.back')}
-              </Button>
-              <Button variant="destructive" onClick={handleVerify}>
-                {t('dangerZone.deleteAccount.dialog.continue')}
-              </Button>
-            </DialogFooter>
-          </>
+          <VerifyPasswordStep
+            tCommon={tCommon}
+            t={t}
+            password={password}
+            error={error}
+            onPasswordChange={setPassword}
+            onSubmit={handleVerify}
+            onBack={() => setStep('warn')}
+          />
         )}
 
         {step === 'confirm' && (
-          <>
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
-              <DialogHeader className="mb-4">
-                <DialogTitle className="text-red-600 dark:text-red-400">
-                  {t('dangerZone.deleteAccount.dialog.confirmTitle')}
-                </DialogTitle>
-                <DialogDescription className="text-red-500/80 dark:text-red-400/80">
-                  {t('dangerZone.deleteAccount.dialog.confirmDescription')}
-                </DialogDescription>
-              </DialogHeader>
-            </div>
-            <div className="space-y-4 py-4">
-              <Input
-                placeholder={t('dangerZone.deleteAccount.dialog.confirmPlaceholder')}
-                value={confirmation}
-                onChange={(e) => setConfirmation(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleDelete()
-                }}
-              />
-              {error && <p className="text-sm text-red-500">{error}</p>}
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setStep('verify')}>
-                {tCommon('actions.back')}
-              </Button>
-              <Button variant="destructive" onClick={handleDelete}>
-                {t('dangerZone.deleteAccount.dialog.confirmButton')}
-              </Button>
-            </DialogFooter>
-          </>
+          <ConfirmDeleteStep
+            tCommon={tCommon}
+            t={t}
+            confirmation={confirmation}
+            error={error}
+            onConfirmationChange={setConfirmation}
+            onSubmit={handleDelete}
+            onBack={() => setStep('verify')}
+          />
         )}
 
-        {step === 'deleting' && (
-          <div className="py-8 text-center">
-            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            <p className="text-muted-foreground">
-              {t('dangerZone.deleteAccount.dialog.deleting')}
-            </p>
-          </div>
-        )}
+        {step === 'deleting' && <DeletingStep t={t} />}
 
-        {step === 'done' && (
-          <>
-            <DialogHeader>
-              <DialogTitle>{t('dangerZone.deleteAccount.dialog.success')}</DialogTitle>
-            </DialogHeader>
-            <DialogFooter>
-              <Button onClick={() => router.push('/')}>{tCommon('actions.done')}</Button>
-            </DialogFooter>
-          </>
-        )}
+        {step === 'done' && <DoneStep tCommon={tCommon} t={t} router={router} />}
       </DialogContent>
     </Dialog>
   )

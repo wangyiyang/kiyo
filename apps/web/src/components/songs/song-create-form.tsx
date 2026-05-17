@@ -32,6 +32,115 @@ const LANGUAGE_OPTIONS = [
   { value: 'ja', labelKey: 'ja' },
 ]
 
+/* ── 子组件 ── */
+
+interface ModeSelectorProps {
+  value: SongCreateInput['mode'] | undefined
+  onChange: (v: SongCreateInput['mode']) => void
+  t: ReturnType<typeof useTranslations>
+}
+
+const MODE_OPTIONS: {
+  value: SongCreateInput['mode']
+  labelKey: string
+  descKey: string
+  emoji: '🎵' | '✍️' | '📝'
+}[] = [
+  { value: 'instrumental', labelKey: 'mode.instrumental.label', descKey: 'mode.instrumental.desc', emoji: '🎵' },
+  { value: 'auto_lyrics', labelKey: 'mode.auto_lyrics.label', descKey: 'mode.auto_lyrics.desc', emoji: '✍️' },
+  { value: 'existing_lyric', labelKey: 'mode.existing_lyric.label', descKey: 'mode.existing_lyric.desc', emoji: '📝' },
+]
+
+function ModeSelector({ value, onChange, t }: ModeSelectorProps) {
+  return (
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      {MODE_OPTIONS.map((opt) => (
+        <label
+          key={opt.value}
+          className={`cursor-pointer rounded-lg border p-4 transition-colors ${
+            value === opt.value
+              ? 'border-primary bg-primary/5'
+              : 'border-border hover:border-primary/50'
+          }`}
+        >
+          <input
+            type="radio"
+            name="mode"
+            value={opt.value}
+            checked={value === opt.value}
+            onChange={() => onChange(opt.value)}
+            className="sr-only"
+          />
+          <div className="text-lg">{opt.emoji}</div>
+          <div className="mt-1 font-medium">{t(opt.labelKey as any)}</div>
+          <div className="mt-1 text-xs text-muted-foreground">{t(opt.descKey as any)}</div>
+        </label>
+      ))}
+    </div>
+  )
+}
+
+interface LyricSelectProps {
+  value: string
+  onChange: (v: string) => void
+  lyrics: { id: string; title: string }[]
+  t: ReturnType<typeof useTranslations>
+}
+
+function LyricSelect({ value, onChange, lyrics, t }: LyricSelectProps) {
+  return (
+    <FormItem>
+      <FormLabel>{t('selectLyric')} *</FormLabel>
+      <FormControl>
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="mt-1 block w-full rounded-md border bg-background px-3 py-2 text-sm"
+        >
+          <option value="">{t('selectLyric')}</option>
+          {lyrics.map((lyric) => (
+            <option key={lyric.id} value={lyric.id}>
+              {lyric.title}
+            </option>
+          ))}
+        </select>
+      </FormControl>
+      {lyrics.length === 0 && (
+        <p className="mt-1 text-xs text-muted-foreground">{t('noLyrics')}</p>
+      )}
+      <FormMessage />
+    </FormItem>
+  )
+}
+
+function LanguageSelect({
+  value,
+  onChange,
+  t,
+  tLocale,
+}: {
+  value: string | undefined
+  onChange: (v: string) => void
+  t: ReturnType<typeof useTranslations>
+  tLocale: ReturnType<typeof useTranslations>
+}) {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="mt-1 block w-full rounded-md border bg-background px-3 py-2 text-sm"
+    >
+      {LANGUAGE_OPTIONS.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.value === '' ? t(opt.labelKey as any) : tLocale(opt.labelKey as any)}
+        </option>
+      ))}
+    </select>
+  )
+}
+
+/* ── 主组件 ── */
+
 export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
   const t = useTranslations('songs.new')
   const tCommon = useTranslations('common')
@@ -55,32 +164,6 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
 
   const mode = form.watch('mode')
 
-  const modeOptions: {
-    value: SongCreateInput['mode']
-    labelKey: string
-    descKey: string
-    emoji: '🎵' | '✍️' | '📝'
-  }[] = [
-    {
-      value: 'instrumental',
-      labelKey: 'mode.instrumental.label',
-      descKey: 'mode.instrumental.desc',
-      emoji: '🎵',
-    },
-    {
-      value: 'auto_lyrics',
-      labelKey: 'mode.auto_lyrics.label',
-      descKey: 'mode.auto_lyrics.desc',
-      emoji: '✍️',
-    },
-    {
-      value: 'existing_lyric',
-      labelKey: 'mode.existing_lyric.label',
-      descKey: 'mode.existing_lyric.desc',
-      emoji: '📝',
-    },
-  ]
-
   const handleGenerate = async (values: SongCreateInput) => {
     try {
       const res = await fetch('/api/songs/generate', {
@@ -93,8 +176,7 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
           mood: values.mood || undefined,
           language: values.language || undefined,
           mode: values.mode,
-          lyric_id:
-            values.mode === 'existing_lyric' ? values.lyricId : undefined,
+          lyric_id: values.mode === 'existing_lyric' ? values.lyricId : undefined,
         }),
       })
       const data = await res.json()
@@ -106,10 +188,7 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
           VALIDATION_ERROR: tCommon('errors.validationError'),
         }
         form.setError('root', {
-          message:
-            errorMap[data.error?.code] ||
-            data.error?.message ||
-            tCommon('errors.unknown'),
+          message: errorMap[data.error?.code] || data.error?.message || tCommon('errors.unknown'),
         })
       }
     } catch {
@@ -119,23 +198,15 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleGenerate)}
-        className="space-y-6"
-      >
+      <form onSubmit={form.handleSubmit(handleGenerate)} className="space-y-6">
         <FormField
           control={form.control}
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                {t('fields.title')} *
-              </FormLabel>
+              <FormLabel>{t('fields.title')} *</FormLabel>
               <FormControl>
-                <Input
-                  placeholder={t('placeholders.title')}
-                  {...field}
-                />
+                <Input placeholder={t('placeholders.title')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -147,15 +218,9 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
           name="prompt"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                {t('fields.prompt')} *
-              </FormLabel>
+              <FormLabel>{t('fields.prompt')} *</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder={t('placeholders.prompt')}
-                  rows={3}
-                  {...field}
-                />
+                <Textarea placeholder={t('placeholders.prompt')} rows={3} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -170,10 +235,7 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
               <FormItem>
                 <FormLabel>{t('fields.genre')}</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={t('placeholders.genre')}
-                    {...field}
-                  />
+                  <Input placeholder={t('placeholders.genre')} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -186,10 +248,7 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
               <FormItem>
                 <FormLabel>{t('fields.mood')}</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={t('placeholders.mood')}
-                    {...field}
-                  />
+                  <Input placeholder={t('placeholders.mood')} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -204,18 +263,12 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
             <FormItem>
               <FormLabel>{t('fields.language')}</FormLabel>
               <FormControl>
-                <select
-                  {...field}
-                  className="mt-1 block w-full rounded-md border bg-background px-3 py-2 text-sm"
-                >
-                  {LANGUAGE_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.value === ''
-                        ? t(opt.labelKey as any)
-                        : tLocale(opt.labelKey as any)}
-                    </option>
-                  ))}
-                </select>
+                <LanguageSelect
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                  t={t}
+                  tLocale={tLocale}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -227,38 +280,13 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
           name="mode"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="mb-2 block">
-                {t('fields.mode')} *
-              </FormLabel>
+              <FormLabel className="mb-2 block">{t('fields.mode')} *</FormLabel>
               <FormControl>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {modeOptions.map((opt) => (
-                    <label
-                      key={opt.value}
-                      className={`cursor-pointer rounded-lg border p-4 transition-colors ${
-                        field.value === opt.value
-                          ? 'border-primary bg-primary/5'
-                          : 'border-border hover:border-primary/50'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="mode"
-                        value={opt.value}
-                        checked={field.value === opt.value}
-                        onChange={() => field.onChange(opt.value)}
-                        className="sr-only"
-                      />
-                      <div className="text-lg">{opt.emoji}</div>
-                      <div className="mt-1 font-medium">
-                        {t(opt.labelKey as any)}
-                      </div>
-                      <div className="mt-1 text-xs text-muted-foreground">
-                        {t(opt.descKey as any)}
-                      </div>
-                    </label>
-                  ))}
-                </div>
+                <ModeSelector
+                  value={field.value}
+                  onChange={field.onChange}
+                  t={t}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -270,44 +298,24 @@ export function SongCreateForm({ lyrics, onSuccess }: SongCreateFormProps) {
             control={form.control}
             name="lyricId"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('selectLyric')} *</FormLabel>
-                <FormControl>
-                  <select
-                    {...field}
-                    className="mt-1 block w-full rounded-md border bg-background px-3 py-2 text-sm"
-                  >
-                    <option value="">{t('selectLyric')}</option>
-                    {lyrics.map((lyric) => (
-                      <option key={lyric.id} value={lyric.id}>
-                        {lyric.title}
-                      </option>
-                    ))}
-                  </select>
-                </FormControl>
-                {lyrics.length === 0 && (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {t('noLyrics')}
-                  </p>
-                )}
-                <FormMessage />
-              </FormItem>
+              <LyricSelect
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                lyrics={lyrics}
+                t={t}
+              />
             )}
           />
         )}
 
         {form.formState.errors.root && (
-          <p className="text-sm text-destructive">
-            {form.formState.errors.root.message}
-          </p>
+          <p className="text-sm text-destructive">{form.formState.errors.root.message}</p>
         )}
 
         <div className="flex justify-end gap-3">
           <Button type="submit" disabled={form.formState.isSubmitting}>
             <Wand2 className="mr-1 h-4 w-4" />
-            {form.formState.isSubmitting
-              ? tCommon('states.generating')
-              : t('submit')}
+            {form.formState.isSubmitting ? tCommon('states.generating') : t('submit')}
           </Button>
         </div>
       </form>

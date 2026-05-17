@@ -111,7 +111,7 @@ export async function checkRateLimit(
 
   if (deleteError) {
     // 清理失败不影响主逻辑，记录但不抛出
-    console.warn('Rate limit cleanup failed:', deleteError.message)
+    console.warn('[rate-limit] cleanup failed:', deleteError.message)
   }
 
   // 2. 统计当前窗口内请求次数
@@ -124,7 +124,7 @@ export async function checkRateLimit(
 
   if (countError) {
     // 查询失败时，出于安全考虑拒绝请求
-    console.error('Rate limit count failed:', countError.message)
+    console.error('[rate-limit] count failed:', countError.message)
     return {
       allowed: false,
       currentCount: 0,
@@ -152,7 +152,7 @@ export async function checkRateLimit(
 
   if (insertError) {
     // 插入失败时，出于安全考虑拒绝请求
-    console.error('Rate limit insert failed:', insertError.message)
+    console.error('[rate-limit] insert failed:', insertError.message)
     return {
       allowed: false,
       currentCount,

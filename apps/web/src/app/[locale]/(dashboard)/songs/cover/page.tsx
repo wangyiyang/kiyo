@@ -11,6 +11,140 @@ import { useTranslations } from 'next-intl'
 
 type SourceMode = 'existing' | 'upload'
 
+interface Song {
+  id: string
+  title: string
+  audio_url: string | null
+  file_path: string | null
+}
+
+/* ── 子组件 ── */
+
+interface AudioSourceSelectorProps {
+  sourceMode: SourceMode
+  selectedSongId: string
+  uploadedUrl: string
+  uploading: boolean
+  songs: Song[]
+  t: ReturnType<typeof useTranslations>
+  tCommon: ReturnType<typeof useTranslations>
+  onSourceModeChange: (v: SourceMode) => void
+  onSongSelect: (v: string) => void
+  onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+function AudioSourceSelector({
+  sourceMode,
+  selectedSongId,
+  uploadedUrl,
+  uploading,
+  songs,
+  t,
+  tCommon,
+  onSourceModeChange,
+  onSongSelect,
+  onFileUpload,
+}: AudioSourceSelectorProps) {
+  return (
+    <div className="rounded-lg border bg-card p-4">
+      <div className="mb-4 flex items-center gap-2">
+        <Music className="h-5 w-5 text-primary" />
+        <Label className="text-base font-medium">{t('source.label')}</Label>
+      </div>
+
+      <Tabs value={sourceMode} onValueChange={(v) => onSourceModeChange(v as SourceMode)} className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="existing" className="gap-2">
+            <Mic2 className="h-4 w-4" />
+            {t('source.existing')}
+          </TabsTrigger>
+          <TabsTrigger value="upload" className="gap-2">
+            <Upload className="h-4 w-4" />
+            {t('source.upload')}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="existing" className="mt-4 space-y-3">
+          <select
+            id="song-select"
+            value={selectedSongId}
+            onChange={(e) => onSongSelect(e.target.value)}
+            className="block w-full rounded-md border bg-background px-3 py-2 text-sm"
+          >
+            <option value="">{t('selectSong')}</option>
+            {songs.map((song) => (
+              <option key={song.id} value={song.id}>
+                {song.title}
+              </option>
+            ))}
+          </select>
+          {songs.length === 0 && (
+            <p className="text-sm text-muted-foreground">{t('error.noSongs')}</p>
+          )}
+        </TabsContent>
+
+        <TabsContent value="upload" className="mt-4 space-y-2">
+          <input
+            id="audio-upload"
+            type="file"
+            accept="audio/mpeg,audio/wav,audio/flac"
+            onChange={onFileUpload}
+            disabled={uploading}
+            className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-primary-foreground"
+          />
+          {uploadedUrl && <p className="text-sm text-green-600">{t('upload.success')}</p>}
+          <p className="text-xs text-muted-foreground">{t('upload.formats')}</p>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}
+
+interface StyleSelectorProps {
+  selectedStyle: string
+  onStyleSelect: (v: string) => void
+  t: ReturnType<typeof useTranslations>
+}
+
+const STYLE_ICONS = ['🎸', '🎷', '🎻', '🎹', '🎺', '🌙', '🤘', '🎤']
+
+function StyleSelector({ selectedStyle, onStyleSelect, t }: StyleSelectorProps) {
+  const styleOptions = React.useMemo(
+    () =>
+      STYLE_ICONS.map((icon, i) => ({
+        icon,
+        label: t(`style.options.${i}.label`),
+        prompt: t(`style.options.${i}.prompt`),
+      })),
+    [t]
+  )
+
+  return (
+    <div>
+      <Label>{t('style.label')} *</Label>
+      <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {styleOptions.map((style) => (
+          <button
+            key={style.prompt}
+            type="button"
+            onClick={() => onStyleSelect(style.prompt)}
+            className={`rounded-lg border p-3 text-center transition-colors ${
+              selectedStyle === style.prompt
+                ? 'border-primary bg-primary/5'
+                : 'border-border hover:bg-muted/50'
+            }`}
+          >
+            <div className="mb-1 text-2xl">{style.icon}</div>
+            <div className="text-xs font-medium">{style.label}</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ── 主组件 ── */
+
 export default function CoverSongPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -22,7 +156,7 @@ export default function CoverSongPage() {
 
   const [sourceMode, setSourceMode] = React.useState<SourceMode>(prefillSongId ? 'existing' : 'existing')
   const [selectedSongId, setSelectedSongId] = React.useState(prefillSongId || '')
-  const [songs, setSongs] = React.useState<{ id: string; title: string; audio_url: string | null; file_path: string | null }[]>([])
+  const [songs, setSongs] = React.useState<Song[]>([])
   const [uploadedUrl, setUploadedUrl] = React.useState('')
   const [uploading, setUploading] = React.useState(false)
   const [selectedStyle, setSelectedStyle] = React.useState('')
@@ -36,17 +170,6 @@ export default function CoverSongPage() {
       : !!uploadedUrl
 
   const canSubmit = hasAudioSource && !!selectedStyle && !uploading
-
-  const styleOptions = [
-    { icon: '🎸', label: t('style.options.0.label'), prompt: t('style.options.0.prompt') },
-    { icon: '🎷', label: t('style.options.1.label'), prompt: t('style.options.1.prompt') },
-    { icon: '🎻', label: t('style.options.2.label'), prompt: t('style.options.2.prompt') },
-    { icon: '🎹', label: t('style.options.3.label'), prompt: t('style.options.3.prompt') },
-    { icon: '🎺', label: t('style.options.4.label'), prompt: t('style.options.4.prompt') },
-    { icon: '🌙', label: t('style.options.5.label'), prompt: t('style.options.5.prompt') },
-    { icon: '🤘', label: t('style.options.6.label'), prompt: t('style.options.6.prompt') },
-    { icon: '🎤', label: t('style.options.7.label'), prompt: t('style.options.7.prompt') },
-  ]
 
   React.useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -164,10 +287,7 @@ export default function CoverSongPage() {
   return (
     <div className="container mx-auto max-w-2xl py-8">
       <div className="mb-6 flex items-center gap-4">
-        <Link
-          href="/songs"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-        >
+        <Link href="/songs" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" />
           {tCommon('actions.back')}
         </Link>
@@ -176,89 +296,24 @@ export default function CoverSongPage() {
       <h1 className="mb-6 text-2xl font-bold">{t('title')}</h1>
 
       <div className="mb-6 space-y-4">
-        {/* 参考音频区域 - 默认展开歌曲选择 */}
-        <div className="rounded-lg border bg-card p-4">
-          <div className="mb-4 flex items-center gap-2">
-            <Music className="h-5 w-5 text-primary" />
-            <Label className="text-base font-medium">{t('source.label')}</Label>
-          </div>
+        <AudioSourceSelector
+          sourceMode={sourceMode}
+          selectedSongId={selectedSongId}
+          uploadedUrl={uploadedUrl}
+          uploading={uploading}
+          songs={songs}
+          t={t}
+          tCommon={tCommon}
+          onSourceModeChange={setSourceMode}
+          onSongSelect={setSelectedSongId}
+          onFileUpload={handleFileUpload}
+        />
 
-          <Tabs
-            value={sourceMode}
-            onValueChange={(v) => setSourceMode(v as SourceMode)}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="existing" className="gap-2">
-                <Mic2 className="h-4 w-4" />
-                {t('source.existing')}
-              </TabsTrigger>
-              <TabsTrigger value="upload" className="gap-2">
-                <Upload className="h-4 w-4" />
-                {t('source.upload')}
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="existing" className="mt-4 space-y-3">
-              <select
-                id="song-select"
-                value={selectedSongId}
-                onChange={(e) => setSelectedSongId(e.target.value)}
-                className="block w-full rounded-md border bg-background px-3 py-2 text-sm"
-              >
-                <option value="">{t('selectSong')}</option>
-                {songs.map((song) => (
-                  <option key={song.id} value={song.id}>
-                    {song.title}
-                  </option>
-                ))}
-              </select>
-              {songs.length === 0 && (
-                <p className="text-sm text-muted-foreground">
-                  {t('error.noSongs')}
-                </p>
-              )}
-            </TabsContent>
-
-            <TabsContent value="upload" className="mt-4 space-y-2">
-              <input
-                id="audio-upload"
-                type="file"
-                accept="audio/mpeg,audio/wav,audio/flac"
-                onChange={handleFileUpload}
-                disabled={uploading}
-                className="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-primary-foreground"
-              />
-              {uploadedUrl && (
-                <p className="text-sm text-green-600">{t('upload.success')}</p>
-              )}
-              <p className="text-xs text-muted-foreground">
-                {t('upload.formats')}
-              </p>
-            </TabsContent>
-          </Tabs>
-        </div>
-
-        <div>
-          <Label>{t('style.label')} *</Label>
-          <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {styleOptions.map((style) => (
-              <button
-                key={style.prompt}
-                type="button"
-                onClick={() => setSelectedStyle(style.prompt)}
-                className={`rounded-lg border p-3 text-center transition-colors ${
-                  selectedStyle === style.prompt
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:bg-muted/50'
-                }`}
-              >
-                <div className="mb-1 text-2xl">{style.icon}</div>
-                <div className="text-xs font-medium">{style.label}</div>
-              </button>
-            ))}
-          </div>
-        </div>
+        <StyleSelector
+          selectedStyle={selectedStyle}
+          onStyleSelect={setSelectedStyle}
+          t={t}
+        />
 
         <div>
           <Label htmlFor="title">{t('titleLabel')}</Label>
