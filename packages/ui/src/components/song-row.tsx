@@ -14,7 +14,7 @@ export function SongRow({ id, title, mode, selected, onSelect, dragHandle }: Son
   const checkboxId = React.useId() + '-' + id
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border px-4 py-3 hover:bg-muted/50">
+    <div className={`flex items-center gap-3 rounded-lg border px-4 py-3 hover:bg-muted/50 transition-colors ${selected ? 'border-primary bg-primary/5' : ''}`}>
       {mode === 'select' && onSelect && (
         <Checkbox
           id={checkboxId}

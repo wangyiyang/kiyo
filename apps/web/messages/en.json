@@ -639,7 +639,9 @@
         "replace": "Replace Cover",
         "generating": "Generating...",
         "retry": "Retry",
-        "error": "Generation failed, please retry"
+        "error": "Generation failed, please retry",
+        "success": "Cover generated successfully",
+        "uploadSuccess": "Cover uploaded successfully"
       },
       "aiPrompt": "Generation Prompt",
       "status": {
@@ -826,7 +828,9 @@
       "replace": "Replace Cover",
       "retry": "Retry",
       "generate": "Generate Cover",
-      "error": "Generation failed, please retry"
+      "error": "Generation failed, please retry",
+      "success": "Cover generated successfully",
+      "uploadSuccess": "Cover uploaded successfully"
     },
     "reorder": {
       "saving": "Saving order...",
