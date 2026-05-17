@@ -801,7 +801,11 @@
       "descriptionPlaceholder": "Enter album description",
       "selectSongs": "Select Songs",
       "save": "Save",
-      "dialogDescription": "Fill in the album information and save"
+      "dialogDescription": "Fill in the album information and save",
+      "songSelector": {
+        "hint": "You can also add songs later",
+        "empty": "No songs yet. Create the album first, then add songs from your song library"
+      }
     },
     "delete": {
       "title": "Confirm Delete",
@@ -879,6 +883,10 @@
     "generate": {
       "title": "AI Generate Lyrics",
       "subtitle": "Describe your song theme and AI will write complete lyrics",
+      "guidance": {
+        "title": "Don't know what to write? Let AI help you start",
+        "description": "Enter your desired theme, style, or mood, and AI will create complete lyrics for you. It can be a specific story, emotion, or any music inspiration."
+      },
       "fields": {
         "prompt": "Theme Description",
         "language": "Language",

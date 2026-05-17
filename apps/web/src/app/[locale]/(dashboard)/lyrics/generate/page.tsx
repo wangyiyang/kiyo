@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { useRouter, Link } from '@/i18n/navigation'
 import { Button, Input, Label, Textarea } from '@kiyo/ui'
-import { ArrowLeft, Sparkles, Loader2 } from 'lucide-react'
+import { ArrowLeft, Sparkles, Loader2, Lightbulb } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 export default function LyricGeneratePage() {
@@ -74,6 +74,18 @@ export default function LyricGeneratePage() {
         <p className="mt-1 text-sm text-muted-foreground">
           {t('subtitle')}
         </p>
+      </div>
+
+      <div className="mb-8 rounded-lg border border-primary/20 bg-primary/5 p-4">
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5 rounded-full bg-primary/10 p-2">
+            <Lightbulb className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h2 className="font-semibold text-primary">{t('guidance.title')}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">{t('guidance.description')}</p>
+          </div>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">

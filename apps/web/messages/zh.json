@@ -801,7 +801,11 @@
       "descriptionPlaceholder": "输入专辑描述",
       "selectSongs": "选择歌曲",
       "save": "保存",
-      "dialogDescription": "填写专辑信息后保存"
+      "dialogDescription": "填写专辑信息后保存",
+      "songSelector": {
+        "hint": "也可以稍后添加歌曲",
+        "empty": "暂无歌曲，创建专辑后可去「歌曲库」添加"
+      }
     },
     "delete": {
       "title": "确认删除",
@@ -879,6 +883,10 @@
     "generate": {
       "title": "AI 生成歌词",
       "subtitle": "描述你想要的歌曲主题，AI 将为你创作完整歌词",
+      "guidance": {
+        "title": "不知道写什么？让 AI 帮你起稿",
+        "description": "输入你想要的主题、风格或情绪，AI 会为你创作完整的歌词。可以是具体的故事、情感，或任何音乐灵感。"
+      },
       "fields": {
         "prompt": "主题描述",
         "language": "语言",

@@ -125,7 +125,14 @@ export function AlbumFormDialog({ mode, album, trigger }: AlbumFormDialogProps) 
           {mode === 'create' && (
             <div>
               <label className="mb-1 block text-sm font-medium">{t('selectSongs')}</label>
-              <SongSelector selectedIds={selectedSongIds} onChange={setSelectedSongIds} />
+              <SongSelector
+                selectedIds={selectedSongIds}
+                onChange={setSelectedSongIds}
+                emptyMessage={t('songSelector.empty')}
+              />
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t('songSelector.hint')}
+              </p>
             </div>
           )}
           <div className="flex justify-end gap-2">
