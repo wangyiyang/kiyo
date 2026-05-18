@@ -35,7 +35,7 @@ describe('SongCreateForm', () => {
     expect(screen.getByLabelText(/主题描述/)).toBeInTheDocument()
     expect(screen.getByLabelText(/风格/)).toBeInTheDocument()
     expect(screen.getByLabelText(/情绪/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/语言/)).toBeInTheDocument()
+    expect(screen.getByRole('combobox')).toBeInTheDocument()
     expect(screen.getByText('开始创作')).toBeInTheDocument()
   })
 

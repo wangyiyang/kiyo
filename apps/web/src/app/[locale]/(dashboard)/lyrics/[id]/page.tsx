@@ -61,6 +61,7 @@ async function LyricDetailContent({
     completed: t('source.manual'),
     failed: tCommon('errors.unknown'),
   }
+  type SongStatus = 'draft' | 'generating' | 'completed' | 'failed'
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-8">
@@ -119,7 +120,7 @@ async function LyricDetailContent({
                 <div className="flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50">
                   <div className="flex items-center gap-3">
                     <span className="font-medium">{song.title}</span>
-                    <SongStatusBadge status={song.status as any} label={statusLabelMap[song.status] ?? song.status} />
+                    <SongStatusBadge status={song.status as SongStatus} label={statusLabelMap[song.status] ?? song.status} />
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     {song.genre && <span>{song.genre}</span>}
