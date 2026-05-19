@@ -13,6 +13,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Providers } from "./providers";
+import { CookieConsent } from "@/components/cookie-consent";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kiyo.ai";
 
@@ -22,6 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
 	const ogLocaleMap: Record<Locale, string> = {
 		en: "en_US",
 		zh: "zh_CN",
+		ja: "ja_JP",
+		ko: "ko_KR",
 	};
 
 	return {
@@ -79,6 +82,7 @@ export default async function RootLayout({
 				</Providers>
 				<Analytics />
 				<SpeedInsights />
+				<CookieConsent />
 			</body>
 		</html>
 	);

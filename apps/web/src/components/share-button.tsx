@@ -42,7 +42,7 @@ export function ShareButton({ entityType, entityId, title, isPublic, locale }: S
   }
 
   const handleTwitter = () => {
-    const text = encodeURIComponent(`${title} — ${t('twitterText')}`)
+    const text = encodeURIComponent(`🎵 ${title} — ${t('twitterText')}\n\n#KiyoAI #AIMusic`)
     window.open(
       `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(publicUrl)}`,
       '_blank',
