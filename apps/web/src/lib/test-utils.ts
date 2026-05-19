@@ -13,7 +13,6 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
 
   let currentTable = ''
   let currentFilters: Array<(item: any) => boolean> = []
-  let currentSelect = '*'
   let currentOrder: { column: string; ascending: boolean } | null = null
   let currentSingle = false
   let currentLimit: number | null = null
@@ -23,7 +22,6 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
   const reset = () => {
     currentTable = ''
     currentFilters = []
-    currentSelect = '*'
     currentOrder = null
     currentSingle = false
     currentLimit = null
@@ -55,8 +53,7 @@ export function createMockSupabaseClient(options: { userId?: string } = {}) {
   }
 
   const chain = {
-    select: (columns = '*', options?: { count?: string }) => {
-      currentSelect = columns
+    select: (_columns = '*', options?: { count?: string }) => {
       if (options?.count) {
         currentCount = true
       }

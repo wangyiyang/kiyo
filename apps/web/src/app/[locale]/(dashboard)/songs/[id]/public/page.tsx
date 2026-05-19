@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: SongPublicPageProps): Promise
 }
 
 export default async function SongPublicPage({ params }: SongPublicPageProps) {
-  const { locale, id } = await params
+  const { id } = await params
   const supabase = await createServerClient()
   const t = await getTranslations('share')
   const tCommon = await getTranslations('common')

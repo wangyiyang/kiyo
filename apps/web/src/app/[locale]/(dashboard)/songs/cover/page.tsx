@@ -27,7 +27,6 @@ interface AudioSourceSelectorProps {
   uploading: boolean
   songs: Song[]
   t: ReturnType<typeof useTranslations>
-  tCommon: ReturnType<typeof useTranslations>
   onSourceModeChange: (v: SourceMode) => void
   onSongSelect: (v: string) => void
   onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -40,7 +39,6 @@ function AudioSourceSelector({
   uploading,
   songs,
   t,
-  tCommon,
   onSourceModeChange,
   onSongSelect,
   onFileUpload,
@@ -303,7 +301,7 @@ export default function CoverSongPage() {
           uploading={uploading}
           songs={songs}
           t={t}
-          tCommon={tCommon}
+
           onSourceModeChange={setSourceMode}
           onSongSelect={setSelectedSongId}
           onFileUpload={handleFileUpload}

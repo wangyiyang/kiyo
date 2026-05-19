@@ -67,7 +67,7 @@ async function SettingsPageContent() {
                 {t('dangerZone.deleteAccount.description')}
               </p>
             </div>
-            {user?.email && <DeleteAccountDialog userEmail={user.email} />}
+            {user?.email && <DeleteAccountDialog />}
           </div>
         </SettingsSection>
       </div>

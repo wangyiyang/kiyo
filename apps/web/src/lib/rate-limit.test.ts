@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { checkRateLimit, createRateLimitResponse, type RateLimitAction } from './rate-limit'
+import { checkRateLimit, createRateLimitResponse } from './rate-limit'
 import { createMockSupabaseClient } from './test-utils'
 
 function createMockRequest(headers: Record<string, string> = {}): Request {
@@ -106,10 +106,10 @@ describe('checkRateLimit', () => {
         const base = originalFrom(table)
         return {
           ...base,
-          select: (columns?: string, options?: { count?: string }) => ({
-            eq: (column: string, value: any) => ({
-              eq: (column2: string, value2: any) => ({
-                gte: (column3: string, value3: any) => ({
+          select: (_columns?: string, _options?: { count?: string }) => ({
+            eq: (_column: string, _value: any) => ({
+              eq: (_column2: string, _value2: any) => ({
+                gte: (_column3: string, _value3: any) => ({
                   then: async (resolve: any) => {
                     // Simulate Supabase error response: resolve with error object
                     return resolve({ data: null, count: 0, error: { message: 'DB error' } })

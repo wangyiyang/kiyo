@@ -24,7 +24,6 @@ import { createBrowserClient } from '@kiyo/supabase'
 type Step = 'warn' | 'verify' | 'confirm' | 'deleting' | 'done'
 
 interface DeleteAccountDialogProps {
-  userEmail: string
 }
 
 /* ── 步骤组件 ── */
@@ -216,7 +215,7 @@ function DoneStep({
 
 /* ── 主组件 ── */
 
-export function DeleteAccountDialog({ userEmail }: DeleteAccountDialogProps) {
+export function DeleteAccountDialog({ }: DeleteAccountDialogProps) {
   const t = useTranslations('settings')
   const tCommon = useTranslations('common')
   const [open, setOpen] = React.useState(false)
