@@ -1,0 +1,1193 @@
+{
+  "nav": {
+    "menu": "メニュー",
+    "openMenu": "ナビゲーションメニューを開く",
+    "closeMenu": "メニューを閉じる",
+    "home": "ホーム",
+    "songs": "楽曲",
+    "albums": "アルバム",
+    "lyrics": "歌詞",
+    "explore": "探索",
+    "language": "言語",
+    "theme": "テーマ",
+    "dashboard": "ダッシュボード",
+    "settings": "設定",
+    "newSong": "新規楽曲",
+    "newLyric": "新規歌詞",
+    "logout": "ログアウト",
+    "notification": "通知"
+  },
+  "metadata": {
+    "title": "Kiyo — AI音楽制作プラットフォーム",
+    "description": "歌詞、メロディ、ボーカル、ミキシングを一つのクリエイター主導のパイプラインに統合したマルチモデルAI音楽ワークフロー。",
+    "applicationName": "Kiyo"
+  },
+  "home": {
+    "title": "Kiyo",
+    "subtitle": "AI音楽制作プラットフォーム",
+    "buttons": {
+      "primary": "始める",
+      "secondary": "詳細を見る",
+      "outline": "ドキュメント"
+    }
+  },
+  "localeSwitcher": {
+    "label": "言語",
+    "en": "English",
+    "zh": "中文",
+    "ja": "日本語",
+    "ko": "한국어"
+  },
+  "notFound": {
+    "title": "ページが見つかりません",
+    "description": "お探しのページは存在しません。",
+    "backToHome": "ホームに戻る",
+    "exploreMusic": "音楽を探索",
+    "errorCode": "404"
+  },
+  "auth": {
+    "login": {
+      "title": "Kiyoにログイン",
+      "subtitle": "お帰りなさい",
+      "email": {
+        "label": "メールアドレス",
+        "placeholder": "you@example.com"
+      },
+      "password": {
+        "label": "パスワード",
+        "placeholder": "パスワードを入力"
+      },
+      "showPassword": "パスワードを表示",
+      "rememberMe": "ログイン状態を保持",
+      "submit": "ログイン",
+      "submitting": "ログイン中…",
+      "magicLink": {
+        "use": "マジックリンクを使用",
+        "backToPassword": "パスワードログインに戻る",
+        "title": "マジックリンクでログイン",
+        "submit": "ログインリンクを送信",
+        "submitting": "送信中…",
+        "success": "ログインリンクを送信しました。メールをご確認ください。",
+        "description": "登録済みのメールアドレスに安全なリンクを送信します。パスワードは不要です。"
+      },
+      "noAccount": "アカウントをお持ちでない場合",
+      "registerLink": "新規登録",
+      "forgotPassword": "パスワードをお忘れですか？",
+      "hidePassword": "パスワードを隠す",
+      "orSeparator": "または"
+    },
+    "register": {
+      "title": "Kiyoに新規登録",
+      "subtitle": "アカウントを作成",
+      "email": {
+        "label": "メールアドレス",
+        "placeholder": "you@example.com"
+      },
+      "password": {
+        "label": "パスワード",
+        "placeholder": "パスワードを作成"
+      },
+      "confirmPassword": {
+        "label": "パスワード（確認）",
+        "placeholder": "パスワードを再入力"
+      },
+      "passwordStrength": {
+        "label": "パスワードの強度",
+        "weak": "弱い",
+        "fair": "普通",
+        "good": "良好",
+        "strong": "強い"
+      },
+      "submit": "登録",
+      "submitting": "登録中…",
+      "success": "アカウントを作成しました。メールの確認リンクをご確認ください。",
+      "hasAccount": "すでにアカウントをお持ちの場合",
+      "loginLink": "ログイン",
+      "hidePassword": "パスワードを隠す",
+      "orSeparator": "または",
+      "termsLabel": "<privacy>プライバシーポリシー</privacy>と<terms>利用規約</terms>を読み、同意します。"
+    },
+    "forgotPassword": {
+      "title": "パスワードをリセット",
+      "subtitle": "パスワードリセット用のリンクをメールで送信します",
+      "email": {
+        "label": "メールアドレス",
+        "placeholder": "you@example.com"
+      },
+      "submit": "リセットリンクを送信",
+      "submitting": "送信中…",
+      "success": "このメールアドレスが登録されている場合、リセットリンクが送信されます。",
+      "backToLogin": "ログインに戻る"
+    },
+    "resetPassword": {
+      "title": "新しいパスワードを設定",
+      "password": {
+        "label": "新しいパスワード",
+        "placeholder": "新しいパスワードを入力"
+      },
+      "confirmPassword": {
+        "label": "新しいパスワード（確認）",
+        "placeholder": "パスワードを再入力"
+      },
+      "submit": "パスワードを更新",
+      "submitting": "更新中…",
+      "success": "パスワードを更新しました。新しいパスワードでログインしてください。",
+      "hidePassword": "パスワードを隠す",
+      "invalidLink": "無効または期限切れのリンクです。",
+      "requestNewLink": "新しいリンクをリクエスト"
+    },
+    "userMenu": {
+      "mySongs": "マイ楽曲",
+      "myAlbums": "マイアルバム",
+      "myLyrics": "マイ歌詞",
+      "settings": "設定",
+      "logout": "ログアウト",
+      "login": "ログイン",
+      "feedback": "フィードバック",
+      "dashboard": "ダッシュボード"
+    },
+    "oauth": {
+      "github": "GitHubで続ける",
+      "google": "Googleで続ける"
+    },
+    "errors": {
+      "invalidEmail": "正しいメールアドレスを入力してください",
+      "emailRequired": "メールアドレスは必須です",
+      "passwordRequired": "パスワードは必須です",
+      "passwordMin": "パスワードは6文字以上である必要があります",
+      "passwordMatch": "パスワードが一致しません",
+      "invalidCredentials": "メールアドレスまたはパスワードが正しくありません",
+      "emailNotConfirmed": "メールアドレスの確認が完了していません",
+      "generic": "問題が発生しました。もう一度お試しください。",
+      "termsRequired": "プライバシーポリシーと利用規約に同意してください",
+      "oauthMissingCode": "認証に失敗しました。もう一度お試しください。",
+      "oauthExchangeFailed": "ログインの検証に失敗しました。設定を確認するか、後でもう一度お試しください。"
+    },
+    "common": {
+      "show": "表示",
+      "hide": "非表示"
+    }
+  },
+  "header": {
+    "nav": {
+      "features": "機能",
+      "howItWorks": "ワークフロー",
+      "showcase": "ショーケース"
+    },
+    "cta": "ウェイトリストに参加"
+  },
+  "footer": {
+    "tagline": "インスピレーションからリリースまで、マルチモデルAI音楽プラットフォーム。",
+    "groups": {
+      "product": {
+        "title": "プロダクト",
+        "links": {
+          "features": "機能",
+          "howItWorks": "ワークフロー",
+          "showcase": "ショーケース"
+        }
+      },
+      "resources": {
+        "title": "リソース",
+        "links": {
+          "docs": "ドキュメント",
+          "roadmap": "ロードマップ",
+          "changelog": "変更履歴"
+        }
+      },
+      "about": {
+        "title": "概要",
+        "links": {
+          "team": "チーム",
+          "contact": "お問い合わせ",
+          "privacy": "プライバシーポリシー",
+          "terms": "利用規約"
+        }
+      }
+    },
+    "copyright": "© {year} Kiyo. Let melody grow free."
+  },
+  "feedback": {
+    "type": {
+      "label": "フィードバックの種類",
+      "placeholder": "種類を選択",
+      "options": {
+        "bug": "バグ報告",
+        "suggestion": "機能の提案",
+        "other": "その他"
+      }
+    },
+    "description": {
+      "label": "詳細",
+      "placeholder": "問題や提案を詳しくお聞かせください…"
+    },
+    "contact": {
+      "label": "連絡先（任意）",
+      "placeholder": "メールアドレスまたはその他の連絡先"
+    },
+    "submit": "フィードバックを送信",
+    "submitting": "送信中…",
+    "success": "フィードバックありがとうございます！",
+    "error": "送信に失敗しました。後でもう一度お試しください。"
+  },
+  "contact": {
+    "title": "お問い合わせ",
+    "subtitle": "ご質問やご提案がございましたら、お気軽にどうぞ。",
+    "email": "メール",
+    "faq": {
+      "title": "よくある質問",
+      "items": [
+        {
+          "question": "生成に失敗した場合はどうすればよいですか？",
+          "answer": "ネットワーク接続をご確認ください。ピーク時には一部モデルがキューに入ることがありますので、後でもう一度お試しください。失敗が続く場合は、フィードバックフォームからご報告いただければ調査いたします。"
+        },
+        {
+          "question": "対応しているオーディオ形式は何ですか？",
+          "answer": "現在、MP3とWAVのエクスポートに対応しています。楽曲カバーはJPGとPNGに対応しています。"
+        },
+        {
+          "question": "作品を削除するにはどうすればよいですか？",
+          "answer": "楽曲またはアルバムの詳細ページで削除ボタンをクリックしてください。一度削除すると復元できませんので、慎重に行ってください。"
+        },
+        {
+          "question": "楽曲の生成にどのくらい時間がかかりますか？",
+          "answer": "楽曲の長さや現在のキュー状況によりますが、通常2〜5分程度です。複雑なアレンジメントの場合はそれ以上かかることがありますので、しばらくお待ちください。"
+        },
+        {
+          "question": "生成された音楽の著作権は誰にありますか？",
+          "answer": "Kiyoを使用して生成された楽曲の著作権は、ご利用者様に帰属します。現地の法律や規制を遵守し、違法な目的での使用はお控えください。"
+        },
+        {
+          "question": "サポートに連絡するにはどうすればよいですか？",
+          "answer": "wangyiyang.kk@gmail.com までメールを送信するか、ページ下部のフィードバックフォームからご連絡ください。"
+        }
+      ]
+    }
+  },
+  "hero": {
+    "badge": "マルチモデル · AI音楽ワークフロー",
+    "headline": {
+      "prefix": "メロディを",
+      "highlight": "自由に育てる",
+      "suffix": ""
+    },
+    "description": "Kiyoはインスピレーション、アレンジメント、ボーカル、ミキシングを一つのタイムラインで統合します。すべての工程で、クリエイターが主導権を握ります。",
+    "cta": {
+      "primary": "ウェイトリストに参加",
+      "primaryAuthenticated": "ダッシュボードへ",
+      "secondary": "詳細を見る"
+    },
+    "stats": {
+      "models": {
+        "label": "モデル",
+        "value": "5+"
+      },
+      "genres": {
+        "label": "ジャンル",
+        "value": "30+"
+      },
+      "cycle": {
+        "label": "生成時間",
+        "value": "数分"
+      }
+    }
+  },
+  "features": {
+    "eyebrow": "できること",
+    "heading": "クリエイターのためのAIワークフロー",
+    "description": "生成だけでなく、コラボレーション。AIをバンドメイトに、ボタンにしない。",
+    "items": {
+      "multiModel": {
+        "title": "マルチモデルコラボレーション",
+        "description": "トップクラスの音楽・言語モデルが一つのタイムラインで連携します。インスピレーション、メロディ、ボーカル、ミキシングが連動し、あなたが指揮を執ります。"
+      },
+      "controllable": {
+        "title": "コントロール可能な工程",
+        "description": "ワンクリックのブラックボックスではありません。歌詞、キー、ジャンル、ボーカル、リズム、ポーズはすべて調整可能。自由に、あるいはプロデューサーのように精密に。"
+      },
+      "endToEnd": {
+        "title": "インスピレーションから完成曲まで",
+        "description": "一つのワークフローで、ドラフト、共同編集、バージョン管理、カバーと歌詞の管理、エクスポートとリリースまで。10個のツールを行き来する必要はありません。"
+      },
+      "aiCover": {
+        "title": "AIカバー",
+        "description": "ワンクリックで楽曲を変換。ポップからジャズへ、ロックからフォークへ。音楽に無限の可能性を。"
+      }
+    }
+  },
+  "howItWorks": {
+    "eyebrow": "ワークフロー",
+    "heading": "インスピレーションからリリースまで、4ステップ",
+    "description": "すべての工程でクリエイターが主導。パイプラインに引きずられることはありません。",
+    "steps": {
+      "describe": {
+        "step": "01",
+        "title": "インスピレーションを記述",
+        "description": "一行の歌詞、一枚の画像、一つの気分。Kiyoがそれをジャンル、感情、セクション構造に変換します。"
+      },
+      "generate": {
+        "step": "02",
+        "title": "共同生成",
+        "description": "複数モデルが並列でドラフトを作成。バース、コーラス、ブリッジのバリエーションを横並びで表示。好きなものを選べば、Kiyoが続きを作ります。"
+      },
+      "refine": {
+        "step": "03",
+        "title": "微調整とボーカル",
+        "description": "テンポを調整、キーを変更、音色を交換、AIボーカルを重ねる。男性、女性、アーティキュレーションスタイル、すべて指示可能です。"
+      },
+      "release": {
+        "step": "04",
+        "title": "ミックスとリリース",
+        "description": "ワンクリックでマスタリング、ロスレスまたはストリーミング対応でエクスポート。数分で完成曲に。"
+      }
+    }
+  },
+  "showcase": {
+    "viewAll": "すべての楽曲を見る",
+    "eyebrow": "ショーケース",
+    "heading": "Kiyoで制作されたサンプルトラック",
+    "description": "シンセウェイブからシネマティック、ローファイからフューチャーファンク。ジャンルは出発点にすぎません。",
+    "tracks": {
+      "cityNight": {
+        "title": "City Nightdrive",
+        "genre": "シンセウェイブ",
+        "mood": "クール · ドリフト"
+      },
+      "summerBird": {
+        "title": "Late-Summer Bird",
+        "genre": "ローファイ · シティポップ",
+        "mood": "暖かい · のんびり"
+      },
+      "blackstone": {
+        "title": "Blackstone Heart",
+        "genre": "シネマティックロック",
+        "mood": "ハイコントラスト · 緊張感"
+      },
+      "tide": {
+        "title": "Tide 04:00",
+        "genre": "アンビエントエレクトロニック",
+        "mood": "深宇宙 · 静寂"
+      },
+      "radio12": {
+        "title": "Radio 12F",
+        "genre": "フューチャーファンク",
+        "mood": "彩度高い · グルーヴ"
+      },
+      "weightlessGarden": {
+        "title": "Weightless Garden",
+        "genre": "ドリームポップ",
+        "mood": "柔らかい光 · 浮遊感"
+      }
+    }
+  },
+  "explore": {
+    "title": "楽曲を探索",
+    "description": "AI生成の音楽を発見",
+    "search": {
+      "label": "楽曲を検索",
+      "placeholder": "楽曲タイトルで検索",
+      "submit": "検索",
+      "clear": "検索をクリア"
+    },
+    "filters": {
+      "genre": "ジャンル",
+      "mood": "気分",
+      "all": "すべて",
+      "clearAll": "フィルターをすべてクリア"
+    },
+    "empty": {
+      "title": "楽曲がありません",
+      "description": "現在のフィルターに一致する楽曲がありません。他のフィルターをお試しください。",
+      "searchTitle": "一致する楽曲がありません",
+      "searchDescription": "「{query}」に一致する公開楽曲がありません。別のキーワードをお試しください。"
+    },
+    "retry": "再試行",
+    "allLoaded": "すべての楽曲を読み込みました",
+    "defaultGenre": "音楽",
+    "defaultMood": "様々"
+  },
+  "finalCta": {
+    "headline": {
+      "prefix": "ハミングしているメロディを",
+      "highlight": "完成曲に",
+      "suffix": "変えよう"
+    },
+    "description": "Kiyoはプライベートベータ中です。メールアドレスを残してウェイトリストに参加すれば、ローンチの瞬間にお知らせします。",
+    "cta": {
+      "primary": "ウェイトリストに参加",
+      "secondary": "詳細を見る"
+    },
+    "authenticated": {
+      "headline": "お帰りなさい。創作を続けましょう",
+      "description": "次のメロディがあなたを待っています。",
+      "cta": "ダッシュボードへ"
+    }
+  },
+  "waitlist": {
+    "title": "Kiyoウェイトリストに参加",
+    "description": "メールアドレスを残して、ローンチの瞬間をお知らせします。",
+    "inline": {
+      "expand": "ニーズをよりよく理解するため、詳細を教えてください",
+      "collapse": "折りたたむ",
+      "thanks": "参加ありがとうございます！ローンチの瞬間にお知らせします。"
+    },
+    "fields": {
+      "email": {
+        "label": "メールアドレス",
+        "placeholder": "you@example.com"
+      },
+      "role": {
+        "label": "音楽制作における役割（任意）",
+        "options": {
+          "beginner": "音楽初心者",
+          "enthusiast": "音楽愛好家",
+          "indie": "インディープロデューサー",
+          "professional": "プロミュージシャン",
+          "songwriter": "ソングライター",
+          "other": "その他"
+        }
+      },
+      "interests": {
+        "label": "興味のある機能（複数選択可）",
+        "options": {
+          "composition": "AI作曲",
+          "arrangement": "AIアレンジメント",
+          "vocal": "ボーカルシンセシス",
+          "mixing": "ミキシング＆マスタリング",
+          "cover": "AIカバー",
+          "lyrics": "スマート歌詞作成"
+        }
+      },
+      "useScenes": {
+        "label": "使用シーン（複数選択可）",
+        "options": {
+          "personal": "個人創作",
+          "commercial": "商業プロジェクト",
+          "education": "教育",
+          "social": "ソーシャルシェア"
+        }
+      }
+    },
+    "actions": {
+      "cancel": "キャンセル",
+      "submit": "ウェイトリストに参加",
+      "submitting": "送信中…"
+    },
+    "toast": {
+      "success": {
+        "title": "ウェイトリストに参加しました！",
+        "description": "ローンチの瞬間にメールでお知らせします。"
+      },
+      "duplicate": "このメールアドレスはすでにウェイトリストに登録されています。更新が必要な場合は hello@kiyo.ai までご連絡ください。",
+      "invalid": "メールアドレスの形式を確認して、もう一度お試しください。",
+      "unknown": "後でもう一度お試しください。または hello@kiyo.ai までご連絡ください。"
+    }
+  },
+  "common": {
+    "actions": {
+      "save": "保存",
+      "cancel": "キャンセル",
+      "delete": "削除",
+      "create": "作成",
+      "edit": "編集",
+      "back": "一覧に戻る",
+      "backToDetail": "詳細に戻る",
+      "confirm": "確認",
+      "generate": "生成",
+      "export": "エクスポート",
+      "add": "追加",
+      "search": "検索…",
+      "viewFull": "全画面表示",
+      "optional": "任意",
+      "login": "ログイン",
+      "done": "完了",
+      "hide": "隠す",
+      "show": "表示"
+    },
+    "ariaLabels": {
+      "pageLoading": "ページ読み込み中",
+      "songsLoading": "楽曲リスト読み込み中",
+      "albumsLoading": "アルバムリスト読み込み中"
+    },
+    "noAudio": "オーディオがありません",
+    "themeToggle": {
+      "switch": "テーマを切り替え",
+      "toDark": "ダークモードに切り替え",
+      "toLight": "ライトモードに切り替え"
+    },
+    "error": {
+      "title": "問題が発生しました",
+      "description": "予期しないエラーが発生しました。再試行するか、ホームページに戻ってください。",
+      "id": "エラーID: {digest}",
+      "retry": "再試行",
+      "backToHome": "ホームに戻る"
+    },
+    "states": {
+      "saving": "保存中…",
+      "loading": "読み込み中…",
+      "generating": "生成中…",
+      "deleting": "削除中…",
+      "submitting": "送信中…",
+      "exporting": "エクスポート中…",
+      "uploading": "アップロード中…",
+      "adding": "追加中…",
+      "updating": "更新中…",
+      "retry": "再試行"
+    },
+    "errors": {
+      "network": "ネットワークエラーが発生しました。もう一度お試しください。",
+      "unknown": "問題が発生しました",
+      "required": "この項目は必須です",
+      "notFound": "見つかりません",
+      "loadFailed": "読み込みに失敗しました",
+      "saveFailed": "保存に失敗しました",
+      "createFailed": "作成に失敗しました",
+      "unauthorized": "続行するにはログインしてください",
+      "validationError": "入力内容を確認してください",
+      "deleteFailed": "削除に失敗しました",
+      "exportFailed": "エクスポートに失敗しました。後でもう一度お試しください。",
+      "uploadFailed": "アップロードに失敗しました: {message}",
+      "fileTooLarge": "ファイルサイズは50MBを超えることはできません",
+      "addFailed": "追加に失敗しました",
+      "updateFailed": "更新に失敗しました",
+      "loginRequired": "楽曲を表示するにはログインが必要です"
+    },
+    "empty": {
+      "songs": {
+        "title": "楽曲がありません",
+        "description": "最初の楽曲を作成"
+      },
+      "albums": {
+        "title": "アルバムがありません",
+        "description": "最初のアルバムを作成"
+      },
+      "lyrics": {
+        "title": "歌詞がありません",
+        "description": "最初の歌詞を作成"
+      }
+    }
+  },
+  "songs": {
+    "list": {
+      "title": "楽曲",
+      "new": "AI作曲",
+      "generate": "AI作曲",
+      "cover": "AIカバー"
+    },
+    "new": {
+      "title": "AI作曲",
+      "fields": {
+        "prompt": "テーマの説明",
+        "title": "楽曲タイトル",
+        "genre": "ジャンル（任意）",
+        "mood": "気分（任意）",
+        "language": "言語（任意）",
+        "mode": "作曲モード",
+        "lyric": "関連歌詞",
+        "noLyric": "なし",
+        "aiPrompt": "AI生成プロンプト"
+      },
+      "placeholders": {
+        "prompt": "作りたい音楽を説明してください。例：夏についてのポップソング",
+        "title": "楽曲タイトルを入力",
+        "genre": "例：ポップ",
+        "mood": "例：明るい",
+        "aiPrompt": "この楽曲の生成に使用したプロンプトを説明"
+      },
+      "mode": {
+        "instrumental": {
+          "label": "インストゥルメンタル",
+          "desc": "歌詞なしのインストゥルメンタルのみを生成"
+        },
+        "auto_lyrics": {
+          "label": "自動歌詞",
+          "desc": "AIが自動で歌詞を作成し作曲"
+        },
+        "existing_lyric": {
+          "label": "既存の歌詞",
+          "desc": "既存の歌詞を使用して作曲"
+        }
+      },
+      "languageUnlimited": "指定なし",
+      "selectLyric": "歌詞を選択",
+      "noLyrics": "利用可能な歌詞がありません。先に歌詞を作成してください",
+      "error": {
+        "emptyPrompt": "テーマの説明は空にできません",
+        "emptyTitle": "楽曲タイトルは空にできません",
+        "noLyricSelected": "関連する歌詞を選択してください"
+      },
+      "submit": "作曲を開始"
+    },
+    "detail": {
+      "back": "一覧に戻る",
+      "edit": "編集",
+      "delete": "削除",
+      "deleteConfirmTitle": "楽曲の削除を確認",
+      "deleteConfirmDescription": "「{title}」を削除してもよろしいですか？この操作は元に戻せず、オーディオファイルも削除されます。",
+      "aiCover": "AIカバー",
+      "export": "オーディオをエクスポート",
+      "audioPreview": "オーディオプレビュー",
+      "lyrics": "歌詞",
+      "viewFullLyrics": "歌詞をすべて表示",
+      "coverStyle": "カバースタイル",
+      "compareOriginal": "オリジナルと比較",
+      "original": "オリジナル",
+      "cover": {
+        "generate": "カバーを生成",
+        "regenerate": "再生成",
+        "upload": "カバーをアップロード",
+        "replace": "カバーを変更",
+        "generating": "生成中…",
+        "retry": "再試行",
+        "error": "生成に失敗しました。もう一度お試しください",
+        "success": "カバーの生成が完了しました",
+        "uploadSuccess": "カバーのアップロードが完了しました"
+      },
+      "aiPrompt": "生成プロンプト",
+      "status": {
+        "draft": {
+          "title": "楽曲がまだ生成されていません",
+          "desc": "この楽曲には音楽が生成されていません",
+          "action": "音楽を生成"
+        },
+        "failed": {
+          "title": "音楽の生成に失敗しました",
+          "desc": "内容を確認して再試行してください",
+          "action": "再試行",
+          "error": "生成に失敗しました。もう一度お試しください"
+        },
+        "generating": {
+          "title": "音楽を生成中です。しばらくお待ちください…",
+          "hint": "通常数分かかります。しばらくお待ちください"
+        },
+        "errors": {
+          "network": "ネットワークエラーが発生しました。もう一度お試しください"
+        }
+      },
+      "source": {
+        "ai_generated": "AI生成",
+        "ai_cover": "AIカバー",
+        "manual": "手動"
+      },
+      "lyricRequired": "音楽を生成する前に歌詞を関連付ける必要があります"
+    },
+    "edit": {
+      "title": "楽曲を編集",
+      "back": "詳細に戻る"
+    },
+    "generate": {
+      "title": "AI作曲",
+      "fields": {
+        "prompt": "テーマの説明",
+        "genre": "ジャンル（任意）",
+        "mood": "気分（任意）",
+        "language": "言語（任意）",
+        "mode": "作曲モード"
+      },
+      "placeholders": {
+        "prompt": "作りたい音楽を説明してください。例：夏についてのポップソング",
+        "genre": "例：ポップ",
+        "mood": "例：明るい"
+      },
+      "mode": {
+        "instrumental": {
+          "label": "インストゥルメンタル",
+          "desc": "歌詞なしのインストゥルメンタルのみを生成"
+        },
+        "auto_lyrics": {
+          "label": "自動歌詞",
+          "desc": "AIが自動で歌詞を作成し作曲"
+        },
+        "existing_lyric": {
+          "label": "既存の歌詞",
+          "desc": "既存の歌詞を使用して作曲"
+        }
+      },
+      "languageUnlimited": "指定なし",
+      "selectLyric": "歌詞を選択",
+      "noLyrics": "利用可能な歌詞がありません。先に歌詞を作成してください",
+      "error": {
+        "emptyPrompt": "テーマの説明は空にできません",
+        "noLyricSelected": "関連する歌詞を選択してください"
+      },
+      "submit": "作曲を開始"
+    },
+    "cover": {
+      "title": "AIカバー",
+      "source": {
+        "label": "オーディオソース",
+        "existing": "既存の楽曲から",
+        "upload": "オーディオをアップロード"
+      },
+      "selectSong": "楽曲を選択",
+      "upload": {
+        "label": "オーディオをアップロード",
+        "success": "オーディオをアップロードしました",
+        "formats": "MP3、WAV、FLAC対応、最大50MB"
+      },
+      "style": {
+        "label": "カバースタイル",
+        "options": [
+          {
+            "label": "ポップロック",
+            "prompt": "ポップロックバージョン、テンポアップ、エレクトリックギタードリブン"
+          },
+          {
+            "label": "ジャズピアノ",
+            "prompt": "ジャズピアノバージョン、ゆるやかなサックス、リラックスしたテンポ"
+          },
+          {
+            "label": "フォークギター",
+            "prompt": "フォークギターバージョン、フィンガースタイルギター、親密なボーカル"
+          },
+          {
+            "label": "EDM",
+            "prompt": "エレクトロニックダンスバージョン、強いビート、シンセパッド"
+          },
+          {
+            "label": "クラシックオーケストラ",
+            "prompt": "クラシックオーケストラバージョン、ストリングアレンジメント、厳粛な雰囲気"
+          },
+          {
+            "label": "ローファイリラックス",
+            "prompt": "ローファイリラックスバージョン、ビニールノイズ、夢のような雰囲気"
+          },
+          {
+            "label": "ロックメタル",
+            "prompt": "ロックメタルバージョン、ディストーションギター、パワフルなドラム"
+          },
+          {
+            "label": "ソウル",
+            "prompt": "ソウルバージョン、感情豊か、アドリブボーカル"
+          }
+        ]
+      },
+      "titleLabel": "タイトル（任意）",
+      "titlePlaceholder": "空欄の場合自動生成",
+      "error": {
+        "noAudio": "既存の楽曲を選択してください",
+        "noUpload": "オーディオファイルをアップロードしてください",
+        "noStyle": "カバースタイルを選択してください",
+        "noSongs": "利用可能な楽曲がありません。先に楽曲を作成して音楽を生成してください"
+      },
+      "submit": "カバーを開始"
+    },
+    "export": {
+      "title": "オーディオをエクスポート",
+      "song": "楽曲",
+      "format": "形式",
+      "formatValue": "MP3",
+      "success": "ダウンロードを開始しました",
+      "confirm": "エクスポートを確認"
+    }
+  },
+  "albums": {
+    "list": {
+      "title": "マイアルバム",
+      "new": "新規アルバム",
+      "songLibrary": "楽曲"
+    },
+    "detail": {
+      "back": "アルバム一覧に戻る",
+      "songList": "楽曲リスト",
+      "songCount": "{count} 曲",
+      "noSongs": {
+        "title": "アルバムに楽曲がありません",
+        "description": "アルバムを編集して楽曲を追加"
+      }
+    },
+    "form": {
+      "createTitle": "新規アルバム",
+      "editTitle": "アルバムを編集",
+      "name": "アルバム名",
+      "namePlaceholder": "アルバム名を入力",
+      "description": "説明（任意）",
+      "descriptionPlaceholder": "アルバムの説明を入力",
+      "selectSongs": "楽曲を選択",
+      "save": "保存",
+      "dialogDescription": "アルバム情報を入力して保存",
+      "songSelector": {
+        "hint": "後から楽曲を追加することもできます",
+        "empty": "楽曲がありません。先にアルバムを作成し、楽曲ライブラリから追加してください"
+      }
+    },
+    "delete": {
+      "title": "削除の確認",
+      "description": "アルバム <strong>{title}</strong> を削除してもよろしいですか？この操作は元に戻せませんが、楽曲は影響を受けません。"
+    },
+    "addSongs": {
+      "title": "楽曲をアルバムに追加",
+      "empty": "利用可能な楽曲がありません",
+      "selectedCount": "追加 ({count})",
+      "noSongsHint": "利用可能な楽曲がありません",
+      "success": "{count} 曲をアルバムに追加しました"
+    },
+    "cover": {
+      "generating": "生成中…",
+      "regenerate": "再生成",
+      "upload": "カバーをアップロード",
+      "replace": "カバーを変更",
+      "retry": "再試行",
+      "generate": "カバーを生成",
+      "error": "生成に失敗しました。もう一度お試しください",
+      "success": "カバーの生成が完了しました",
+      "uploadSuccess": "カバーのアップロードが完了しました"
+    },
+    "reorder": {
+      "saving": "順序を保存中…",
+      "failed": "順序の更新に失敗しました"
+    }
+  },
+  "lyrics": {
+    "list": {
+      "title": "マイ歌詞",
+      "new": "新規歌詞",
+      "generate": "AI歌詞生成"
+    },
+    "new": {
+      "title": "新規歌詞",
+      "fields": {
+        "title": "タイトル",
+        "language": "言語",
+        "style": "スタイル",
+        "mood": "気分",
+        "content": "内容"
+      },
+      "placeholders": {
+        "title": "歌詞のタイトル",
+        "language": "例：ja、en",
+        "style": "例：ポップ、ロック",
+        "mood": "例：感動的、悲しい",
+        "content": "歌詞をここに入力。[Verse]、[Chorus] タグも使用可能…"
+      },
+      "error": {
+        "emptyTitle": "タイトルは必須です",
+        "emptyContent": "内容は必須です"
+      }
+    },
+    "detail": {
+      "back": "一覧に戻る",
+      "edit": "編集",
+      "generateSong": "音楽を生成",
+      "linkedSongs": "関連楽曲",
+      "noLinkedSongs": {
+        "title": "関連楽曲がありません",
+        "description": "上のボタンから音楽を生成"
+      },
+      "source": {
+        "ai": "AI",
+        "manual": "手動"
+      },
+      "composed": "作曲済み",
+      "noLanguage": "未指定",
+      "noStyle": "未指定"
+    },
+    "edit": {
+      "title": "歌詞を編集",
+      "back": "詳細に戻る",
+      "contentLabel": "歌詞の内容"
+    },
+    "generate": {
+      "title": "AI歌詞生成",
+      "subtitle": "曲のテーマを説明すると、AIが完全な歌詞を作成します",
+      "guidance": {
+        "title": "何を書けばいいか分からない？AIが手助けします",
+        "description": "希望するテーマ、スタイル、気分を入力すれば、AIが完全な歌詞を作成します。具体的な物語、感情、音楽のインスピレーションなど、何でも構いません。"
+      },
+      "fields": {
+        "prompt": "テーマの説明",
+        "language": "言語",
+        "style": "スタイル（任意）",
+        "mood": "気分（任意）"
+      },
+      "placeholders": {
+        "prompt": "例：青春のキャンパスについての感動的な歌",
+        "style": "ポップ、ロック…",
+        "mood": "感動的、悲しい…"
+      },
+      "submit": "歌詞を生成",
+      "error": {
+        "failed": "生成に失敗しました。後でもう一度お試しください",
+        "network": "生成に失敗しました。ネットワークを確認してください"
+      }
+    },
+    "generateSong": {
+      "title": "歌詞から音楽を生成",
+      "emptyWarning": "歌詞の内容が空のため、音楽を生成できません",
+      "fields": {
+        "prompt": "テーマの説明",
+        "genre": "ジャンル（任意）",
+        "mood": "気分（任意）",
+        "language": "言語（任意）"
+      },
+      "placeholders": {
+        "prompt": "作りたい音楽を説明",
+        "genre": "例：ポップ",
+        "mood": "例：明るい"
+      },
+      "preview": "歌詞プレビュー",
+      "noContent": "（内容なし）",
+      "submit": "生成を開始",
+      "successTitle": "生成完了",
+      "successDescription": "楽曲が生成されました。表示するか、歌詞ページに留まることができます。",
+      "viewSong": "楽曲を見る",
+      "continueHere": "歌詞ページに留まる",
+      "successMessage": "楽曲が生成されました。クリックして表示"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "プライバシーポリシー",
+      "description": "Kiyoが情報を収集、使用、保護する方法",
+      "lastUpdated": "最終更新日：2026年5月10日",
+      "sections": {
+        "intro": {
+          "title": "はじめに",
+          "p1": "Kiyo（「当社」「私たち」または「弊社」）は、お客様のプライバシーを保護することをお約束します。本プライバシーポリシーは、当社のAI音楽制作プラットフォームをご利用いただく際に、当社がどのように情報を収集、使用、開示、保護するかを説明します。",
+          "p2": "当社のサービスをご利用いただくことで、お客様は本ポリシーに従った情報の収集と使用に同意したものとみなされます。"
+        },
+        "collection": {
+          "title": "収集する情報",
+          "p1": "当社は以下の種類の情報を収集します：",
+          "items": {
+            "email": "登録時のアカウント情報（メールアドレス、パスワード）",
+            "content": "お客様が作成したコンテンツ（歌詞、楽曲、アルバム）",
+            "usage": "利用データ（プラットフォームとのやり取り、使用した機能）",
+            "cookies": "Cookieおよび類似の追跡技術"
+          }
+        },
+        "usage": {
+          "title": "情報の使用方法",
+          "p1": "収集した情報は以下の目的で使用します：",
+          "items": {
+            "service": "サービスの提供、維持、改善",
+            "personalization": "体験のパーソナライズ",
+            "ai": "AIモデル（Minimax）を通じたコンテンツ処理と音楽生成",
+            "communication": "サービス関連の通知と更新の送信"
+          }
+        },
+        "storage": {
+          "title": "データの保存とセキュリティ",
+          "p1": "お客様のデータは、業界標準の暗号化を使用してSupabase（当社のバックエンドインフラストラクチャ）に安全に保存されます。",
+          "p2": "オーディオファイルやユーザーコンテンツは、安全なオブジェクトストレージに保存され、定期的にバックアップされます。"
+        },
+        "thirdParty": {
+          "title": "第三者サービス",
+          "p1": "当社は、お客様のデータにアクセスする可能性のある第三者サービスを使用しています：",
+          "items": {
+            "supabase": "Supabase - バックエンドデータベースと認証",
+            "minimax": "Minimax - 音楽生成のAIモデルプロバイダー",
+            "vercel": "Vercel - ホスティングとデプロイメントプラットフォーム"
+          }
+        },
+        "rights": {
+          "title": "お客様の権利",
+          "p1": "お客様の個人データに関して、以下の権利があります：",
+          "items": {
+            "access": "個人データへのアクセス権",
+            "correction": "不正確なデータの訂正権",
+            "deletion": "データの削除をリクエストする権利",
+            "withdraw": "同意の撤回権"
+          },
+          "contact": "これらの権利を行使するには、以下までご連絡ください："
+        },
+        "security": {
+          "title": "データセキュリティ",
+          "p1": "当社は、不正アクセス、変更、開示、破壊から個人データを保護するため、適切な技術的および組織的対策を実施しています。"
+        },
+        "changes": {
+          "title": "本ポリシーの変更",
+          "p1": "当社は、本プライバシーポリシーを随時更新することがあります。変更がある場合は、このページに新しいポリシーを掲載し、「最終更新日」を更新することで通知します。"
+        },
+        "contact": {
+          "title": "お問い合わせ",
+          "p1": "本プライバシーポリシーについてご質問がある場合は、以下までご連絡ください："
+        }
+      }
+    },
+    "terms": {
+      "title": "利用規約",
+      "description": "Kiyoの利用に関する規約と条件",
+      "lastUpdated": "最終更新日：2026年5月10日",
+      "sections": {
+        "intro": {
+          "title": "規約への同意",
+          "p1": "本利用規約（「規約」）は、Kiyo（「当社」「私たち」または「弊社」）が運営するAI音楽制作プラットフォームへのアクセスと使用を規制します。",
+          "p2": "当社のサービスにアクセスまたは使用することで、お客様は本規約に拘束されることに同意したものとみなされます。規約の一部に同意されない場合は、サービスにアクセスしないでください。"
+        },
+        "service": {
+          "title": "サービスの説明",
+          "p1": "Kiyoは、人工知能モデルを使用して音楽を生成、編集、管理できるAI音楽制作プラットフォームを提供します。",
+          "p2": "当社は、いつでもサービスの一部を修正、停止、または中止する権利を留保します。"
+        },
+        "account": {
+          "title": "ユーザーアカウント",
+          "p1": "特定の機能にアクセスするには、アカウントを作成する必要があります。お客様は以下に同意します：",
+          "items": {
+            "register": "正確かつ完全な登録情報を提供すること",
+            "accurate": "アカウント情報を最新の状態に保つこと",
+            "security": "アカウント認証情報のセキュリティを維持すること",
+            "age": "アカウント作成には最低16歳であること"
+          }
+        },
+        "content": {
+          "title": "ユーザーコンテンツと知的財産",
+          "p1": "お客様は、Kiyoを使用して作成したコンテンツの所有権を保持します。コンテンツをアップロードまたは作成することで、当社はサービスを提供するためにそれを使用、保存、処理するライセンスを付与したものとみなされます。",
+          "p2": "当社のプラットフォームを使用して生成されたAI音楽は、本規約に従い、個人的および商業的目的で使用できます。"
+        },
+        "prohibited": {
+          "title": "禁止行為",
+          "p1": "お客様は以下の行為を行わないことに同意します：",
+          "items": {
+            "illegal": "違法な目的でサービスを使用すること",
+            "infringe": "他者の知的財産権を侵害すること",
+            "harmful": "有害、攻撃的、または他者の権利を侵害するコンテンツをアップロードすること",
+            "spam": "スパムを送信したり、マルウェアを配布したりすること"
+          }
+        },
+        "changes": {
+          "title": "規約の変更",
+          "p1": "当社は、いつでも本規約を変更する権利を留保します。重大な変更がある場合は、このページに更新された規約を掲載することで通知します。"
+        },
+        "termination": {
+          "title": "利用停止",
+          "p1": "当社は、本規約の違反を含むいかなる理由でも、事前通知なく、お客様のサービスへのアクセスを直ちに終了または停止することができます。"
+        },
+        "disclaimer": {
+          "title": "免責事項",
+          "p1": "本サービスは「現状有姿」および「利用可能な範囲で」提供され、いかなる種類の保証もありません。",
+          "p2": "当社は、サービスが中断なく、安全で、またはエラーフリーであることを保証しません。"
+        },
+        "law": {
+          "title": "準拠法",
+          "p1": "本規約は、適用法に準拠し、同法に従って解釈されるものとします。"
+        },
+        "contact": {
+          "title": "お問い合わせ",
+          "p1": "本規約についてご質問がある場合は、以下までご連絡ください："
+        }
+      }
+    }
+  },
+  "notification": {
+    "title": "通知",
+    "markAllAsRead": "すべて既読にする",
+    "empty": "通知はありません",
+    "generation": {
+      "started": "⏳ 「{songTitle}」の生成を開始しました",
+      "completed": "🎵 「{songTitle}」の生成が完了しました！クリックして聴く",
+      "failed": "❌ 「{songTitle}」の生成に失敗しました。もう一度お試しください"
+    }
+  },
+  "share": {
+    "button": "シェア",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました！",
+    "copyFailed": "リンクのコピーに失敗しました",
+    "shareTwitter": "Xでシェア",
+    "twitterText": "Kiyoで作成",
+    "makingPublic": "公開設定中…",
+    "madePublic": "公開設定完了、リンクをコピーしました！",
+    "makePublicFailed": "公開設定に失敗しました",
+    "loginToPlay": "ログインして再生",
+    "playOnKiyo": "Kiyoで表示"
+  },
+  "settings": {
+    "title": "設定",
+    "emailSection": {
+      "title": "メールアドレスを変更",
+      "description": "ログイン用のメールアドレスを変更",
+      "newEmail": "新しいメールアドレス",
+      "currentPassword": "現在のパスワード",
+      "currentPasswordIncorrect": "現在のパスワードが正しくありません",
+      "submit": "メールアドレスを更新",
+      "success": "新しいアドレスに確認メールを送信しました"
+    },
+    "passwordSection": {
+      "title": "パスワードを変更",
+      "description": "アカウントのパスワードを更新",
+      "currentPassword": "現在のパスワード",
+      "currentPasswordIncorrect": "現在のパスワードが正しくありません",
+      "newPassword": "新しいパスワード",
+      "confirmPassword": "新しいパスワード（確認）",
+      "submit": "パスワードを変更",
+      "success": "パスワードを更新しました"
+    },
+    "dangerZone": {
+      "title": "危険な操作",
+      "description": "これらの操作は元に戻せません。慎重に進めてください。",
+      "deleteAccount": {
+        "title": "アカウントを削除",
+        "description": "アカウントとすべてのデータを完全に削除",
+        "button": "アカウントを削除",
+        "dialog": {
+          "warnTitle": "アカウントを削除してもよろしいですか？",
+          "warnDescription": "アカウントとすべてのデータ（楽曲、アルバム、歌詞、アップロードしたオーディオファイルを含む）が完全に削除されます。この操作は元に戻せません。",
+          "continue": "リスクを理解しました。続行",
+          "verifyTitle": "パスワードを確認",
+          "verifyDescription": "本人確認のため、現在のパスワードを入力してください",
+          "verifyPlaceholder": "現在のパスワード",
+          "confirmTitle": "削除を確認",
+          "confirmDescription": "完全なアカウント削除を確認するため、DELETE と入力してください",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "アカウントを完全に削除",
+          "deleting": "アカウントを削除中…",
+          "success": "アカウントの削除が完了しました",
+          "noPassword": "マジックリンクでログインしています。アカウントを削除する前にパスワードを設定してください。",
+          "error": "削除に失敗しました。後でもう一度お試しください。またはサポートにご連絡ください。"
+        }
+      }
+    }
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "stats": {
+      "songs": {
+        "label": "楽曲",
+        "completed": "{count} 曲完了"
+      },
+      "lyrics": {
+        "label": "歌詞",
+        "composed": "{count} 曲作曲済み"
+      },
+      "albums": {
+        "label": "アルバム",
+        "totalSongs": "{count} 曲"
+      },
+      "generating": {
+        "label": "生成中",
+        "description": "生成中の楽曲"
+      }
+    },
+    "quickActions": "クイックアクション",
+    "newSong": "新規楽曲",
+    "aiCompose": "AI作曲",
+    "aiCover": "AIカバー",
+    "newLyric": "新規歌詞",
+    "newAlbum": "新規アルバム",
+    "recent": {
+      "title": "最近のプロジェクト",
+      "viewAll": "すべて表示",
+      "empty": "最近のアクティビティはありません"
+    }
+  },
+  "player": {
+    "prev": "前へ",
+    "next": "次へ",
+    "play": "再生",
+    "pause": "一時停止",
+    "shuffle": "シャッフル",
+    "repeat": "リピート",
+    "repeatOne": "1曲リピート",
+    "mute": "ミュート",
+    "unmute": "ミュート解除",
+    "volume": "音量",
+    "expand": "プレイヤーを展開",
+    "collapse": "プレイヤーを折りたたむ",
+    "close": "プレイヤーを閉じる",
+    "playlist": "プレイリスト",
+    "playSong": "{title} を再生",
+    "playingIndicator": "{title} を再生中",
+    "empty": "オーディオがありません"
+  }
+}
