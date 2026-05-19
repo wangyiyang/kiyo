@@ -3,19 +3,20 @@ import { captureAppException } from '@/lib/monitoring'
 import { generateMusic, MinimaxError } from '@kiyo/ai'
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
+import {
+  createUnauthorizedResponse,
+  createValidationResponse,
+  createNotFoundResponse,
+} from '@/lib/api-utils'
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  // Rate limiting
   const rateLimit = await checkRateLimit('song_generate', user.id, request)
   if (!rateLimit.allowed) {
     return createRateLimitResponse(rateLimit)
@@ -29,17 +30,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
     .single()
 
   if (songError || !song) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'Song not found' } },
-      { status: 404 }
-    )
+    return createNotFoundResponse('Song')
   }
 
   if (!song.lyric_id) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Song must have a lyric to generate music' } },
-      { status: 400 }
-    )
+    return createValidationResponse('Song must have a lyric to generate music')
   }
 
   await supabase

@@ -1,15 +1,15 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
+import { createUnauthorizedResponse } from '@/lib/api-utils'
 
 export async function GET() {
   const supabase = await createServerClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return createUnauthorizedResponse()
   }
 
-  // Songs stats
   const { count: totalSongs } = await supabase
     .from('songs')
     .select('*', { count: 'exact', head: true })
@@ -27,7 +27,6 @@ export async function GET() {
     .eq('user_id', user.id)
     .eq('status', 'generating')
 
-  // Lyrics stats
   const { count: totalLyrics } = await supabase
     .from('lyrics')
     .select('*', { count: 'exact', head: true })
@@ -39,7 +38,6 @@ export async function GET() {
     .eq('user_id', user.id)
     .not('lyric_id', 'is', null)
 
-  // Albums stats
   const { count: totalAlbums } = await supabase
     .from('albums')
     .select('*', { count: 'exact', head: true })

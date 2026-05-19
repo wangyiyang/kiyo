@@ -1,24 +1,10 @@
 import { createServerClient, createServiceRoleClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
+import { createErrorResponse, parsePagination } from '@/lib/api-utils'
 
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 18
 const MAX_LIMIT = 50
-
-function parsePaginationParams(request: Request): { page: number; limit: number } {
-  const url = new URL(request.url)
-  const rawPage = url.searchParams.get('page')
-  const rawLimit = url.searchParams.get('limit')
-
-  let page = parseInt(rawPage ?? '', 10)
-  let limit = parseInt(rawLimit ?? '', 10)
-
-  if (!Number.isFinite(page) || page < 1) page = DEFAULT_PAGE
-  if (!Number.isFinite(limit) || limit < 1) limit = DEFAULT_LIMIT
-  if (limit > MAX_LIMIT) limit = MAX_LIMIT
-
-  return { page, limit }
-}
 
 function normalizeSearchParam(value: string | null): string | undefined {
   const normalized = value?.trim().toLowerCase()
@@ -40,14 +26,17 @@ interface SongRow {
 
 export async function GET(request: Request) {
   const supabase = await createServerClient()
-  const { page, limit } = parsePaginationParams(request)
-
   const url = new URL(request.url)
+  const { page, limit, offset } = parsePagination(url.searchParams, {
+    page: DEFAULT_PAGE,
+    limit: DEFAULT_LIMIT,
+    maxLimit: MAX_LIMIT,
+  })
+
   const genre = url.searchParams.get('genre') || undefined
   const mood = url.searchParams.get('mood') || undefined
   const search = normalizeSearchParam(url.searchParams.get('q'))
 
-  // 1. Query all public songs through RLS (anonymous client)
   let query = supabase
     .from('songs')
     .select('id, title, genre, mood, cover_url, cover_file_path, audio_url, file_path, duration, created_at')
@@ -63,18 +52,14 @@ export async function GET(request: Request) {
   const { data: songs, error } = await query.order('created_at', { ascending: false })
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
-  // 2. Memory sort: songs with cover (cover_url OR cover_file_path) first, then created_at desc
-  const allSongs: SongRow[] = (songs ?? [])
-    .filter((song) => {
-      if (!search) return true
-      return song.title.toLowerCase().includes(search)
-    })
+  const allSongs: SongRow[] = (songs ?? []).filter((song) => {
+    if (!search) return true
+    return song.title.toLowerCase().includes(search)
+  })
+
   allSongs.sort((a, b) => {
     const aHasCover = (a.cover_url || a.cover_file_path) ? 1 : 0
     const bHasCover = (b.cover_url || b.cover_file_path) ? 1 : 0
@@ -87,11 +72,10 @@ export async function GET(request: Request) {
   })
 
   const total = allSongs.length
-  const from = (page - 1) * limit
+  const from = offset
   const to = page * limit
   const paginatedSongs = allSongs.slice(from, to)
 
-  // 3. Batch sign cover_file_path → cover_url (only if cover_url is empty)
   const songsNeedingSignature = paginatedSongs.filter(
     (s) => s.cover_file_path && !s.cover_url
   )

@@ -1,16 +1,60 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import type { Database } from '@kiyo/supabase'
 import { NextResponse } from 'next/server'
+import {
+  createUnauthorizedResponse,
+  createErrorResponse,
+  createValidationResponse,
+  createNotFoundResponse,
+  parseBody,
+  validateString,
+} from '@/lib/api-utils'
 
 const MAX_TITLE_LENGTH = 200
 const MAX_FIELD_LENGTH = 100
 const MAX_AI_PROMPT_LENGTH = 2000
 
-function validateString(value: unknown, name: string, maxLength: number): string | null {
-  if (typeof value !== 'string') return `${name} must be a string`
-  if (value.length === 0) return `${name} is required`
-  if (value.length > maxLength) return `${name} must be ${maxLength} characters or less`
-  return null
+function validateSongField(key: string, value: unknown): string | null {
+  switch (key) {
+    case 'title':
+      return validateString(value, 'Title', MAX_TITLE_LENGTH)
+    case 'ai_prompt':
+      return validateString(value, 'AI Prompt', MAX_AI_PROMPT_LENGTH)
+    case 'genre':
+    case 'mood':
+      return typeof value === 'string' ? validateString(value, key, MAX_FIELD_LENGTH) : null
+    default:
+      return null
+  }
+}
+
+async function fetchSong(
+  supabase: Awaited<ReturnType<typeof createServerClient>>,
+  id: string,
+  userId: string
+) {
+  const { data: song, error } = await supabase
+    .from('songs')
+    .select('*, lyrics(*)')
+    .eq('id', id)
+    .eq('user_id', userId)
+    .single()
+
+  if (error || !song) {
+    return null
+  }
+  return song
+}
+
+function extractStoragePath(audioUrl: string | null): string | null {
+  if (!audioUrl) return null
+  try {
+    const url = new URL(audioUrl)
+    const pathParts = url.pathname.split('/')
+    return pathParts.slice(pathParts.indexOf('audio') + 1).join('/')
+  } catch {
+    return null
+  }
 }
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
@@ -18,24 +62,12 @@ export async function GET(request: Request, { params }: { params: { id: string }
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  const { data: song, error } = await supabase
-    .from('songs')
-    .select('*, lyrics(*)')
-    .eq('id', params.id)
-    .eq('user_id', user.id)
-    .single()
-
-  if (error || !song) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'Song not found' } },
-      { status: 404 }
-    )
+  const song = await fetchSong(supabase, params.id, user.id)
+  if (!song) {
+    return createNotFoundResponse('Song')
   }
 
   return NextResponse.json({ song })
@@ -46,43 +78,21 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  const { data: existing } = await supabase
-    .from('songs')
-    .select('*')
-    .eq('id', params.id)
-    .eq('user_id', user.id)
-    .single()
-
+  const existing = await fetchSong(supabase, params.id, user.id)
   if (!existing) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'Song not found' } },
-      { status: 404 }
-    )
+    return createNotFoundResponse('Song')
   }
 
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON body' } },
-      { status: 400 }
-    )
-  }
+  const body = await parseBody<Record<string, unknown>>(request)
+  if (body instanceof NextResponse) return body
 
   const protectedFields = ['audio_url', 'status', 'duration']
   for (const field of protectedFields) {
     if (field in body) {
-      return NextResponse.json(
-        { error: { code: 'VALIDATION_ERROR', message: `Cannot update ${field} directly` } },
-        { status: 400 }
-      )
+      return createValidationResponse(`Cannot update ${field} directly`)
     }
   }
 
@@ -91,52 +101,25 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   for (const key of allowed) {
     if (key in body) {
-      if (key === 'title') {
-        const error = validateString(body[key], 'Title', MAX_TITLE_LENGTH)
-        if (error) {
-          return NextResponse.json(
-            { error: { code: 'VALIDATION_ERROR', message: error } },
-            { status: 400 }
-          )
-        }
-        updates[key] = body[key]
-      } else if (key === 'ai_prompt') {
-        const error = validateString(body[key], 'AI Prompt', MAX_AI_PROMPT_LENGTH)
-        if (error) {
-          return NextResponse.json(
-            { error: { code: 'VALIDATION_ERROR', message: error } },
-            { status: 400 }
-          )
-        }
-        updates[key] = body[key]
-      } else if (key === 'is_public') {
+      if (key === 'is_public') {
         if (typeof body[key] !== 'boolean') {
-          return NextResponse.json(
-            { error: { code: 'VALIDATION_ERROR', message: 'is_public must be a boolean' } },
-            { status: 400 }
-          )
-        }
-        updates[key] = body[key]
-      } else if (typeof body[key] === 'string') {
-        const error = validateString(body[key], key, MAX_FIELD_LENGTH)
-        if (error) {
-          return NextResponse.json(
-            { error: { code: 'VALIDATION_ERROR', message: error } },
-            { status: 400 }
-          )
+          return createValidationResponse('is_public must be a boolean')
         }
         updates[key] = body[key]
       } else if (body[key] === null) {
         updates[key] = null
+      } else {
+        const error = validateSongField(key, body[key])
+        if (error) {
+          return createValidationResponse(error)
+        }
+        updates[key] = body[key]
       }
     }
   }
 
   if (Object.keys(updates).length === 0) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'No valid fields to update' } },
-      { status: 400 }
-    )
+    return createValidationResponse('No valid fields to update')
   }
 
   const { data: song, error } = await supabase
@@ -148,10 +131,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     .single()
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
   return NextResponse.json({ song })
@@ -162,36 +142,15 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  const { data: existing } = await supabase
-    .from('songs')
-    .select('*')
-    .eq('id', params.id)
-    .eq('user_id', user.id)
-    .single()
-
+  const existing = await fetchSong(supabase, params.id, user.id)
   if (!existing) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'Song not found' } },
-      { status: 404 }
-    )
+    return createNotFoundResponse('Song')
   }
 
-  const storagePath = existing.file_path || (() => {
-    try {
-      if (!existing.audio_url) return null
-      const url = new URL(existing.audio_url)
-      const pathParts = url.pathname.split('/')
-      return pathParts.slice(pathParts.indexOf('audio') + 1).join('/')
-    } catch {
-      return null
-    }
-  })()
+  const storagePath = existing.file_path || extractStoragePath(existing.audio_url)
 
   if (storagePath) {
     await supabase.storage.from('audio').remove([storagePath])
@@ -204,10 +163,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     .eq('user_id', user.id)
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
   return NextResponse.json({ success: true })

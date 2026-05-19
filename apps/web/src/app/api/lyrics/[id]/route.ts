@@ -1,16 +1,46 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import type { Database } from '@kiyo/supabase'
 import { NextResponse } from 'next/server'
+import {
+  createUnauthorizedResponse,
+  createErrorResponse,
+  createValidationResponse,
+  createNotFoundResponse,
+  parseBody,
+  validateString,
+} from '@/lib/api-utils'
 
 const MAX_TITLE_LENGTH = 200
 const MAX_CONTENT_LENGTH = 10000
 const MAX_FIELD_LENGTH = 100
 
-function validateString(value: unknown, name: string, maxLength: number): string | null {
-  if (typeof value !== 'string') return `${name} must be a string`
-  if (value.length === 0) return `${name} is required`
-  if (value.length > maxLength) return `${name} must be ${maxLength} characters or less`
-  return null
+function validateLyricField(key: string, value: unknown): string | null {
+  switch (key) {
+    case 'title':
+      return validateString(value, 'Title', MAX_TITLE_LENGTH)
+    case 'content':
+      return validateString(value, 'Content', MAX_CONTENT_LENGTH)
+    case 'language':
+    case 'style':
+    case 'mood':
+      return typeof value === 'string' ? validateString(value, key, MAX_FIELD_LENGTH) : null
+    default:
+      return null
+  }
+}
+
+async function fetchLyric(supabase: Awaited<ReturnType<typeof createServerClient>>, id: string, userId: string): Promise<{ lyric: unknown } | null> {
+  const { data: lyric, error } = await supabase
+    .from('lyrics')
+    .select('*')
+    .eq('id', id)
+    .eq('user_id', userId)
+    .single()
+
+  if (error || !lyric) {
+    return null
+  }
+  return { lyric }
 }
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
@@ -18,34 +48,15 @@ export async function GET(request: Request, { params }: { params: { id: string }
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  const { data: lyric, error } = await supabase
-    .from('lyrics')
-    .select('*')
-    .eq('id', params.id)
-    .eq('user_id', user.id)
-    .single()
-
-  if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+  const result = await fetchLyric(supabase, params.id, user.id)
+  if (!result) {
+    return createNotFoundResponse('Lyric')
   }
 
-  if (!lyric) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'Lyric not found' } },
-      { status: 404 }
-    )
-  }
-
-  return NextResponse.json({ lyric })
+  return NextResponse.json({ lyric: result.lyric })
 }
 
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
@@ -53,77 +64,32 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  const { data: existing } = await supabase
-    .from('lyrics')
-    .select('*')
-    .eq('id', params.id)
-    .eq('user_id', user.id)
-    .single()
-
-  if (!existing) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'Lyric not found' } },
-      { status: 404 }
-    )
+  const existingResult = await fetchLyric(supabase, params.id, user.id)
+  if (!existingResult) {
+    return createNotFoundResponse('Lyric')
   }
 
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON body' } },
-      { status: 400 }
-    )
-  }
+  const body = await parseBody<Record<string, unknown>>(request)
+  if (body instanceof NextResponse) return body
 
   const allowed = ['title', 'content', 'language', 'style', 'mood', 'status']
   const updates: Record<string, unknown> = {}
 
   for (const key of allowed) {
     if (key in body) {
-      if (key === 'title') {
-        const error = validateString(body[key], 'Title', MAX_TITLE_LENGTH)
-        if (error) {
-          return NextResponse.json(
-            { error: { code: 'VALIDATION_ERROR', message: error } },
-            { status: 400 }
-          )
-        }
-        updates[key] = body[key]
-      } else if (key === 'content') {
-        const error = validateString(body[key], 'Content', MAX_CONTENT_LENGTH)
-        if (error) {
-          return NextResponse.json(
-            { error: { code: 'VALIDATION_ERROR', message: error } },
-            { status: 400 }
-          )
-        }
-        updates[key] = body[key]
-      } else if (typeof body[key] === 'string') {
-        const error = validateString(body[key], key, MAX_FIELD_LENGTH)
-        if (error) {
-          return NextResponse.json(
-            { error: { code: 'VALIDATION_ERROR', message: error } },
-            { status: 400 }
-          )
-        }
-        updates[key] = body[key]
+      const error = validateLyricField(key, body[key])
+      if (error) {
+        return createValidationResponse(error)
       }
+      updates[key] = body[key]
     }
   }
 
   if (Object.keys(updates).length === 0) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'No valid fields to update' } },
-      { status: 400 }
-    )
+    return createValidationResponse('No valid fields to update')
   }
 
   const { data: lyric, error } = await supabase
@@ -135,10 +101,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     .single()
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
   return NextResponse.json({ lyric })
@@ -149,27 +112,14 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  const { data: existing } = await supabase
-    .from('lyrics')
-    .select('*')
-    .eq('id', params.id)
-    .eq('user_id', user.id)
-    .single()
-
-  if (!existing) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'Lyric not found' } },
-      { status: 404 }
-    )
+  const existingResult = await fetchLyric(supabase, params.id, user.id)
+  if (!existingResult) {
+    return createNotFoundResponse('Lyric')
   }
 
-  // 检查是否有歌曲关联该歌词
   const { count: linkedCount } = await supabase
     .from('songs')
     .select('id', { count: 'exact' })
@@ -181,8 +131,8 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         error: {
           code: 'LYRIC_IN_USE',
           message: `该歌词已被 ${linkedCount} 首歌曲使用，请先解除关联或删除相关歌曲。`,
-          linkedSongCount: linkedCount
-        }
+          linkedSongCount: linkedCount,
+        },
       },
       { status: 409 }
     )
@@ -195,10 +145,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     .eq('user_id', user.id)
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
   return NextResponse.json({ success: true })

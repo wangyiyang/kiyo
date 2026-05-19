@@ -1,5 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
-import { NextResponse } from 'next/server'
+import { createUnauthorizedResponse, createErrorResponse } from '@/lib/api-utils'
 
 export async function PATCH(
   request: Request,
@@ -9,10 +9,7 @@ export async function PATCH(
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
   const { error } = await supabase
@@ -22,10 +19,7 @@ export async function PATCH(
     .eq('user_id', user.id)
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
   return new Response(null, { status: 200 })

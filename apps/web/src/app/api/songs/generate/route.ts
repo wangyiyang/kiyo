@@ -3,6 +3,14 @@ import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { triggerGenerationWorker } from '@/lib/generation-worker'
 import { normalizeTag } from '@/lib/tag-normalization'
 import { NextResponse } from 'next/server'
+import {
+  createUnauthorizedResponse,
+  createErrorResponse,
+  createValidationResponse,
+  createNotFoundResponse,
+  createForbiddenResponse,
+  parseBody,
+} from '@/lib/api-utils'
 
 const VALID_MODES = ['instrumental', 'auto_lyrics', 'existing_lyric'] as const
 type Mode = (typeof VALID_MODES)[number]
@@ -29,57 +37,34 @@ export async function POST(request: Request) {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  // Rate limiting
   const rateLimit = await checkRateLimit('song_generate', user.id, request)
   if (!rateLimit.allowed) {
     return createRateLimitResponse(rateLimit)
   }
 
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON body' } },
-      { status: 400 }
-    )
-  }
+  const body = await parseBody<Record<string, unknown>>(request)
+  if (body instanceof NextResponse) return body
 
   const { prompt, mode, genre, mood, language, lyric_id, title } = body
 
   if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Prompt is required' } },
-      { status: 400 }
-    )
+    return createValidationResponse('Prompt is required')
   }
 
   if (!title || typeof title !== 'string' || title.trim() === '') {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Title is required' } },
-      { status: 400 }
-    )
+    return createValidationResponse('Title is required')
   }
 
   if (!VALID_MODES.includes(mode as Mode)) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid mode' } },
-      { status: 400 }
-    )
+    return createValidationResponse('Invalid mode')
   }
 
   if (mode === 'existing_lyric') {
     if (!lyric_id || typeof lyric_id !== 'string') {
-      return NextResponse.json(
-        { error: { code: 'VALIDATION_ERROR', message: 'lyric_id is required for existing_lyric mode' } },
-        { status: 400 }
-      )
+      return createValidationResponse('lyric_id is required for existing_lyric mode')
     }
 
     const { data: lyric, error: lyricError } = await supabase
@@ -89,17 +74,11 @@ export async function POST(request: Request) {
       .single()
 
     if (lyricError || !lyric) {
-      return NextResponse.json(
-        { error: { code: 'NOT_FOUND', message: 'Lyric not found' } },
-        { status: 404 }
-      )
+      return createNotFoundResponse('Lyric')
     }
 
     if (lyric.user_id !== user.id) {
-      return NextResponse.json(
-        { error: { code: 'FORBIDDEN', message: 'You do not have permission to use this lyric' } },
-        { status: 403 }
-      )
+      return createForbiddenResponse('You do not have permission to use this lyric')
     }
   }
 
@@ -129,10 +108,7 @@ export async function POST(request: Request) {
     .single()
 
   if (insertError || !song) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: insertError?.message ?? 'Failed to create song' } },
-      { status: 500 }
-    )
+    return createErrorResponse(insertError?.message ?? 'Failed to create song')
   }
 
   const { data: task, error: taskError } = await supabase
@@ -156,14 +132,10 @@ export async function POST(request: Request) {
     .single()
 
   if (taskError || !task) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: taskError?.message ?? 'Failed to create generation task' } },
-      { status: 500 }
-    )
+    return createErrorResponse(taskError?.message ?? 'Failed to create generation task')
   }
 
-  // 同步创建"开始生成"通知
-  const { error: notifyError } = await supabase.from('notifications').insert({
+  await supabase.from('notifications').insert({
     user_id: user.id,
     song_id: song.id,
     type: 'generation',
@@ -171,11 +143,7 @@ export async function POST(request: Request) {
     template_key: 'notification.generation.started',
     template_params: { songTitle: song.title },
   })
-  if (notifyError) {
-    console.error('Failed to create started notification:', notifyError)
-  }
 
-  // Fire-and-forget: trigger immediate processing
   triggerGenerationWorker()
 
   return NextResponse.json(

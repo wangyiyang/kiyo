@@ -1,15 +1,13 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { createUnauthorizedResponse, createErrorResponse } from '@/lib/api-utils'
 
 export async function GET(request: Request) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
   const { searchParams } = new URL(request.url)
@@ -25,24 +23,18 @@ export async function GET(request: Request) {
     .range(offset, offset + limit - 1)
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
   return NextResponse.json({ data, count })
 }
 
-export async function PATCH(request: NextRequest | Request) {
+export async function PATCH(_request: NextRequest | Request) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
   const { error } = await supabase
@@ -52,10 +44,7 @@ export async function PATCH(request: NextRequest | Request) {
     .eq('is_read', false)
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
   return new Response(null, { status: 200 })

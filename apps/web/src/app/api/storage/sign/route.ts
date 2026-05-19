@@ -1,42 +1,20 @@
-import { createServerClient } from '@kiyo/supabase/server'
-import { createServiceRoleClient } from '@kiyo/supabase/server'
+import { createServerClient, createServiceRoleClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
+import {
+  createErrorResponse,
+  createValidationResponse,
+  createForbiddenResponse,
+  parseBody,
+} from '@/lib/api-utils'
 
 const VALID_BUCKETS = ['audio', 'covers'] as const
 
-export async function POST(request: Request) {
-  const supabase = await createServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  let body: { bucket?: string; path?: string }
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON body' } },
-      { status: 400 }
-    )
-  }
-
-  const { bucket, path } = body
-
-  if (!bucket || !VALID_BUCKETS.includes(bucket as (typeof VALID_BUCKETS)[number])) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid or missing bucket' } },
-      { status: 400 }
-    )
-  }
-
-  if (!path || typeof path !== 'string' || path.includes('..')) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid or missing path' } },
-      { status: 400 }
-    )
-  }
-
-  // Permission check
-  let hasAccess = false
-
+async function checkAccess(
+  supabase: Awaited<ReturnType<typeof createServerClient>>,
+  bucket: string,
+  path: string,
+  userId: string | undefined
+): Promise<boolean> {
   if (bucket === 'audio') {
     const { data: song } = await supabase
       .from('songs')
@@ -45,12 +23,11 @@ export async function POST(request: Request) {
       .single()
 
     if (song) {
-      const isOwner = user?.id === song.user_id
+      const isOwner = userId === song.user_id
       const isPublic = song.status === 'completed'
-      hasAccess = isOwner || isPublic
+      return isOwner || isPublic
     }
   } else if (bucket === 'covers') {
-    // Check songs table first
     const { data: song } = await supabase
       .from('songs')
       .select('id, user_id, status')
@@ -58,28 +35,46 @@ export async function POST(request: Request) {
       .single()
 
     if (song) {
-      const isOwner = user?.id === song.user_id
+      const isOwner = userId === song.user_id
       const isPublic = song.status === 'completed'
-      hasAccess = isOwner || isPublic
-    } else {
-      // Check albums table
-      const { data: album } = await supabase
-        .from('albums')
-        .select('id, user_id')
-        .eq('cover_file_path', path)
-        .single()
+      return isOwner || isPublic
+    }
 
-      if (album) {
-        hasAccess = user?.id === album.user_id
-      }
+    const { data: album } = await supabase
+      .from('albums')
+      .select('id, user_id')
+      .eq('cover_file_path', path)
+      .single()
+
+    if (album) {
+      return userId === album.user_id
     }
   }
 
+  return false
+}
+
+export async function POST(request: Request) {
+  const supabase = await createServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const body = await parseBody<{ bucket?: string; path?: string }>(request)
+  if (body instanceof NextResponse) return body
+
+  const { bucket, path } = body
+
+  if (!bucket || !VALID_BUCKETS.includes(bucket as (typeof VALID_BUCKETS)[number])) {
+    return createValidationResponse('Invalid or missing bucket')
+  }
+
+  if (!path || typeof path !== 'string' || path.includes('..')) {
+    return createValidationResponse('Invalid or missing path')
+  }
+
+  const hasAccess = await checkAccess(supabase, bucket, path, user?.id)
+
   if (!hasAccess) {
-    return NextResponse.json(
-      { error: { code: 'FORBIDDEN', message: 'Access denied' } },
-      { status: 403 }
-    )
+    return createForbiddenResponse('Access denied')
   }
 
   const serviceClient = createServiceRoleClient()
@@ -89,10 +84,7 @@ export async function POST(request: Request) {
     .createSignedUrl(path, 3600)
 
   if (signedError || !signedData) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: 'Failed to generate signed URL' } },
-      { status: 500 }
-    )
+    return createErrorResponse('Failed to generate signed URL')
   }
 
   return NextResponse.json({

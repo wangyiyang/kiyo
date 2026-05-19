@@ -2,40 +2,33 @@ import { createServerClient } from '@kiyo/supabase/server'
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { triggerGenerationWorker } from '@/lib/generation-worker'
 import { NextResponse } from 'next/server'
+import {
+  createUnauthorizedResponse,
+  createErrorResponse,
+  createValidationResponse,
+  createNotFoundResponse,
+  parseBody,
+} from '@/lib/api-utils'
 
 export async function POST(request: Request) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  // Rate limiting
   const rateLimit = await checkRateLimit('task_retry', user.id, request)
   if (!rateLimit.allowed) {
     return createRateLimitResponse(rateLimit)
   }
 
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON body' } },
-      { status: 400 }
-    )
-  }
+  const body = await parseBody<Record<string, unknown>>(request)
+  if (body instanceof NextResponse) return body
 
   const { song_id } = body
   if (!song_id || typeof song_id !== 'string') {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'song_id is required' } },
-      { status: 400 }
-    )
+    return createValidationResponse('song_id is required')
   }
 
   const { data: task, error: taskError } = await supabase
@@ -47,10 +40,7 @@ export async function POST(request: Request) {
     .single()
 
   if (taskError || !task) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'No failed task found for this song' } },
-      { status: 404 }
-    )
+    return createNotFoundResponse('Failed task')
   }
 
   const { data: updated, error: updateError } = await supabase
@@ -68,10 +58,7 @@ export async function POST(request: Request) {
     .single()
 
   if (updateError || !updated) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: updateError?.message ?? 'Failed to retry task' } },
-      { status: 500 }
-    )
+    return createErrorResponse(updateError?.message ?? 'Failed to retry task')
   }
 
   await supabase
@@ -80,7 +67,6 @@ export async function POST(request: Request) {
     .eq('id', song_id)
     .eq('user_id', user.id)
 
-  // Fire-and-forget: trigger immediate processing
   triggerGenerationWorker()
 
   return NextResponse.json({ task: updated })
