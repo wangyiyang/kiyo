@@ -5,7 +5,7 @@ import { EmptyState, SongCard, Button, Dialog, DialogContent, DialogHeader, Dial
 import { Link, useRouter } from '@/i18n/navigation'
 import { AuthGuardButton } from '@/components/auth/auth-guard-button'
 import { Wand2, Mic2, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 
 interface Song {
   id: string
@@ -25,7 +25,6 @@ interface Pagination {
 }
 
 export default function SongsList() {
-  const locale = useLocale()
   const router = useRouter()
   const t = useTranslations('songs')
   const tCommon = useTranslations('common')

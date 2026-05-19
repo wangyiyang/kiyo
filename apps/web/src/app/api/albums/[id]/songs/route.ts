@@ -1,34 +1,29 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
+import {
+  createUnauthorizedResponse,
+  createErrorResponse,
+  createValidationResponse,
+  createNotFoundResponse,
+  createForbiddenResponse,
+  parseBody,
+} from '@/lib/api-utils'
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  let body: { song_ids?: string[] }
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON body' } },
-      { status: 400 }
-    )
-  }
+  const body = await parseBody<{ song_ids?: string[] }>(request)
+  if (body instanceof NextResponse) return body
 
   const { song_ids } = body
 
   if (!Array.isArray(song_ids) || song_ids.length === 0 || !song_ids.every((id) => typeof id === 'string')) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'song_ids must be a non-empty array of strings' } },
-      { status: 400 }
-    )
+    return createValidationResponse('song_ids must be a non-empty array of strings')
   }
 
   const uniqueSongIds = Array.from(new Set(song_ids))
@@ -41,10 +36,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     .single()
 
   if (albumError || !album) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'Album not found' } },
-      { status: 404 }
-    )
+    return createNotFoundResponse('Album')
   }
 
   const { data: ownedSongs, error: songsError } = await supabase
@@ -54,17 +46,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
     .in('id', uniqueSongIds)
 
   if (songsError) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: songsError.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(songsError.message)
   }
 
   if (!ownedSongs || ownedSongs.length !== uniqueSongIds.length) {
-    return NextResponse.json(
-      { error: { code: 'FORBIDDEN', message: 'Some songs are not owned by you' } },
-      { status: 403 }
-    )
+    return createForbiddenResponse('Some songs are not owned by you')
   }
 
   const { data: existingAlbumSongs, error: existingError } = await supabase
@@ -74,17 +60,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
     .in('song_id', uniqueSongIds)
 
   if (existingError) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: existingError.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(existingError.message)
   }
 
   if (existingAlbumSongs && existingAlbumSongs.length > 0) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Some songs are already in this album' } },
-      { status: 400 }
-    )
+    return createValidationResponse('Some songs are already in this album')
   }
 
   const { data: maxRows, error: maxError } = await supabase
@@ -95,10 +75,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     .limit(1)
 
   if (maxError) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: maxError.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(maxError.message)
   }
 
   const maxOrderIndex = maxRows?.[0]?.order_index ?? -1
@@ -114,10 +91,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     .insert(albumSongs)
 
   if (insertError) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: insertError.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(insertError.message)
   }
 
   return NextResponse.json({ added: uniqueSongIds.length })

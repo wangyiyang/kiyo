@@ -49,7 +49,7 @@ async function getSignedCoverUrl(filePath: string | null): Promise<string | null
   }
 }
 
-export function ShowcaseCard({ track, index, playlist, gradient }: ShowcaseCardProps) {
+export function ShowcaseCard({ track, playlist, gradient }: ShowcaseCardProps) {
   const play = usePlayerStore((s) => s.play)
   const t = useTranslations('common')
   const tExplore = useTranslations('explore')

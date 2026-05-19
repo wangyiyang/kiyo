@@ -33,14 +33,6 @@ function StatCard({ icon, label, primary, secondary, href, className = '' }: Sta
   )
 }
 
-interface RecentItem {
-  type: 'song' | 'lyric' | 'album'
-  id: string
-  title: string
-  created_at: string
-  status?: string
-}
-
 async function getStats() {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -127,9 +119,6 @@ export default async function DashboardPage() {
 }
 
 async function DashboardContent() {
-  const supabase = await createServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
   const t = await getTranslations('dashboard')
   const [stats, recentItems] = await Promise.all([getStats(), getRecentItems()])
 

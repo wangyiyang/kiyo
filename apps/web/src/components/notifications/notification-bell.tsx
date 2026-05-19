@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { Bell } from 'lucide-react'
-import { cn } from '@kiyo/ui'
 import { useTranslations } from 'next-intl'
 import { useNotifications } from '@/hooks/use-notifications'
 import { NotificationPanel } from './notification-panel'

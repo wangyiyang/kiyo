@@ -5,7 +5,7 @@ import { EmptyState, AlbumCard } from '@kiyo/ui'
 import { Link } from '@/i18n/navigation'
 import { DeleteConfirmDialog } from './_components/DeleteConfirmDialog'
 import { Trash2, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 
 interface Album {
   id: string
@@ -25,7 +25,6 @@ interface Pagination {
 }
 
 export default function AlbumsList() {
-  const locale = useLocale()
   const t = useTranslations('albums')
   const tCommon = useTranslations('common')
 

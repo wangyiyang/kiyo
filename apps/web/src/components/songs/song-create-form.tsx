@@ -72,8 +72,8 @@ function ModeSelector({ value, onChange, t }: ModeSelectorProps) {
             className="sr-only"
           />
           <div className="text-lg">{opt.emoji}</div>
-          <div className="mt-1 font-medium">{t(opt.labelKey as any)}</div>
-          <div className="mt-1 text-xs text-muted-foreground">{t(opt.descKey as any)}</div>
+          <div className="mt-1 font-medium">{t(opt.labelKey)}</div>
+          <div className="mt-1 text-xs text-muted-foreground">{t(opt.descKey)}</div>
         </label>
       ))}
     </div>
@@ -132,7 +132,7 @@ function LanguageSelect({
     >
       {LANGUAGE_OPTIONS.map((opt) => (
         <option key={opt.value} value={opt.value}>
-          {opt.value === '' ? t(opt.labelKey as any) : tLocale(opt.labelKey as any)}
+          {opt.value === '' ? t(opt.labelKey) : tLocale(opt.labelKey)}
         </option>
       ))}
     </select>

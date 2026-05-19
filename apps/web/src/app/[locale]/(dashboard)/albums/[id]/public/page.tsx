@@ -11,6 +11,17 @@ interface AlbumPublicPageProps {
   params: Promise<{ locale: string; id: string }>
 }
 
+interface SongRow {
+  id: string
+  title: string
+  audio_url: string | null
+  file_path: string | null
+  cover_url: string | null
+  cover_file_path: string | null
+  duration: number | null
+  status?: string
+}
+
 export async function generateMetadata({ params }: AlbumPublicPageProps): Promise<Metadata> {
   const { id } = await params
   const supabase = await createServerClient()
@@ -48,7 +59,7 @@ export async function generateMetadata({ params }: AlbumPublicPageProps): Promis
 }
 
 export default async function AlbumPublicPage({ params }: AlbumPublicPageProps) {
-  const { locale, id } = await params
+  const { id } = await params
   const supabase = await createServerClient()
   const t = await getTranslations('share')
   const tCommon = await getTranslations('common')
@@ -73,8 +84,10 @@ export default async function AlbumPublicPage({ params }: AlbumPublicPageProps) 
     .eq('album_id', id)
     .order('order_index', { ascending: true })
 
-  const songs = (albumSongs ?? []).map((as: any) => as.songs).filter(Boolean)
-  const playableSongs = songs.filter((s: any) => s.status === 'completed' && (s.audio_url || s.file_path))
+  const songs = (albumSongs ?? [])
+    .map((as) => (as as { songs?: SongRow }).songs)
+    .filter((s): s is SongRow => !!s)
+  const playableSongs = songs.filter((s) => s.status === 'completed' && (s.audio_url || s.file_path))
 
   const formatDuration = (seconds?: number | null) => {
     if (seconds == null) return '--:--'
@@ -132,7 +145,7 @@ export default async function AlbumPublicPage({ params }: AlbumPublicPageProps) 
               coverUrl={album.cover_url}
               coverFilePath={album.cover_file_path}
               songId={playableSongs[0]?.id}
-              playlist={playableSongs.map((s: any) => ({
+              playlist={playableSongs.map((s) => ({
                 id: s.id,
                 title: s.title,
                 audio_url: s.audio_url || '',
@@ -176,7 +189,7 @@ export default async function AlbumPublicPage({ params }: AlbumPublicPageProps) 
       <div className="mb-8">
         <h2 className="mb-4 text-lg font-semibold">{tCommon('albums.detail.songList')}</h2>
         <div className="divide-y rounded-lg border">
-          {songs.map((song: any, index: number) => (
+          {songs.map((song: SongRow, index: number) => (
             <div key={song.id} className="flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-3">
                 <span className="text-sm text-muted-foreground w-6">{index + 1}</span>

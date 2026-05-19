@@ -1,5 +1,11 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
+import {
+  createUnauthorizedResponse,
+  createErrorResponse,
+  createNotFoundResponse,
+  createBadRequestResponse,
+} from '@/lib/api-utils'
 
 function parseFilePathFromUrl(audioUrl: string): string | null {
   try {
@@ -22,10 +28,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
   const { data: song, error } = await supabase
@@ -36,38 +39,26 @@ export async function GET(request: Request, { params }: { params: { id: string }
     .single()
 
   if (error || !song) {
-    return NextResponse.json(
-      { error: { code: 'NOT_FOUND', message: 'Song not found' } },
-      { status: 404 }
-    )
+    return createNotFoundResponse('Song')
   }
 
   if (song.status !== 'completed') {
-    return NextResponse.json(
-      { error: { code: 'BAD_REQUEST', message: 'Song is not completed yet' } },
-      { status: 400 }
-    )
+    return createBadRequestResponse('Song is not completed yet')
   }
 
   const filePath = song.file_path || parseFilePathFromUrl(song.audio_url || '')
 
   if (!filePath) {
-    return NextResponse.json(
-      { error: { code: 'BAD_REQUEST', message: 'No audio file available' } },
-      { status: 400 }
-    )
+    return createBadRequestResponse('No audio file available')
   }
 
   const { data: signedData, error: signedError } = await supabase
     .storage
     .from('audio')
-    .createSignedUrl(filePath, 300) // 5 minutes
+    .createSignedUrl(filePath, 300)
 
   if (signedError || !signedData) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: 'Failed to generate download link' } },
-      { status: 500 }
-    )
+    return createErrorResponse('Failed to generate download link')
   }
 
   const filename = `${sanitizeFilename(song.title)}.mp3`

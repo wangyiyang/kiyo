@@ -1,15 +1,31 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
+import {
+  createUnauthorizedResponse,
+  createErrorResponse,
+  createValidationResponse,
+  parseBody,
+  validateString,
+  parsePagination,
+} from '@/lib/api-utils'
 
 const MAX_TITLE_LENGTH = 200
 const MAX_CONTENT_LENGTH = 10000
 const MAX_FIELD_LENGTH = 100
 
-function validateString(value: unknown, name: string, maxLength: number): string | null {
-  if (typeof value !== 'string') return `${name} must be a string`
-  if (value.length === 0) return `${name} is required`
-  if (value.length > maxLength) return `${name} must be ${maxLength} characters or less`
-  return null
+function validateLyricField(key: string, value: unknown): string | null {
+  switch (key) {
+    case 'title':
+      return validateString(value, 'Title', MAX_TITLE_LENGTH)
+    case 'content':
+      return validateString(value, 'Content', MAX_CONTENT_LENGTH)
+    case 'language':
+    case 'style':
+    case 'mood':
+      return validateString(value, key, MAX_FIELD_LENGTH)
+    default:
+      return null
+  }
 }
 
 export async function POST(request: Request) {
@@ -17,78 +33,41 @@ export async function POST(request: Request) {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  let body: { title?: string; content?: string; language?: string; style?: string; mood?: string }
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON body' } },
-      { status: 400 }
-    )
-  }
+  const body = await parseBody<{
+    title?: string
+    content?: string
+    language?: string
+    style?: string
+    mood?: string
+  }>(request)
+  if (body instanceof NextResponse) return body
 
-  const titleRaw = body.title as string | undefined
-  const contentRaw = body.content as string | undefined
-  const titleError = validateString(titleRaw, 'Title', MAX_TITLE_LENGTH)
-  if (titleError) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: titleError } },
-      { status: 400 }
-    )
-  }
-  const contentError = validateString(contentRaw, 'Content', MAX_CONTENT_LENGTH)
-  if (contentError) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: contentError } },
-      { status: 400 }
-    )
-  }
+  const titleError = validateLyricField('title', body.title)
+  if (titleError) return createValidationResponse(titleError)
 
-  const languageRaw = body.language as string | undefined
-  if (languageRaw) {
-    const langError = validateString(languageRaw, 'Language', MAX_FIELD_LENGTH)
-    if (langError) {
-      return NextResponse.json(
-        { error: { code: 'VALIDATION_ERROR', message: langError } },
-        { status: 400 }
-      )
-    }
-  }
-  const styleRaw = body.style as string | undefined
-  if (styleRaw) {
-    const styleError = validateString(styleRaw, 'Style', MAX_FIELD_LENGTH)
-    if (styleError) {
-      return NextResponse.json(
-        { error: { code: 'VALIDATION_ERROR', message: styleError } },
-        { status: 400 }
-      )
-    }
-  }
-  const moodRaw = body.mood as string | undefined
-  if (moodRaw) {
-    const moodError = validateString(moodRaw, 'Mood', MAX_FIELD_LENGTH)
-    if (moodError) {
-      return NextResponse.json(
-        { error: { code: 'VALIDATION_ERROR', message: moodError } },
-        { status: 400 }
-      )
+  const contentError = validateLyricField('content', body.content)
+  if (contentError) return createValidationResponse(contentError)
+
+  const optionalFields = ['language', 'style', 'mood'] as const
+  for (const field of optionalFields) {
+    const value = body[field]
+    if (value) {
+      const error = validateLyricField(field, value)
+      if (error) return createValidationResponse(error)
     }
   }
 
   const { data: lyric, error } = await supabase
     .from('lyrics')
     .insert({
-      title: titleRaw!,
-      content: contentRaw!,
-      language: languageRaw ?? null,
-      style: styleRaw ?? null,
-      mood: moodRaw ?? null,
+      title: body.title!,
+      content: body.content!,
+      language: body.language ?? null,
+      style: body.style ?? null,
+      mood: body.mood ?? null,
       source: 'manual',
       status: 'draft',
       user_id: user.id,
@@ -97,32 +76,10 @@ export async function POST(request: Request) {
     .single()
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
   return NextResponse.json({ lyric })
-}
-
-const DEFAULT_PAGE = 1
-const DEFAULT_LIMIT = 20
-const MAX_LIMIT = 100
-
-function parsePaginationParams(request: Request): { page: number; limit: number } {
-  const url = new URL(request.url)
-  const rawPage = url.searchParams.get('page')
-  const rawLimit = url.searchParams.get('limit')
-
-  let page = parseInt(rawPage ?? '', 10)
-  let limit = parseInt(rawLimit ?? '', 10)
-
-  if (!Number.isFinite(page) || page < 1) page = DEFAULT_PAGE
-  if (!Number.isFinite(limit) || limit < 1) limit = DEFAULT_LIMIT
-  if (limit > MAX_LIMIT) limit = MAX_LIMIT
-
-  return { page, limit }
 }
 
 export async function GET(request: Request) {
@@ -130,28 +87,21 @@ export async function GET(request: Request) {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  const { page, limit } = parsePaginationParams(request)
-  const from = (page - 1) * limit
-  const to = page * limit - 1
+  const url = new URL(request.url)
+  const { page, limit, offset } = parsePagination(url.searchParams)
 
   const { data: lyrics, error } = await supabase
     .from('lyrics')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
-    .range(from, to)
+    .range(offset, offset + limit - 1)
 
   if (error) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: error.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(error.message)
   }
 
   const { count: total, error: countError } = await supabase
@@ -160,10 +110,7 @@ export async function GET(request: Request) {
     .eq('user_id', user.id)
 
   if (countError) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: countError.message } },
-      { status: 500 }
-    )
+    return createErrorResponse(countError.message)
   }
 
   const totalCount = total ?? 0

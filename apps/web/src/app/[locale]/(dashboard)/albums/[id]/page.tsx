@@ -13,6 +13,16 @@ interface AlbumDetailPageProps {
   params: Promise<{ locale: string; id: string }>
 }
 
+interface SongRow {
+  id: string
+  title: string
+  audio_url: string | null
+  file_path: string | null
+  cover_url: string | null
+  cover_file_path: string | null
+  duration: number | null
+}
+
 export default async function AlbumDetailPage({ params }: AlbumDetailPageProps) {
   const { locale, id } = await params
   return (
@@ -47,10 +57,11 @@ async function AlbumDetailContent({ locale, id }: { locale: string; id: string }
     .eq('album_id', id)
     .order('order_index', { ascending: true })
 
-  const songs = (albumSongs ?? []).map((as: any) => as.songs).filter(Boolean)
+  const songs = (albumSongs ?? [])
+    .map((as) => (as as { songs?: SongRow }).songs)
+    .filter((s): s is SongRow => !!s)
 
   const t = await getTranslations('albums')
-  const tCommon = await getTranslations('common')
   const tPlayer = await getTranslations('player')
 
   return (
@@ -88,7 +99,7 @@ async function AlbumDetailContent({ locale, id }: { locale: string; id: string }
             isPublic={album.is_public ?? false}
             locale={locale}
           />
-          <AddSongsDialog albumId={id} excludeIds={songs.map((s: any) => s.id)} />
+          <AddSongsDialog albumId={id} excludeIds={songs.map((s) => s.id)} />
         </div>
       </div>
 
@@ -103,7 +114,7 @@ async function AlbumDetailContent({ locale, id }: { locale: string; id: string }
               coverUrl={album.cover_url}
               coverFilePath={album.cover_file_path}
               songId={songs[0]?.id}
-              playlist={songs.map((s: any) => ({
+              playlist={songs.map((s) => ({
                 id: s.id,
                 title: s.title,
                 audio_url: s.audio_url || '',
@@ -132,7 +143,7 @@ async function AlbumDetailContent({ locale, id }: { locale: string; id: string }
             />
           </div>
           <DraggableSongList
-            songs={songs.map((s: any) => ({ id: s.id, title: s.title }))}
+            songs={songs.map((s) => ({ id: s.id, title: s.title }))}
             albumId={id}
           />
         </>

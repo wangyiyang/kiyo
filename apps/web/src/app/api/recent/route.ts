@@ -1,22 +1,22 @@
 import { createServerClient } from '@kiyo/supabase/server'
 import { NextResponse } from 'next/server'
+import { createUnauthorizedResponse } from '@/lib/api-utils'
 
 export async function GET(request: Request) {
   const supabase = await createServerClient()
   const { searchParams } = new URL(request.url)
   const days = parseInt(searchParams.get('days') ?? '7')
   const limit = parseInt(searchParams.get('limit') ?? '6')
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return createUnauthorizedResponse()
   }
 
   const since = new Date()
   since.setDate(since.getDate() - days)
   const sinceStr = since.toISOString()
 
-  // Fetch recent songs
   const { data: recentSongs } = await supabase
     .from('songs')
     .select('id, title, status, created_at')
@@ -25,7 +25,6 @@ export async function GET(request: Request) {
     .order('created_at', { ascending: false })
     .limit(limit)
 
-  // Fetch recent lyrics
   const { data: recentLyrics } = await supabase
     .from('lyrics')
     .select('id, title, created_at')
@@ -34,7 +33,6 @@ export async function GET(request: Request) {
     .order('created_at', { ascending: false })
     .limit(limit)
 
-  // Fetch recent albums
   const { data: recentAlbums } = await supabase
     .from('albums')
     .select('id, title, created_at')
@@ -43,7 +41,6 @@ export async function GET(request: Request) {
     .order('created_at', { ascending: false })
     .limit(limit)
 
-  // Combine and sort by created_at
   const items = [
     ...(recentSongs ?? []).map(s => ({ type: 'song' as const, ...s })),
     ...(recentLyrics ?? []).map(l => ({ type: 'lyric' as const, ...l })),

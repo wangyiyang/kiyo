@@ -140,12 +140,10 @@ function SongFormFields({
 
 function SuccessContent({
 	t,
-	tCommon,
 	onViewSong,
 	onContinue,
 }: {
 	t: ReturnType<typeof useTranslations>
-	tCommon: ReturnType<typeof useTranslations>
 	onViewSong: () => void
 	onContinue: () => void
 }) {
@@ -293,7 +291,6 @@ export function GenerateSongDialog({
 				{generatedSongId ? (
 					<SuccessContent
 						t={t}
-						tCommon={tCommon}
 						onViewSong={handleViewSong}
 						onContinue={handleContinue}
 					/>

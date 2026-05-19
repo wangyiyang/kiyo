@@ -3,48 +3,38 @@ import { captureAppException } from '@/lib/monitoring'
 import { generateCover, MinimaxError } from '@kiyo/ai'
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
+import {
+  createUnauthorizedResponse,
+  createErrorResponse,
+  createValidationResponse,
+  createNotFoundResponse,
+  parseBody,
+} from '@/lib/api-utils'
 
 export async function POST(request: Request) {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json(
-      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
-      { status: 401 }
-    )
+    return createUnauthorizedResponse()
   }
 
-  // Rate limiting
   const rateLimit = await checkRateLimit('cover_generate', user.id, request)
   if (!rateLimit.allowed) {
     return createRateLimitResponse(rateLimit)
   }
 
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON body' } },
-      { status: 400 }
-    )
-  }
+  const body = await parseBody<Record<string, unknown>>(request)
+  if (body instanceof NextResponse) return body
 
   const { voice_style, audio_url, original_song_id, title } = body
 
   if (!voice_style || typeof voice_style !== 'string' || voice_style.length < 10 || voice_style.length > 300) {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'voice_style must be between 10 and 300 characters' } },
-      { status: 400 }
-    )
+    return createValidationResponse('voice_style must be between 10 and 300 characters')
   }
 
   if (!audio_url || typeof audio_url !== 'string') {
-    return NextResponse.json(
-      { error: { code: 'VALIDATION_ERROR', message: 'audio_url is required' } },
-      { status: 400 }
-    )
+    return createValidationResponse('audio_url is required')
   }
 
   let originalSong: { title: string; lyric_id: string | null; audio_url: string | null } | null = null
@@ -58,17 +48,11 @@ export async function POST(request: Request) {
       .single()
 
     if (songError || !song) {
-      return NextResponse.json(
-        { error: { code: 'NOT_FOUND', message: 'Original song not found' } },
-        { status: 404 }
-      )
+      return createNotFoundResponse('Original song')
     }
 
     if (!song.audio_url) {
-      return NextResponse.json(
-        { error: { code: 'VALIDATION_ERROR', message: '原歌曲没有可用音频' } },
-        { status: 400 }
-      )
+      return createValidationResponse('原歌曲没有可用音频')
     }
 
     originalSong = song
@@ -95,10 +79,7 @@ export async function POST(request: Request) {
     .single()
 
   if (insertError || !song) {
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: insertError?.message ?? 'Failed to create song' } },
-      { status: 500 }
-    )
+    return createErrorResponse(insertError?.message ?? 'Failed to create song')
   }
 
   try {

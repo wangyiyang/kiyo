@@ -42,8 +42,11 @@ export async function downloadImage(url: string): Promise<ArrayBuffer> {
   return res.arrayBuffer()
 }
 
+import type { SupabaseClient } from '@supabase/supabase-js'
+import type { Database } from '@kiyo/supabase'
+
 export async function uploadToCovers(
-  supabase: any,
+  supabase: SupabaseClient<Database>,
   filePath: string,
   buffer: ArrayBuffer
 ): Promise<string> {

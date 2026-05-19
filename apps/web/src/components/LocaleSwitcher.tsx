@@ -21,7 +21,6 @@ export function LocaleSwitcher() {
 	const currentLocale = useLocale()
 	const router = useRouter()
 	const pathname = usePathname()
-	const t = useTranslations('localeSwitcher')
 
 	const handleChange = (nextLocale: 'en' | 'zh') => {
 		if (nextLocale === currentLocale) return
