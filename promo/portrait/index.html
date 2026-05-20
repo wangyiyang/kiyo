@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    :root {
+      --bg: #0D0D12;
+      --fg: #FFFFFF;
+      --purple: #8B5CF6;
+      --cyan: #22D3EE;
+      --purple-glow: rgba(139, 92, 246, 0.22);
+      --cyan-glow: rgba(34, 211, 238, 0.18);
+      --muted: rgba(255, 255, 255, 0.55);
+      --surface: rgba(255, 255, 255, 0.06);
+      --surface-border: rgba(139, 92, 246, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--fg);
+    }
+
+    .scene {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    #scene1 { z-index: 1; }
+    #scene2 { z-index: 2; opacity: 0; }
+    #scene3 { z-index: 3; opacity: 0; }
+    #scene4 { z-index: 4; opacity: 0; }
+    #scene5 { z-index: 5; opacity: 0; }
+
+    .scene-content {
+      width: 100%;
+      height: 100%;
+      padding: 160px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Decorative: radial glow */
+    .radial-glow {
+      position: absolute;
+      width: 900px;
+      height: 900px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--purple-glow), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Decorative: ghost text */
+    .ghost-text {
+      position: absolute;
+      font-size: 280px;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.03);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Mono label */
+    .mono-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 20px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    /* Waveform bars */
+    .waveform {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .wbar {
+      width: 8px;
+      border-radius: 4px;
+      background: linear-gradient(to top, var(--purple), var(--cyan));
+      transform-origin: bottom;
+    }
+
+    /* Prompt box */
+    .prompt-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 22px 32px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      font-size: 26px;
+      color: var(--muted);
+      max-width: 900px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .prompt-cursor {
+      width: 3px;
+      height: 28px;
+      background: var(--cyan);
+      margin-left: 4px;
+      flex-shrink: 0;
+    }
+
+    /* Feature pill */
+    .feature-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 32px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      font-size: 26px;
+      font-weight: 500;
+    }
+    .feature-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+    }
+
+    /* CTA button */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 64px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      font-size: 32px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: 0.02em;
+    }
+
+    /* EQ bars */
+    .eq-bar {
+      width: 6px;
+      border-radius: 3px;
+      background: linear-gradient(to top, var(--purple), var(--cyan));
+      transform-origin: bottom;
+    }
+
+    /* Genre tag */
+    .genre-tag {
+      padding: 12px 24px;
+      border-radius: 24px;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    /* Fade overlay */
+    #fade-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1080px;
+      height: 1920px;
+      background: #000000;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* ── Scene 1 specific ── */
+    .s1-glow {
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .s1-ghost {
+      top: 42%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .s1-content {
+      gap: 20px;
+    }
+    .s1-badge {
+      margin-bottom: 12px;
+    }
+    .s1-title {
+      font-size: 170px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin: 0;
+    }
+    .s1-tagline {
+      font-size: 40px;
+      font-weight: 400;
+      color: var(--muted);
+      margin: 0;
+      margin-top: 12px;
+    }
+    .s1-waveform {
+      margin-top: 80px;
+      height: 120px;
+    }
+
+    /* ── Scene 2 specific ── */
+    .s2-glow {
+      top: -200px;
+      right: -200px;
+      background: radial-gradient(circle, var(--cyan-glow), transparent 70%);
+    }
+    .s2-content {
+      gap: 24px;
+    }
+    .s2-title {
+      font-size: 130px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin: 0;
+    }
+    .s2-subtitle {
+      font-size: 38px;
+      font-weight: 400;
+      color: var(--muted);
+      margin: 0;
+      max-width: 900px;
+      line-height: 1.4;
+    }
+    .s2-prompt-wrap {
+      margin-top: 60px;
+    }
+    .s2-soundwave {
+      margin-top: 60px;
+      height: 100px;
+      align-items: center;
+    }
+    .s2-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 50px;
+      justify-content: center;
+    }
+
+    /* ── Scene 3 specific ── */
+    .s3-glow {
+      bottom: -300px;
+      left: -200px;
+      background: radial-gradient(circle, var(--purple-glow), transparent 70%);
+    }
+    .s3-content {
+      gap: 20px;
+    }
+    .s3-title {
+      font-size: 130px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin: 0;
+    }
+    .s3-subtitle {
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--muted);
+      margin: 0;
+      max-width: 900px;
+      line-height: 1.4;
+    }
+    .s3-waveforms {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      margin-top: 60px;
+    }
+    .s3-waveform-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .s3-waveform-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .s3-morph-arrow {
+      font-size: 44px;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+    .s3-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 50px;
+      justify-content: center;
+    }
+
+    /* ── Scene 4 specific ── */
+    .s4-glow {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+    }
+    .s4-content {
+      gap: 20px;
+    }
+    .s4-title {
+      font-size: 130px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin: 0;
+    }
+    .s4-subtitle {
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--muted);
+      margin: 0;
+      max-width: 900px;
+      line-height: 1.4;
+    }
+    .s4-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 60px;
+      align-items: center;
+    }
+    .s4-eq {
+      display: flex;
+      align-items: flex-end;
+      gap: 5px;
+      margin-top: 60px;
+      height: 80px;
+    }
+
+    /* ── Scene 5 specific ── */
+    .s5-glow {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1000px;
+      height: 1000px;
+      background: radial-gradient(circle, rgba(139,92,246,0.35), transparent 65%);
+    }
+    .s5-content {
+      gap: 24px;
+    }
+    .s5-title {
+      font-size: 110px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin: 0;
+      max-width: 960px;
+    }
+    .s5-url {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 32px;
+      color: var(--cyan);
+      letter-spacing: 0.04em;
+      margin-top: 12px;
+    }
+    .s5-cta-wrap {
+      margin-top: 50px;
+    }
+    </style>
+</head>
+<body>
+  <div id="root" data-composition-id="kiyo-promo-portrait" data-width="1080" data-height="1920" data-start="0" data-duration="35">
+
+    <!-- ═══════ SCENE 1: Brand Intro ═══════ -->
+    <div id="scene1" class="scene">
+      <div class="radial-glow s1-glow" id="s1-glow"></div>
+      <div class="scene-content s1-content">
+        <div class="mono-label s1-badge" id="s1-badge">AI Music Platform</div>
+        <h1 class="s1-title gradient-text" id="s1-title">KIYO</h1>
+        <p class="s1-tagline" id="s1-tagline">AI 音乐创作平台</p>
+        <div class="waveform s1-waveform" id="s1-waveform">
+          <div class="wbar" style="height:50px"></div>
+          <div class="wbar" style="height:64px"></div>
+          <div class="wbar" style="height:63px"></div>
+          <div class="wbar" style="height:77px"></div>
+          <div class="wbar" style="height:94px"></div>
+          <div class="wbar" style="height:86px"></div>
+          <div class="wbar" style="height:59px"></div>
+          <div class="wbar" style="height:64px"></div>
+          <div class="wbar" style="height:62px"></div>
+          <div class="wbar" style="height:42px"></div>
+          <div class="wbar" style="height:35px"></div>
+          <div class="wbar" style="height:56px"></div>
+          <div class="wbar" style="height:80px"></div>
+          <div class="wbar" style="height:81px"></div>
+          <div class="wbar" style="height:69px"></div>
+          <div class="wbar" style="height:82px"></div>
+          <div class="wbar" style="height:92px"></div>
+          <div class="wbar" style="height:76px"></div>
+          <div class="wbar" style="height:51px"></div>
+          <div class="wbar" style="height:53px"></div>
+          <div class="wbar" style="height:54px"></div>
+          <div class="wbar" style="height:47px"></div>
+          <div class="wbar" style="height:43px"></div>
+          <div class="wbar" style="height:64px"></div>
+          <div class="wbar" style="height:85px"></div>
+          <div class="wbar" style="height:84px"></div>
+          <div class="wbar" style="height:69px"></div>
+          <div class="wbar" style="height:81px"></div>
+          <div class="wbar" style="height:88px"></div>
+          <div class="wbar" style="height:70px"></div>
+          <div class="wbar" style="height:44px"></div>
+          <div class="wbar" style="height:46px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SCENE 2: AI Compose ═══════ -->
+    <div id="scene2" class="scene">
+      <div class="radial-glow s2-glow" id="s2-glow"></div>
+      <div class="scene-content s2-content">
+        <div class="mono-label" id="s2-eyebrow">Feature 01</div>
+        <h2 class="s2-title gradient-text" id="s2-title">AI 作曲</h2>
+        <p class="s2-subtitle" id="s2-subtitle">输入想法，生成完整音乐作品</p>
+        <div class="s2-prompt-wrap" id="s2-prompt">
+          <div class="prompt-box">
+            <span>"一段关于星空的钢琴曲，温柔而梦幻..."</span>
+            <div class="prompt-cursor" id="s2-cursor"></div>
+          </div>
+        </div>
+        <div class="waveform s2-soundwave" id="s2-soundwave">
+          <div class="wbar" style="height:30px"></div>
+          <div class="wbar" style="height:45px"></div>
+          <div class="wbar" style="height:60px"></div>
+          <div class="wbar" style="height:75px"></div>
+          <div class="wbar" style="height:85px"></div>
+          <div class="wbar" style="height:70px"></div>
+          <div class="wbar" style="height:55px"></div>
+          <div class="wbar" style="height:40px"></div>
+          <div class="wbar" style="height:50px"></div>
+          <div class="wbar" style="height:65px"></div>
+          <div class="wbar" style="height:80px"></div>
+          <div class="wbar" style="height:72px"></div>
+          <div class="wbar" style="height:58px"></div>
+          <div class="wbar" style="height:42px"></div>
+          <div class="wbar" style="height:35px"></div>
+          <div class="wbar" style="height:48px"></div>
+          <div class="wbar" style="height:62px"></div>
+          <div class="wbar" style="height:78px"></div>
+          <div class="wbar" style="height:68px"></div>
+          <div class="wbar" style="height:52px"></div>
+          <div class="wbar" style="height:38px"></div>
+          <div class="wbar" style="height:44px"></div>
+          <div class="wbar" style="height:56px"></div>
+          <div class="wbar" style="height:70px"></div>
+        </div>
+        <div class="s2-tags">
+          <div class="genre-tag" id="s2-tag1">多风格</div>
+          <div class="genre-tag" id="s2-tag2">多语言人声</div>
+          <div class="genre-tag" id="s2-tag3">完整伴奏</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SCENE 3: AI Cover ═══════ -->
+    <div id="scene3" class="scene">
+      <div class="radial-glow s3-glow" id="s3-glow"></div>
+      <div class="scene-content s3-content">
+        <div class="mono-label" id="s3-eyebrow">Feature 02</div>
+        <h2 class="s3-title gradient-text" id="s3-title">AI 翻唱</h2>
+        <p class="s3-subtitle" id="s3-subtitle">用你喜欢的声音，重新演绎任意歌曲</p>
+        <div class="s3-waveforms">
+          <div class="s3-waveform-col" id="s3-left">
+            <div class="waveform" style="height:90px; gap:4px;">
+              <div class="wbar" style="height:30px; width:5px;"></div>
+              <div class="wbar" style="height:50px; width:5px;"></div>
+              <div class="wbar" style="height:70px; width:5px;"></div>
+              <div class="wbar" style="height:60px; width:5px;"></div>
+              <div class="wbar" style="height:80px; width:5px;"></div>
+              <div class="wbar" style="height:55px; width:5px;"></div>
+              <div class="wbar" style="height:40px; width:5px;"></div>
+              <div class="wbar" style="height:65px; width:5px;"></div>
+              <div class="wbar" style="height:75px; width:5px;"></div>
+              <div class="wbar" style="height:45px; width:5px;"></div>
+              <div class="wbar" style="height:35px; width:5px;"></div>
+              <div class="wbar" style="height:55px; width:5px;"></div>
+              <div class="wbar" style="height:70px; width:5px;"></div>
+              <div class="wbar" style="height:60px; width:5px;"></div>
+              <div class="wbar" style="height:50px; width:5px;"></div>
+              <div class="wbar" style="height:40px; width:5px;"></div>
+            </div>
+            <div class="s3-waveform-label">原曲</div>
+          </div>
+          <div class="s3-morph-arrow" id="s3-arrow">&#8594;</div>
+          <div class="s3-waveform-col" id="s3-right">
+            <div class="waveform" style="height:90px; gap:4px;">
+              <div class="wbar" style="height:35px; width:5px;"></div>
+              <div class="wbar" style="height:55px; width:5px;"></div>
+              <div class="wbar" style="height:45px; width:5px;"></div>
+              <div class="wbar" style="height:75px; width:5px;"></div>
+              <div class="wbar" style="height:65px; width:5px;"></div>
+              <div class="wbar" style="height:85px; width:5px;"></div>
+              <div class="wbar" style="height:50px; width:5px;"></div>
+              <div class="wbar" style="height:70px; width:5px;"></div>
+              <div class="wbar" style="height:60px; width:5px;"></div>
+              <div class="wbar" style="height:80px; width:5px;"></div>
+              <div class="wbar" style="height:40px; width:5px;"></div>
+              <div class="wbar" style="height:55px; width:5px;"></div>
+              <div class="wbar" style="height:45px; width:5px;"></div>
+              <div class="wbar" style="height:70px; width:5px;"></div>
+              <div class="wbar" style="height:65px; width:5px;"></div>
+              <div class="wbar" style="height:50px; width:5px;"></div>
+            </div>
+            <div class="s3-waveform-label">新声音</div>
+          </div>
+        </div>
+        <div class="s3-tags">
+          <div class="genre-tag" id="s3-tag1">流行</div>
+          <div class="genre-tag" id="s3-tag2">摇滚</div>
+          <div class="genre-tag" id="s3-tag3">电子</div>
+          <div class="genre-tag" id="s3-tag4">爵士</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SCENE 4: Smart Edit ═══════ -->
+    <div id="scene4" class="scene">
+      <div class="radial-glow s4-glow" id="s4-glow"></div>
+      <div class="scene-content s4-content">
+        <div class="mono-label" id="s4-eyebrow">Feature 03</div>
+        <h2 class="s4-title gradient-text" id="s4-title">智能编辑</h2>
+        <p class="s4-subtitle" id="s4-subtitle">分段调整、风格迁移、和声重构</p>
+        <div class="s4-pills">
+          <div class="feature-pill" id="s4-pill1">
+            <div class="feature-dot"></div>
+            <span>风格迁移</span>
+          </div>
+          <div class="feature-pill" id="s4-pill2">
+            <div class="feature-dot"></div>
+            <span>和声重构</span>
+          </div>
+          <div class="feature-pill" id="s4-pill3">
+            <div class="feature-dot"></div>
+            <span>云端导出</span>
+          </div>
+        </div>
+        <div class="s4-eq" id="s4-eq">
+          <div class="eq-bar" style="height:20px"></div>
+          <div class="eq-bar" style="height:35px"></div>
+          <div class="eq-bar" style="height:50px"></div>
+          <div class="eq-bar" style="height:40px"></div>
+          <div class="eq-bar" style="height:55px"></div>
+          <div class="eq-bar" style="height:30px"></div>
+          <div class="eq-bar" style="height:45px"></div>
+          <div class="eq-bar" style="height:60px"></div>
+          <div class="eq-bar" style="height:35px"></div>
+          <div class="eq-bar" style="height:50px"></div>
+          <div class="eq-bar" style="height:25px"></div>
+          <div class="eq-bar" style="height:40px"></div>
+          <div class="eq-bar" style="height:55px"></div>
+          <div class="eq-bar" style="height:45px"></div>
+          <div class="eq-bar" style="height:30px"></div>
+          <div class="eq-bar" style="height:50px"></div>
+          <div class="eq-bar" style="height:35px"></div>
+          <div class="eq-bar" style="height:45px"></div>
+          <div class="eq-bar" style="height:55px"></div>
+          <div class="eq-bar" style="height:40px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ SCENE 5: CTA ═══════ -->
+    <div id="scene5" class="scene">
+      <div class="radial-glow s5-glow" id="s5-glow"></div>
+      <div class="scene-content s5-content">
+        <h2 class="s5-title" id="s5-title">创造属于你的声音</h2>
+        <div class="s5-url" id="s5-url">kiyo.wangyiyang.cc</div>
+        <div class="s5-cta-wrap" id="s5-cta">
+          <div class="cta-btn">立即体验</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fade to black overlay -->
+    <div id="fade-overlay"></div>
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+
+    /* ═══════════════════════════════════════════════
+       SCENE 1: Brand Intro (0 - 5.5s)
+       ═══════════════════════════════════════════════ */
+
+    // Ambient: radial glow breathe
+    tl.fromTo("#s1-glow",
+      { scale: 1 },
+      { scale: 1.08, yoyo: true, repeat: 3, duration: 1.4, ease: "sine.inOut" }, 0);
+
+    // Badge entrance
+    tl.fromTo("#s1-badge",
+      { y: -12, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.3);
+
+    // Title SLAM
+    tl.fromTo("#s1-title",
+      { scale: 0.82, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.75, ease: "expo.out" }, 0.4);
+
+    // Tagline
+    tl.fromTo("#s1-tagline",
+      { y: 25, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 0.9);
+
+    // Waveform bars stagger in
+    var s1bars = document.querySelectorAll("#s1-waveform .wbar");
+    s1bars.forEach(function(bar, i) {
+      tl.fromTo(bar,
+        { scaleY: 0.3, opacity: 0 },
+        { scaleY: 1, opacity: 1, duration: 0.4, ease: "power2.out" }, 1.1 + i * 0.018);
+    });
+
+    // Ambient: waveform bars pulse
+    s1bars.forEach(function(bar, i) {
+      tl.fromTo(bar,
+        { scaleY: 0.6 },
+        { scaleY: 1, yoyo: true, repeat: 7, duration: 0.55, ease: "sine.inOut" }, 1.6 + i * 0.04);
+    });
+
+    /* ═══════════════════════════════════════════════
+       TRANSITION 1→2: Zoom Through (5.5s)
+       ═══════════════════════════════════════════════ */
+    tl.set("#scene1", { zIndex: 10 }, 5.5);
+    tl.set("#scene2", { zIndex: 1 }, 5.5);
+    tl.to("#scene1",
+      { scale: 2.5, opacity: 0, filter: "blur(8px)", duration: 0.4, ease: "power3.in", transformOrigin: "50% 50%", overwrite: "auto" }, 5.5);
+    tl.fromTo("#scene2",
+      { scale: 0.5, opacity: 0, filter: "blur(8px)" },
+      { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 5.65);
+    tl.set("#scene1", { zIndex: "auto", visibility: "hidden" }, 5.911);
+    tl.set("#scene2", { zIndex: "auto" }, 5.911);
+
+    /* ═══════════════════════════════════════════════
+       SCENE 2: AI Compose (5.5 - 12.5s)
+       ═══════════════════════════════════════════════ */
+
+    // Ambient: cyan glow drift
+    tl.fromTo("#s2-glow",
+      { scale: 1, x: 0 },
+      { scale: 1.1, x: 30, yoyo: true, repeat: 3, duration: 1.8, ease: "sine.inOut" }, 5.5);
+    
+    // Eyebrow
+    tl.fromTo("#s2-eyebrow",
+      { y: -10, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 5.9);
+
+    // Title from left
+    tl.fromTo("#s2-title",
+      { x: -55, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.7, ease: "expo.out" }, 6.0);
+
+    // Subtitle
+    tl.fromTo("#s2-subtitle",
+      { y: 25, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 6.4);
+
+    // Prompt box
+    tl.fromTo("#s2-prompt",
+      { scale: 0.92, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, ease: "power2.out" }, 6.7);
+
+    // Cursor blink (finite)
+    tl.fromTo("#s2-cursor",
+      { opacity: 1 },
+      { opacity: 0, yoyo: true, repeat: 9, duration: 0.25, ease: "steps(1)" }, 7.0);
+
+    // Sound wave bars
+    var s2bars = document.querySelectorAll("#s2-soundwave .wbar");
+    s2bars.forEach(function(bar, i) {
+      tl.fromTo(bar,
+        { scaleY: 0.2, opacity: 0 },
+        { scaleY: 1, opacity: 1, duration: 0.35, ease: "power2.out" }, 7.1 + i * 0.02);
+    });
+
+    // Ambient: sound wave pulse
+    s2bars.forEach(function(bar, i) {
+      tl.fromTo(bar,
+        { scaleY: 0.55 },
+        { scaleY: 1, yoyo: true, repeat: 8, duration: 0.5, ease: "sine.inOut" }, 7.8 + i * 0.035);
+    });
+
+    // Tags stagger
+    tl.fromTo("#s2-tag1",
+      { y: 18, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 8.3);
+    tl.fromTo("#s2-tag2",
+      { y: 18, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 8.45);
+    tl.fromTo("#s2-tag3",
+      { y: 18, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 8.6);
+
+    /* ═══════════════════════════════════════════════
+       TRANSITION 2→3: Zoom Through (12.5s)
+       ═══════════════════════════════════════════════ */
+    tl.set("#scene2", { zIndex: 10 }, 12.5);
+    tl.set("#scene3", { zIndex: 1 }, 12.5);
+    tl.to("#scene2",
+      { scale: 2.5, opacity: 0, filter: "blur(8px)", duration: 0.4, ease: "power3.in", transformOrigin: "50% 50%", overwrite: "auto" }, 12.5);
+    tl.fromTo("#scene3",
+      { scale: 0.5, opacity: 0, filter: "blur(8px)" },
+      { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 12.65);
+    tl.set("#scene2", { zIndex: "auto", visibility: "hidden" }, 12.911);
+    tl.set("#scene3", { zIndex: "auto" }, 12.911);
+
+    /* ═══════════════════════════════════════════════
+       SCENE 3: AI Cover (12.5 - 20.0s)
+       ═══════════════════════════════════════════════ */
+
+    // Ambient: purple glow
+    tl.fromTo("#s3-glow",
+      { scale: 1 },
+      { scale: 1.12, yoyo: true, repeat: 3, duration: 1.9, ease: "sine.inOut" }, 12.5);
+    
+    // Eyebrow
+    tl.fromTo("#s3-eyebrow",
+      { y: -10, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 12.9);
+
+    // Title from right
+    tl.fromTo("#s3-title",
+      { x: 55, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.7, ease: "expo.out" }, 13.0);
+
+    // Subtitle
+    tl.fromTo("#s3-subtitle",
+      { y: 25, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 13.4);
+
+    // Left waveform
+    tl.fromTo("#s3-left",
+      { x: -35, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, 13.6);
+
+    // Right waveform
+    tl.fromTo("#s3-right",
+      { x: 35, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, 13.6);
+
+    // Morph arrow
+    tl.fromTo("#s3-arrow",
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, 13.9);
+
+    // Genre tags stagger
+    var s3tags = ["#s3-tag1", "#s3-tag2", "#s3-tag3", "#s3-tag4"];
+    s3tags.forEach(function(tag, i) {
+      tl.fromTo(tag,
+        { scale: 0.88, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.4, ease: "power2.out" }, 14.2 + i * 0.1);
+    });
+
+    // Waveform bars ambient
+    var s3bars = document.querySelectorAll("#scene3 .wbar");
+    s3bars.forEach(function(bar, i) {
+      tl.fromTo(bar,
+        { scaleY: 0.5 },
+        { scaleY: 1, yoyo: true, repeat: 9, duration: 0.45, ease: "sine.inOut" }, 14.8 + (i % 8) * 0.06);
+    });
+
+    /* ═══════════════════════════════════════════════
+       TRANSITION 3→4: Blur Crossfade (20.0s)
+       ═══════════════════════════════════════════════ */
+    tl.to("#scene3",
+      { filter: "blur(10px)", scale: 1.03, opacity: 0, duration: 0.5, ease: "power2.inOut", overwrite: "auto" }, 20.0);
+    tl.fromTo("#scene4",
+      { filter: "blur(10px)", scale: 0.97, opacity: 0 },
+      { filter: "blur(0px)", scale: 1, opacity: 1, duration: 0.5, ease: "power2.inOut" }, 20.1);
+    tl.set("#scene3", { zIndex: "auto", visibility: "hidden" }, 20.609);
+    tl.set("#scene4", { zIndex: "auto" }, 20.609);
+
+    /* ═══════════════════════════════════════════════
+       SCENE 4: Smart Edit (20.0 - 27.0s)
+       ═══════════════════════════════════════════════ */
+
+    // Ambient: glow
+    tl.fromTo("#s4-glow",
+      { scale: 1 },
+      { scale: 1.06, yoyo: true, repeat: 3, duration: 1.7, ease: "sine.inOut" }, 20.0);
+    
+    // Eyebrow
+    tl.fromTo("#s4-eyebrow",
+      { y: -10, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 20.4);
+
+    // Title from top
+    tl.fromTo("#s4-title",
+      { y: -35, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.7, ease: "expo.out" }, 20.5);
+
+    // Subtitle
+    tl.fromTo("#s4-subtitle",
+      { y: 25, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 20.9);
+
+    // Feature pills stagger
+    var pills = ["#s4-pill1", "#s4-pill2", "#s4-pill3"];
+    pills.forEach(function(pill, i) {
+      tl.fromTo(pill,
+        { y: 35, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 21.1 + i * 0.12);
+    });
+
+    // Ambient: pills float
+    pills.forEach(function(pill, i) {
+      tl.fromTo(pill,
+        { y: 0 },
+        { y: -6, yoyo: true, repeat: 5, duration: 1.1, ease: "sine.inOut" }, 21.8 + i * 0.15);
+    });
+
+    // EQ bars
+    var s4eq = document.querySelectorAll("#s4-eq .eq-bar");
+    s4eq.forEach(function(bar, i) {
+      tl.fromTo(bar,
+        { scaleY: 0, opacity: 0 },
+        { scaleY: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 21.6 + i * 0.025);
+    });
+
+    // Ambient: EQ pulse
+    s4eq.forEach(function(bar, i) {
+      tl.fromTo(bar,
+        { scaleY: 0.5 },
+        { scaleY: 1, yoyo: true, repeat: 8, duration: 0.4, ease: "sine.inOut" }, 22.2 + (i % 5) * 0.05);
+    });
+
+    /* ═══════════════════════════════════════════════
+       TRANSITION 4→5: Color Dip (27.0s)
+       ═══════════════════════════════════════════════ */
+    tl.to("#scene4",
+      { opacity: 0, duration: 0.2, ease: "power2.in", overwrite: "auto" }, 27.0);
+    tl.fromTo("#scene5",
+      { opacity: 0 },
+      { opacity: 1, duration: 0.2, ease: "power2.out" }, 27.25);
+    tl.set("#scene4", { zIndex: "auto", visibility: "hidden" }, 27.46);
+    tl.set("#scene5", { zIndex: "auto" }, 27.46);
+
+    /* ═══════════════════════════════════════════════
+       SCENE 5: CTA (27.0 - 35.0s)
+       ═══════════════════════════════════════════════ */
+
+    // Ambient: strong glow pulse
+    tl.fromTo("#s5-glow",
+      { scale: 0.95 },
+      { scale: 1.15, yoyo: true, repeat: 3, duration: 2.0, ease: "sine.inOut" }, 27.0);
+
+    // Title
+    tl.fromTo("#s5-title",
+      { scale: 0.88, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.85, ease: "expo.out" }, 27.3);
+
+    // URL
+    tl.fromTo("#s5-url",
+      { y: 15, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 27.9);
+
+    // CTA button
+    tl.fromTo("#s5-cta",
+      { y: 25, scale: 0.95, opacity: 0 },
+      { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "power2.out" }, 28.3);
+
+    // Ambient: CTA button glow
+    tl.fromTo("#s5-cta .cta-btn",
+      { boxShadow: "0 0 0px rgba(139,92,246,0)" },
+      { boxShadow: "0 0 60px rgba(139,92,246,0.5)", yoyo: true, repeat: 3, duration: 1.8, ease: "sine.inOut" }, 29.0);
+
+    /* ═══════════════════════════════════════════════
+       FINAL FADE TO BLACK (33.5s)
+       ═══════════════════════════════════════════════ */
+    tl.to("#s5-title, #s5-url, #s5-cta",
+      { opacity: 0, y: -15, duration: 0.6, ease: "power2.in" }, 33.5);
+    tl.to("#fade-overlay",
+      { opacity: 1, duration: 1.2, ease: "power2.in" }, 33.8);
+
+    // Hard-kill scene5 after final fade
+    tl.set("#scene5", { visibility: "hidden" }, 35.011);
+
+    // Register timeline
+    window.__timelines["kiyo-promo-portrait"] = tl;
+  </script>
+</body>
+</html>
