@@ -1,3 +1,4 @@
+// Legacy Minimax exports (backward compatible)
 export { MinimaxError } from './src/errors'
 export type { MinimaxErrorCode } from './src/errors'
 export { minimaxFetch } from './src/client'
@@ -11,3 +12,30 @@ export { generateLyrics } from './src/lyrics'
 export type { GenerateLyricsOptions, GenerateLyricsResult } from './src/lyrics'
 export { generateCover } from './src/cover'
 export type { GenerateCoverOptions, GenerateCoverResult } from './src/cover'
+
+// Provider-based exports (multi-provider support)
+export {
+  generateLyrics as routeLyrics,
+  generateText as routeText,
+  generateImage as routeImage,
+  generateMusic as routeMusic,
+  generateCover as routeCover,
+  getProviderForTask,
+  ProviderError,
+  createMinimaxFallback,
+  createGmiFallback,
+} from './src/providers'
+export type {
+  AIProvider,
+  ProviderName,
+  LyricsOptions,
+  LyricsResult,
+  TextOptions,
+  TextResult,
+  ImageOptions,
+  ImageResult,
+  MusicOptions,
+  MusicResult,
+  CoverOptions,
+  CoverResult,
+} from './src/providers'

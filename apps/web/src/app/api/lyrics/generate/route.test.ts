@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { POST } from './route'
 import { buildLyricsPrompt } from './lib'
 import { createMockSupabaseClient } from '@/lib/test-utils'
-import { MinimaxError } from '@kiyo/ai'
+import { MinimaxError, ProviderError } from '@kiyo/ai'
 
 vi.mock('@kiyo/supabase/server', async () => {
   const actual = await vi.importActual('@kiyo/supabase/server')
@@ -31,6 +31,7 @@ vi.mock('@kiyo/ai', async () => {
   const actual = await vi.importActual('@kiyo/ai')
   return {
     ...actual,
+    routeLyrics: vi.fn(),
     generateLyrics: vi.fn(),
   }
 })
@@ -40,12 +41,12 @@ beforeEach(() => {
 })
 
 describe('POST /api/lyrics/generate', () => {
-  it('generates lyrics with AI and creates record (200)', async () => {
+  it('generates lyrics with provider routing and creates record (200)', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
-    const { generateLyrics } = await import('@kiyo/ai')
+    const { routeLyrics } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(generateLyrics).mockResolvedValue({
+    vi.mocked(routeLyrics).mockResolvedValue({
       text: '[Verse 1]\nGenerated line',
     })
 
@@ -68,6 +69,30 @@ describe('POST /api/lyrics/generate', () => {
     expect(json.lyric.ai_prompt).toBe('一首关于青春的歌')
     expect(json.lyric.language).toBe('zh')
     expect(json.lyric.title).toBe('一首关于青春的歌')
+  })
+
+  it('falls back to Minimax when provider routing fails (200)', async () => {
+    const { createServerClient } = await import('@kiyo/supabase/server')
+    const { routeLyrics, generateLyrics } = await import('@kiyo/ai')
+    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(routeLyrics).mockRejectedValue(
+      new ProviderError('GMI failed', 'gmi', 'api_error')
+    )
+    vi.mocked(generateLyrics).mockResolvedValue({
+      text: 'Fallback lyrics from Minimax',
+    })
+
+    const request = new Request('http://localhost/api/lyrics/generate', {
+      method: 'POST',
+      body: JSON.stringify({ prompt: 'test' }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    const response = await POST(request)
+    expect(response.status).toBe(200)
+    const json = await response.json()
+    expect(json.lyric.content).toBe('Fallback lyrics from Minimax')
   })
 
   it('returns 401 when not authenticated', async () => {
@@ -106,9 +131,10 @@ describe('POST /api/lyrics/generate', () => {
 
   it('returns 422 when AI generation throws MinimaxError', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
-    const { generateLyrics } = await import('@kiyo/ai')
+    const { routeLyrics, generateLyrics } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+    vi.mocked(routeLyrics).mockRejectedValue(new ProviderError('GMI failed', 'gmi', 'api_error'))
     vi.mocked(generateLyrics).mockRejectedValue(new MinimaxError('API failed', 'api_error'))
 
     const request = new Request('http://localhost/api/lyrics/generate', {
@@ -230,7 +256,7 @@ describe('POST /api/lyrics/generate', () => {
 
   it('returns 500 when DB insert fails', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
-    const { generateLyrics } = await import('@kiyo/ai')
+    const { routeLyrics } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
 
     const insertError = new Error('insert failed')
@@ -248,7 +274,7 @@ describe('POST /api/lyrics/generate', () => {
     }) as any
 
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(generateLyrics).mockResolvedValue({ text: 'lyric text' })
+    vi.mocked(routeLyrics).mockResolvedValue({ text: 'lyric text' })
 
     const request = new Request('http://localhost/api/lyrics/generate', {
       method: 'POST',

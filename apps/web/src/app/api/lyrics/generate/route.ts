@@ -1,5 +1,5 @@
 import { createServerClient } from '@kiyo/supabase/server'
-import { generateLyrics, MinimaxError } from '@kiyo/ai'
+import { generateLyrics, routeLyrics, ProviderError, MinimaxError } from '@kiyo/ai'
 import { captureAppException } from '@/lib/monitoring'
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
@@ -66,7 +66,22 @@ export async function POST(request: Request) {
 
   try {
     const fullPrompt = buildLyricsPrompt({ prompt, language, style, mood })
-    const { text } = await generateLyrics({ prompt: fullPrompt })
+    let text: string
+
+    try {
+      // Try provider-based routing (configured via PROVIDER_LYRICS env var)
+      const result = await routeLyrics({ prompt: fullPrompt })
+      text = result.text
+    } catch (err) {
+      // Explicit fallback to Minimax
+      if (err instanceof ProviderError) {
+        console.warn(`Provider ${err.provider} failed for lyrics, falling back to Minimax:`, err.message)
+        const result = await generateLyrics({ prompt: fullPrompt })
+        text = result.text
+      } else {
+        throw err
+      }
+    }
 
     const title = prompt.slice(0, 50)
 
