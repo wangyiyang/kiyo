@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>03 · Agent Architecture</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide {
+    display: flex;
+    padding: 60px 80px;
+    flex-direction: column;
+    gap: 40px;
+    background: var(--vi-ink);
+    color: var(--vi-paper);
+    position: relative;
+    box-sizing: border-box;
+  }
+  .bg-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background: url('../assets/bg-agent-network.jpg') center/cover no-repeat;
+  }
+  .header { position: relative; z-index: 1; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--vi-vermillion);
+  }
+  h1 {
+    font-family: var(--font-display-en);
+    font-size: var(--fs-h1);
+    font-weight: 700;
+    margin-top: 12px;
+  }
+  .arch-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    flex: 1;
+    align-content: center;
+  }
+  .agent-card {
+    border: 1px solid rgba(250,250,250,0.15);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .agent-card h3 {
+    font-family: var(--font-display-en);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="bg-pattern"></div>
+  <div class="header">
+    <p class="section-label">架构</p>
+    <h1>多 Agent 协同编排</h1>
+  </div>
+  <div class="arch-grid">
+    <div class="agent-card">
+      <h3>歌词 Agent</h3>
+      <p style="font-size:var(--fs-body);opacity:0.6;line-height:1.5">多语言歌词生成<br>Deepseek V4 Flash</p>
+    </div>
+    <div class="agent-card">
+      <h3>音乐 Agent</h3>
+      <p style="font-size:var(--fs-body);opacity:0.6;line-height:1.5">旋律 + 编曲生成<br>Suno API</p>
+    </div>
+    <div class="agent-card">
+      <h3>封面 Agent</h3>
+      <p style="font-size:var(--fs-body);opacity:0.6;line-height:1.5">AI 封面设计<br>MiniMax image-01</p>
+    </div>
+    <div class="agent-card">
+      <h3>编排器</h3>
+      <p style="font-size:var(--fs-body);opacity:0.6;line-height:1.5">工作流编排<br>状态机 + 事件驱动</p>
+    </div>
+  </div>
+  <p style="position:relative;z-index:1;font-family:var(--font-mono);font-size:var(--fs-caption);opacity:0.4;text-align:center">GMI Cloud GPU · Vercel Edge · Supabase Realtime</p>
+</div>
+</body>
+</html>

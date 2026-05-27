@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>08 · Ending</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--vi-ink);
+    color: var(--vi-paper);
+    position: relative;
+    text-align: center;
+    gap: 40px;
+  }
+  .tagline {
+    font-family: var(--font-display-zh);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .url {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    opacity: 0.6;
+    letter-spacing: 0.02em;
+  }
+  .qr-section {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-top: 16px;
+  }
+  .qr-section img {
+    width: 140px;
+    height: 140px;
+    border-radius: 8px;
+  }
+  .qr-label {
+    font-size: var(--fs-caption);
+    opacity: 0.5;
+    text-align: left;
+    line-height: 1.6;
+  }
+  .closing {
+    font-family: var(--font-display-en);
+    font-size: var(--fs-h3);
+    opacity: 0.4;
+    margin-top: 8px;
+  }
+  .credit {
+    position: absolute;
+    bottom: 32px;
+    right: 48px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+  .vermillion-dot {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--vi-vermillion);
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="vermillion-dot"></div>
+  <p class="tagline">一个人，一套多 Agent 系统<br>服务全球创作者</p>
+  <p class="url">kiyo.wangyiyang.cc</p>
+  <div class="qr-section">
+    <img src="../assets/wechat-qrcode.png" alt="WeChat QR">
+    <div class="qr-label">微信公众号<br>翊行代码</div>
+  </div>
+  <p class="closing">Thank you. Let's build.</p>
+  <span class="credit">使用 YY Design 制作</span>
+</div>
+</body>
+</html>

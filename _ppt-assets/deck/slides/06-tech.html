@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>06 · Tech Stack</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide {
+    display: flex;
+    padding: 60px 80px;
+    flex-direction: column;
+    gap: 40px;
+    box-sizing: border-box;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--vi-vermillion);
+  }
+  h1 {
+    font-family: var(--font-display-en);
+    font-size: var(--fs-h1);
+    font-weight: 700;
+    margin-top: 8px;
+  }
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    flex: 1;
+    align-content: center;
+  }
+  .tech-item {
+    border-top: 1px solid rgba(10,10,10,0.15);
+    padding-top: 20px;
+  }
+  .tech-item h3 {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 8px;
+  }
+  .tech-item p {
+    font-family: var(--font-display-en);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div>
+    <p class="section-label">技术栈</p>
+    <h1>生产级架构</h1>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-item">
+      <h3>Frontend</h3>
+      <p>Next.js 15<br>React 19<br>TypeScript</p>
+    </div>
+    <div class="tech-item">
+      <h3>AI / LLM</h3>
+      <p>Deepseek V4 Flash<br>GMI Cloud GPU<br>MiniMax</p>
+    </div>
+    <div class="tech-item">
+      <h3>Music Gen</h3>
+      <p>Suno API<br>MiniMax TTS<br>AI Cover</p>
+    </div>
+    <div class="tech-item">
+      <h3>Backend</h3>
+      <p>Supabase<br>Edge Functions<br>Realtime</p>
+    </div>
+    <div class="tech-item">
+      <h3>Infra</h3>
+      <p>Vercel Edge<br>R2 Storage<br>Turborepo</p>
+    </div>
+    <div class="tech-item">
+      <h3>Quality</h3>
+      <p>Vitest<br>Playwright E2E<br>CI/CD</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

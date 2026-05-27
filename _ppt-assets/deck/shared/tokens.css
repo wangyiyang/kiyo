@@ -1,0 +1,55 @@
+/* 翊行代码 VI v1.0 · Slide Deck Tokens */
+:root {
+  /* 品牌色 */
+  --vi-ink: #0A0A0A;
+  --vi-paper: #FAFAFA;
+  --vi-vermillion: #C0392B;
+  --vi-gold: #B8860B;
+
+  /* Kiyo 产品色（用于 UI 截图衬底） */
+  --kiyo-purple: hsl(262, 83%, 65%);
+  --kiyo-cyan: hsl(190, 95%, 55%);
+
+  /* 字体 */
+  --font-display-zh: "Source Han Serif SC", "Noto Serif SC", serif;
+  --font-body-zh: "Source Han Sans SC", "Noto Sans SC", sans-serif;
+  --font-display-en: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* 字号（10m 投屏） */
+  --fs-hero: 72px;
+  --fs-h1: 56px;
+  --fs-h2: 40px;
+  --fs-h3: 28px;
+  --fs-body: 22px;
+  --fs-caption: 16px;
+
+  /* 间距 */
+  --slide-pad: 80px;
+  --slide-pad-y: 60px;
+}
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; }
+
+/* 基础 slide 容器 */
+.slide {
+  width: 1920px;
+  height: 1080px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-family: var(--font-body-zh);
+  color: var(--vi-ink);
+  background: var(--vi-paper);
+}
+.slide img {
+  max-width: 100%;
+  height: auto;
+}
+
+.slide--dark {
+  background: var(--vi-ink);
+  color: var(--vi-paper);
+}

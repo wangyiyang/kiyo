@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>07 · Competitive Edge</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide {
+    display: flex;
+    padding: 60px 80px;
+    flex-direction: column;
+    gap: 40px;
+    box-sizing: border-box;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--vi-vermillion);
+  }
+  h1 {
+    font-family: var(--font-display-zh);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+    margin-top: 8px;
+  }
+  .compare {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 0;
+    flex: 1;
+    align-content: center;
+    font-size: var(--fs-body);
+  }
+  .compare-header {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 16px 0;
+    border-bottom: 2px solid var(--vi-ink);
+    opacity: 0.6;
+  }
+  .compare-header.brand {
+    font-weight: 700;
+    color: var(--vi-vermillion);
+    opacity: 1;
+  }
+  .compare-cell {
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(10,10,10,0.1);
+    line-height: 1.4;
+  }
+  .check {
+    color: var(--vi-vermillion);
+    font-weight: 700;
+  }
+  .dim { opacity: 0.4; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div>
+    <p class="section-label">Why Kiyo</p>
+    <h1>差异化竞争力</h1>
+  </div>
+  <div class="compare">
+    <div class="compare-header"></div>
+    <div class="compare-header brand">Kiyo</div>
+    <div class="compare-header">Suno</div>
+    <div class="compare-header">Udio</div>
+
+    <div class="compare-cell">多 Agent 协同工作流</div>
+    <div class="compare-cell check">&#10003;</div>
+    <div class="compare-cell dim">&#10007;</div>
+    <div class="compare-cell dim">&#10007;</div>
+
+    <div class="compare-cell">多语言歌词生成（中/英/日）</div>
+    <div class="compare-cell check">&#10003;</div>
+    <div class="compare-cell dim">仅英</div>
+    <div class="compare-cell dim">仅英</div>
+
+    <div class="compare-cell">开源 · 可私有部署</div>
+    <div class="compare-cell check">&#10003;</div>
+    <div class="compare-cell dim">&#10007;</div>
+    <div class="compare-cell dim">&#10007;</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>02 · Problem</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide {
+    display: flex;
+    padding: var(--slide-pad);
+    padding-top: var(--slide-pad-y);
+    flex-direction: column;
+    justify-content: center;
+    gap: 64px;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--vi-vermillion);
+  }
+  h1 {
+    font-family: var(--font-display-zh);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .pain-points {
+    display: flex;
+    gap: 48px;
+    margin-top: 16px;
+  }
+  .pain-point {
+    flex: 1;
+    border-top: 2px solid var(--vi-ink);
+    padding-top: 20px;
+  }
+  .pain-point h3 {
+    font-family: var(--font-display-en);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .pain-point p {
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    opacity: 0.7;
+  }
+  .stat {
+    font-family: var(--font-mono);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--vi-vermillion);
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div>
+    <p class="section-label">Problem</p>
+    <h1>全球创作者需要原创音乐<br>但专业工具门槛太高</h1>
+  </div>
+  <div class="pain-points">
+    <div class="pain-point">
+      <p class="stat">50M+</p>
+      <h3>内容创作者</h3>
+      <p>TikTok / YouTube / Instagram 创作者需要原创 BGM</p>
+    </div>
+    <div class="pain-point">
+      <p class="stat">6 月+</p>
+      <h3>学习曲线</h3>
+      <p>DAW 专业工具入门门槛陡峭，非音乐人难以上手</p>
+    </div>
+    <div class="pain-point">
+      <p class="stat">$$$</p>
+      <h3>版权成本</h3>
+      <p>商用音乐授权昂贵且同质化严重</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

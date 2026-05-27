@@ -1,0 +1,488 @@
+<!doctype html><html lang="zh-Hans"><head>
+<meta charset="utf-8"><title>Kiyo · Demo v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=Noto+Serif+SC:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0A;--ink:#FAFAFA;--ink80:rgba(255,255,255,.82);--ink60:rgba(255,255,255,.58);--muted:rgba(255,255,255,.4);--dim:rgba(255,255,255,.18);--hair:rgba(255,255,255,.12);--accent:#C0392B;--gold:#B8860B;--serif:"Noto Serif SC","Songti SC",serif;--sans:"Inter",-apple-system,"PingFang SC",system-ui,sans-serif;--mono:"JetBrains Mono","SF Mono",monospace;}
+html,body{margin:0;padding:0;background:#0A0A0A;overflow:hidden;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;}
+*{box-sizing:border-box;}
+.stage{position:fixed;top:50%;left:50%;width:1920px;height:1080px;transform-origin:center center;background:var(--bg);overflow:hidden;}
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden;will-change:opacity;display:flex;align-items:center;justify-content:center;}
+.scene.visible{visibility:visible;}
+.wm{position:absolute;font-family:var(--mono);letter-spacing:.18em;color:rgba(255,255,255,.13);z-index:50;text-transform:uppercase;pointer-events:none;}
+.wm-tl{top:40px;left:56px;font-size:12px;}.wm-br{bottom:32px;right:52px;font-size:10px;}
+.s0{flex-direction:column;gap:0;}.s0-logo{font-family:var(--sans);font-size:180px;font-weight:200;letter-spacing:-.06em;line-height:1;will-change:opacity,transform;}.s0-logo .k{color:var(--accent);}
+.s0-line{width:0;height:2px;background:var(--accent);margin:36px auto 0;}.s0-tag{font-family:var(--mono);font-size:18px;color:var(--muted);letter-spacing:.22em;margin-top:32px;opacity:0;}.s0-sub{font-family:var(--serif);font-size:26px;color:var(--ink60);margin-top:16px;opacity:0;}
+.s1{flex-direction:column;gap:0;padding:0 240px;align-items:flex-start;}.s1-eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.3em;color:var(--accent);margin-bottom:28px;opacity:0;text-transform:uppercase;}
+.s1-num{font-family:var(--sans);font-size:140px;font-weight:200;letter-spacing:-.04em;line-height:1;opacity:0;}.s1-num .u{color:var(--accent);}.s1-desc{font-family:var(--serif);font-size:34px;color:var(--ink60);margin-top:20px;opacity:0;}
+.s1-pains{margin-top:44px;display:flex;flex-direction:column;gap:18px;}.s1-pain{font-family:var(--sans);font-size:22px;color:var(--muted);display:flex;align-items:center;gap:20px;opacity:0;}.s1-pain .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.s2{flex-direction:column;gap:0;}.s2-label{font-family:var(--mono);font-size:13px;letter-spacing:.28em;color:var(--muted);margin-bottom:28px;opacity:0;text-transform:uppercase;}.s2-hero{font-family:var(--sans);font-size:96px;font-weight:200;letter-spacing:-.04em;text-align:center;line-height:1.08;opacity:0;}.s2-hero .a{color:var(--accent);}.s2-sub{font-family:var(--mono);font-size:20px;color:var(--muted);margin-top:36px;letter-spacing:.08em;opacity:0;}
+.s3{flex-direction:column;align-items:center;gap:0;}.s3-title{font-family:var(--mono);font-size:13px;letter-spacing:.28em;color:var(--muted);margin-bottom:56px;text-transform:uppercase;opacity:0;}
+.s3-flow{position:relative;width:1400px;height:480px;}.s3-node{position:absolute;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;}.s3-box{border:1px solid var(--hair);padding:18px 36px;font-family:var(--mono);font-size:17px;font-weight:500;letter-spacing:.04em;white-space:nowrap;transition:border-color .4s,color .4s,box-shadow .4s;}.s3-box.lit{border-color:var(--accent);color:var(--accent);box-shadow:0 0 28px rgba(192,57,43,.22);}.s3-sub{font-family:var(--sans);font-size:12px;color:var(--muted);text-align:center;max-width:180px;line-height:1.5;}
+.s3-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+.ss{position:relative;width:100%;height:100%;overflow:hidden;}.ss-img{position:absolute;top:0;left:0;will-change:transform;}.ss-img img{width:1920px;height:auto;display:block;}.ss-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,10,10,.75) 0%,rgba(10,10,10,.3) 100%);z-index:2;}
+.ss-content{position:absolute;z-index:3;left:120px;bottom:120px;}.ss-content.right{left:auto;right:120px;text-align:right;}.ss-label{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;opacity:0;}.ss-title{font-family:var(--serif);font-size:68px;font-weight:400;line-height:1.1;margin-bottom:18px;opacity:0;}.ss-desc{font-family:var(--sans);font-size:21px;color:var(--ink60);max-width:600px;line-height:1.65;opacity:0;}
+.ss-badge{display:inline-flex;align-items:center;gap:12px;margin-top:24px;border:1px solid rgba(192,57,43,.35);padding:10px 22px;opacity:0;}.ss-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}.ss-badge-text{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.06em;}
+.s7{flex-direction:column;align-items:center;gap:0;}.s7-eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.3em;color:var(--muted);margin-bottom:28px;opacity:0;text-transform:uppercase;}.s7-hero{font-family:var(--sans);font-size:120px;font-weight:200;letter-spacing:-.05em;text-align:center;opacity:0;}.s7-hero .a{color:var(--accent);}.s7-langs{display:flex;gap:44px;margin-top:60px;flex-wrap:wrap;justify-content:center;}.s7-lang{font-family:var(--mono);font-size:15px;color:var(--muted);letter-spacing:.12em;opacity:0;}
+.s11{flex-direction:column;gap:0;padding:0 200px;align-items:flex-start;}.s11-label{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--muted);margin-bottom:44px;opacity:0;text-transform:uppercase;}.s11-row{display:flex;gap:56px;margin-bottom:28px;flex-wrap:wrap;}.s11-chip{display:flex;flex-direction:column;gap:6px;opacity:0;}.s11-chip-name{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--ink80);letter-spacing:.04em;}.s11-chip-role{font-family:var(--sans);font-size:13px;color:var(--muted);}.s11-chip.lit .s11-chip-name{color:var(--accent);}.s11-caption{font-family:var(--serif);font-size:30px;color:var(--dim);margin-top:36px;opacity:0;font-style:italic;}
+.s12{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:100%;height:100%;}.s12-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border:1px solid rgba(255,255,255,.04);opacity:0;}.s12-num{font-family:var(--sans);font-size:120px;font-weight:200;letter-spacing:-.04em;line-height:1;color:var(--ink80);}.s12-num .u{color:var(--accent);}.s12-label{font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+.s13{flex-direction:column;gap:0;padding:0 200px;align-items:flex-start;}.s13-title{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--muted);margin-bottom:56px;text-transform:uppercase;opacity:0;}.s13-head{display:grid;grid-template-columns:2fr 1fr 1fr;width:100%;margin-bottom:0;}.s13-hcell{font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--muted);padding:14px 22px;text-transform:uppercase;opacity:0;}.s13-hcell.hl{color:var(--accent);}.s13-row{display:grid;grid-template-columns:2fr 1fr 1fr;border-top:1px solid var(--hair);width:100%;opacity:0;}.s13-cell{font-family:var(--sans);font-size:19px;color:var(--ink60);padding:18px 22px;}.s13-cell.dim{color:var(--muted);}.s13-cell.bright{color:var(--ink80);}.s13-cell.ac{color:var(--accent);font-weight:500;}
+.s14{flex-direction:row;gap:160px;align-items:center;}.s14-left{display:flex;flex-direction:column;gap:24px;opacity:0;}.s14-qr{width:300px;height:300px;border:1px solid var(--hair);padding:20px;background:rgba(255,255,255,.03);}.s14-qr img{width:100%;height:100%;filter:invert(1);}.s14-right{display:flex;flex-direction:column;gap:14px;opacity:0;}.s14-brand{font-family:var(--mono);font-size:12px;letter-spacing:.28em;color:var(--muted);text-transform:uppercase;}.s14-name{font-family:var(--serif);font-size:60px;font-weight:400;line-height:1.1;}.s14-name .a{color:var(--accent);}.s14-sub{font-family:var(--sans);font-size:19px;color:var(--muted);margin-top:6px;}.s14-line{width:100px;height:1px;background:var(--accent);margin:20px 0;}.s14-url{font-family:var(--mono);font-size:17px;color:var(--dim);letter-spacing:.08em;}
+.s15{flex-direction:column;gap:0;align-items:center;}.s15-panel{position:absolute;inset:0;background:var(--ink);transform:translateY(100%);z-index:1;}.s15-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:0;}.s15-logo{font-family:var(--sans);font-size:100px;font-weight:200;letter-spacing:-.05em;line-height:1;opacity:0;color:var(--bg);}.s15-logo .k{color:var(--accent);}.s15-url{font-family:var(--mono);font-size:26px;color:rgba(0,0,0,.4);letter-spacing:.08em;margin-top:24px;opacity:0;}.s15-cta{font-family:var(--serif);font-size:20px;color:rgba(0,0,0,.3);margin-top:16px;opacity:0;font-style:italic;}.s15-yy{position:absolute;bottom:44px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:rgba(0,0,0,.18);text-transform:uppercase;opacity:0;z-index:3;}
+</style></head><body>
+<div class="stage" id="stage">
+<div class="wm wm-tl">KIYO · DEMO</div>
+<div class="wm wm-br">kiyo.wangyiyang.cc</div>
+<div class="scene s0" id="s0">
+  <canvas id="s0-canvas" style="position:absolute;inset:0;width:100%;height:100%;opacity:.18;"></canvas>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:0;position:relative;z-index:2;">
+    <div class="s0-logo" id="s0-logo"><span class="k">K</span>iyo</div>
+    <div class="s0-line" id="s0-line"></div>
+    <div class="s0-tag" id="s0-tag">MULTI-AGENT MUSIC CREATION</div>
+    <div class="s0-sub" id="s0-sub">面向全球创作者的 AI 音乐协作系统</div>
+  </div>
+</div>
+<div class="scene s1" id="s1">
+  <div class="s1-eyebrow" id="s1-ey">PROBLEM · 痛点</div>
+  <div class="s1-num" id="s1-num">5000<span class="u">万+</span></div>
+  <div class="s1-desc" id="s1-desc">全球内容创作者需要原创音乐</div>
+  <div class="s1-pains">
+    <div class="s1-pain" id="s1-p0"><span class="dot"></span>专业工具门槛高 — DAW 学习曲线陡峭</div>
+    <div class="s1-pain" id="s1-p1"><span class="dot"></span>版权音乐贵且同质化</div>
+    <div class="s1-pain" id="s1-p2"><span class="dot"></span>现有 AI 工具只做单点，无完整工作流</div>
+  </div>
+</div>
+<div class="scene s2" id="s2">
+  <div class="s2-label" id="s2-lbl">SOLUTION · 解决方案</div>
+  <div class="s2-hero" id="s2-hero">不是单一 AI 工具<br>而是<span class="a">多 Agent 协同系统</span></div>
+  <div class="s2-sub" id="s2-sub">Orchestrate · Generate · Compose · Visualize</div>
+</div>
+<div class="scene s3" id="s3">
+  <div class="s3-title" id="s3-ttl">AGENT ARCHITECTURE · 编排架构</div>
+  <div class="s3-flow" id="s3-flow">
+    <div class="s3-node" id="s3-n0" style="left:550px;top:20px;">
+      <div class="s3-box" id="s3-b0">Orchestrator Agent</div>
+      <div class="s3-sub">意图理解 · 任务分发</div>
+    </div>
+    <div class="s3-node" id="s3-n1" style="left:40px;top:240px;">
+      <div class="s3-box" id="s3-b1">Lyric Agent</div>
+      <div class="s3-sub">多语言歌词生成<br>LLM 驱动</div>
+    </div>
+    <div class="s3-node" id="s3-n2" style="left:340px;top:240px;">
+      <div class="s3-box" id="s3-b2">Composition Agent</div>
+      <div class="s3-sub">风格 + 情绪<br>→ 完整歌曲</div>
+    </div>
+    <div class="s3-node" id="s3-n3" style="left:700px;top:240px;">
+      <div class="s3-box" id="s3-b3">Voice Agent</div>
+      <div class="s3-sub">声线转换<br>保留情感</div>
+    </div>
+    <div class="s3-node" id="s3-n4" style="left:1020px;top:240px;">
+      <div class="s3-box" id="s3-b4">Visual Agent</div>
+      <div class="s3-sub">封面图像生成<br>风格匹配</div>
+    </div>
+    <svg class="s3-svg" id="s3-svg"><defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(192,57,43,.5)"/></marker></defs></svg>
+  </div>
+</div>
+<div class="scene" id="s4"><div class="ss">
+  <div class="ss-img" id="s4-img"><img src="assets/ui-homepage-dark.png" alt=""></div>
+  <div class="ss-overlay"></div>
+  <div class="ss-content">
+    <div class="ss-label" id="s4-lbl">AI MUSIC CREATION</div>
+    <div class="ss-title" id="s4-ttl">一个 Prompt<br>完整作品</div>
+    <div class="ss-desc" id="s4-desc">选择风格、输入情绪描述，多 Agent 协同生成人声 + 伴奏的完整歌曲</div>
+    <div class="ss-badge" id="s4-badge"><div class="ss-badge-dot"></div><div class="ss-badge-text">LIVE DEMO · kiyo.wangyiyang.cc</div></div>
+  </div>
+</div></div>
+<div class="scene" id="s5"><div class="ss">
+  <div class="ss-img" id="s5-img"><img src="assets/ui-song-detail.png" alt=""></div>
+  <div class="ss-overlay"></div>
+  <div class="ss-content right">
+    <div class="ss-label" id="s5-lbl">FULL WORKFLOW</div>
+    <div class="ss-title" id="s5-ttl">作词 → 作曲<br>→ 翻唱 → 专辑</div>
+    <div class="ss-desc" id="s5-desc">每首歌都是完整的创作过程，不是单次生成的孤立产物</div>
+    <div class="ss-badge" id="s5-badge"><div class="ss-badge-dot"></div><div class="ss-badge-text">AGENT PIPELINE · 4 AGENTS</div></div>
+  </div>
+</div></div>
+<div class="scene" id="s6"><div class="ss">
+  <div class="ss-img" id="s6-img"><img src="assets/ui-lyrics-generate.png" alt=""></div>
+  <div class="ss-overlay"></div>
+  <div class="ss-content">
+    <div class="ss-label" id="s6-lbl">LYRIC AGENT</div>
+    <div class="ss-title" id="s6-ttl">多语言歌词<br>韵律自然</div>
+    <div class="ss-desc" id="s6-desc">理解不同语言的韵律结构和文化表达，生成真正符合语言规律的歌词</div>
+    <div class="ss-badge" id="s6-badge"><div class="ss-badge-dot"></div><div class="ss-badge-text">EN · JA · KO · ES · ZH</div></div>
+  </div>
+</div></div>
+<div class="scene s7" id="s7">
+  <div class="s7-eyebrow" id="s7-ey">GLOBAL READY · 全球落地</div>
+  <div class="s7-hero" id="s7-hero">面向<span class="a">全球</span>创作者</div>
+  <div class="s7-langs">
+    <div class="s7-lang" id="s7-lENG">ENGLISH</div>
+    <div class="s7-lang" id="s7-l日本語">日本語</div>
+    <div class="s7-lang" id="s7-l한국어">한국어</div>
+    <div class="s7-lang" id="s7-lESP">ESPAÑOL</div>
+    <div class="s7-lang" id="s7-l中文">中文</div>
+    <div class="s7-lang" id="s7-lPOR">PORTUGUÊS</div>
+    <div class="s7-lang" id="s7-lFRA">FRANÇAIS</div>
+    <div class="s7-lang" id="s7-lDEU">DEUTSCH</div>
+  </div>
+</div>
+<div class="scene" id="s8"><div class="ss">
+  <div class="ss-img" id="s8-img"><img src="assets/ui-homepage-en.png" alt=""></div>
+  <div class="ss-overlay" style="background:linear-gradient(135deg,rgba(10,10,10,.6) 0%,rgba(10,10,10,.15) 100%);"></div>
+  <div class="ss-content right">
+    <div class="ss-label" id="s8-lbl">GLOBAL UI</div>
+    <div class="ss-title" id="s8-ttl">English<br>Interface</div>
+    <div class="ss-desc" id="s8-desc">UI fully localized — not just translated, culturally adapted for each market</div>
+  </div>
+</div></div>
+<div class="scene" id="s9"><div class="ss">
+  <div class="ss-img" id="s9-img"><img src="assets/ui-homepage-ja.png" alt=""></div>
+  <div class="ss-overlay" style="background:linear-gradient(225deg,rgba(10,10,10,.6) 0%,rgba(10,10,10,.15) 100%);"></div>
+  <div class="ss-content">
+    <div class="ss-label" id="s9-lbl">日本語対応</div>
+    <div class="ss-title" id="s9-ttl">日本語<br>インターフェース</div>
+    <div class="ss-desc" id="s9-desc">J-Pop · City Pop スタイルに特化した音楽生成に対応</div>
+  </div>
+</div></div>
+<div class="scene" id="s10"><div class="ss">
+  <div class="ss-img" id="s10-img"><img src="assets/ui-songs-list.png" alt=""></div>
+  <div class="ss-overlay"></div>
+  <div class="ss-content">
+    <div class="ss-label" id="s10-lbl">ALBUM MANAGEMENT</div>
+    <div class="ss-title" id="s10-ttl">专辑管理<br>AI 封面生成</div>
+    <div class="ss-desc" id="s10-desc">Visual Agent 根据音乐风格自动生成匹配封面，一键发布专辑</div>
+    <div class="ss-badge" id="s10-badge"><div class="ss-badge-dot"></div><div class="ss-badge-text">VISUAL AGENT · AUTO COVER</div></div>
+  </div>
+</div></div>
+<div class="scene s11" id="s11">
+  <div class="s11-label" id="s11-lbl">TECH STACK · 技术架构</div>
+  <div class="s11-row">
+    <div class="s11-chip lit" id="s11-cNex"><div class="s11-chip-name">Next.js</div><div class="s11-chip-role">全栈框架 · App Router</div></div>
+    <div class="s11-chip" id="s11-cSup"><div class="s11-chip-name">Supabase</div><div class="s11-chip-role">数据库 + 存储 + Auth</div></div>
+    <div class="s11-chip" id="s11-cVer"><div class="s11-chip-name">Vercel</div><div class="s11-chip-role">全球边缘部署</div></div>
+    <div class="s11-chip" id="s11-cTyp"><div class="s11-chip-name">TypeScript</div><div class="s11-chip-role">端到端类型安全</div></div>
+  </div>
+  <div class="s11-row">
+    <div class="s11-chip lit" id="s11-cGMI2"><div class="s11-chip-name">GMI Cloud</div><div class="s11-chip-role">DeepSeek V4 Flash · LLM</div></div>
+    <div class="s11-chip" id="s11-cRLS2"><div class="s11-chip-name">RLS</div><div class="s11-chip-role">行级安全 · 数据隔离</div></div>
+    <div class="s11-chip" id="s11-cRat2"><div class="s11-chip-name">Rate Limit</div><div class="s11-chip-role">滑动窗口限流</div></div>
+    <div class="s11-chip" id="s11-cOAu2"><div class="s11-chip-name">OAuth</div><div class="s11-chip-role">GitHub / Google 全球登录</div></div>
+  </div>
+  <div class="s11-caption" id="s11-cap">一个人，完成全部开发和运维</div>
+</div>
+<div class="scene s12" id="s12">
+  <div class="s12-cell" id="s12-cAI "><div class="s12-num">4<span class="u"></span></div><div class="s12-label">AI Agents</div></div>
+  <div class="s12-cell" id="s12-cLan"><div class="s12-num">10<span class="u">+</span></div><div class="s12-label">Languages</div></div>
+  <div class="s12-cell" id="s12-cVid"><div class="s12-num">1920<span class="u">×1080</span></div><div class="s12-label">Video Output</div></div>
+  <div class="s12-cell" id="s12-c独立开"><div class="s12-num">1<span class="u">人</span></div><div class="s12-label">独立开发</div></div>
+</div>
+<div class="scene s13" id="s13">
+  <div class="s13-title" id="s13-ttl">COMPETITIVE ADVANTAGE · 差异化优势</div>
+  <div class="s13-head">
+    <div class="s13-hcell" id="s13-h0">维度</div>
+    <div class="s13-hcell" id="s13-h1">Suno / Udio</div>
+    <div class="s13-hcell hl" id="s13-h2">Kiyo</div>
+  </div>
+  <div class="s13-row" id="s13-r0"><div class="s13-cell">定位</div><div class="s13-cell dim">单点生成工具</div><div class="s13-cell ac">多 Agent 创作系统</div></div>
+  <div class="s13-row" id="s13-r1"><div class="s13-cell">工作流</div><div class="s13-cell dim">生成即结束</div><div class="s13-cell ac">作词→作曲→翻唱→封面→专辑</div></div>
+  <div class="s13-row" id="s13-r2"><div class="s13-cell">海外适配</div><div class="s13-cell dim">英文为主</div><div class="s13-cell ac">多语言 Agent + 文化适配</div></div>
+  <div class="s13-row" id="s13-r3"><div class="s13-cell">架构</div><div class="s13-cell dim">黑盒</div><div class="s13-cell ac">可扩展 Agent 编排</div></div>
+</div>
+<div class="scene s14" id="s14">
+  <div class="s14-left" id="s14-l">
+    <div style="font-family:var(--mono);font-size:12px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;">微信公众号</div>
+    <div class="s14-qr"><img src="assets/wechat-qrcode.png" alt="WeChat QR"></div>
+    <div style="font-family:var(--sans);font-size:14px;color:var(--muted);text-align:center;margin-top:12px;">翊行代码</div>
+  </div>
+  <div class="s14-right" id="s14-r">
+    <div class="s14-brand">YY Design · 翊行代码</div>
+    <div class="s14-name"><span class="a">K</span>iyo</div>
+    <div class="s14-sub">AI Multi-Agent Music Creation</div>
+    <div class="s14-line"></div>
+    <div class="s14-url">kiyo.wangyiyang.cc</div>
+    <div style="font-family:var(--mono);font-size:13px;color:var(--dim);margin-top:16px;letter-spacing:.06em;">Built by Wang Yiyang · 2026</div>
+  </div>
+</div>
+<div class="scene s15" id="s15">
+  <div class="s15-panel" id="s15-panel"></div>
+  <div class="s15-content">
+    <div class="s15-logo" id="s15-logo"><span class="k">K</span>iyo</div>
+    <div class="s15-url" id="s15-url">kiyo.wangyiyang.cc</div>
+    <div class="s15-cta" id="s15-cta">Start creating. Now.</div>
+  </div>
+  <div class="s15-yy" id="s15-yy">YY Design · 翊行代码 · 2026</div>
+</div>
+</div><!-- /stage -->
+<script>
+
+(function(){
+// ── Timing (seconds) ──────────────────────────────────────────────────────
+const T = {
+  TOTAL: 96,
+  s0:  [0,    5],    // Title
+  s1:  [5,    11],   // Problem
+  s2:  [11,   16],   // Solution
+  s3:  [16,   23],   // Architecture
+  s4:  [23,   30],   // Homepage dark
+  s5:  [30,   37],   // Song detail
+  s6:  [37,   44],   // Lyrics
+  s7:  [44,   49],   // Global intro
+  s8:  [49,   55],   // English UI
+  s9:  [55,   61],   // Japanese UI
+  s10: [61,   68],   // Songs list
+  s11: [68,   75],   // Tech stack
+  s12: [75,   81],   // Stats
+  s13: [81,   87],   // Compare
+  s14: [87,   92],   // QR + YY Design
+  s15: [92,   96],   // Closing
+};
+
+// ── Easings ───────────────────────────────────────────────────────────────
+const expoOut  = t => t>=1?1:1-Math.pow(2,-10*t);
+const cubicOut = t => 1-Math.pow(1-t,3);
+const cubicIn  = t => t*t*t;
+const linear   = t => t;
+const clamp    = (v,lo=0,hi=1) => Math.max(lo,Math.min(hi,v));
+const lerp01   = (t,t0,t1) => clamp((t-t0)/(t1-t0));
+function lerp(t,t0,t1,v0,v1,ease=linear){ return v0+(v1-v0)*ease(lerp01(t,t0,t1)); }
+
+// ── DOM helpers ───────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+function show(el, op){ if(!el)return; if(op>0.001)el.classList.add('visible'); else el.classList.remove('visible'); el.style.opacity=op; }
+function fadeIn(el,t,t0,t1,ease=expoOut){ if(!el)return; const op=lerp(t,t0,t1,0,1,ease); show(el,op); }
+function slideUp(el,t,t0,t1,dy=30){ if(!el)return; const p=lerp01(t,t0,t1); const op=expoOut(p); const y=dy*(1-expoOut(p)); show(el,op); el.style.transform=`translateY(${y}px)`; }
+
+// ── Scale stage to viewport ───────────────────────────────────────────────
+function scaleStage(){
+  const s=document.getElementById('stage');
+  const sx=window.innerWidth/1920, sy=window.innerHeight/1080;
+  const sc=Math.min(sx,sy);
+  s.style.transform=`translate(-50%,-50%) scale(${sc})`;
+}
+scaleStage(); window.addEventListener('resize',scaleStage);
+
+// ── Particle canvas (S0) ──────────────────────────────────────────────────
+const canvas=$('s0-canvas');
+if(canvas){
+  canvas.width=1920; canvas.height=1080;
+  const ctx=canvas.getContext('2d');
+  const pts=Array.from({length:60},()=>({x:Math.random()*1920,y:Math.random()*1080,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*2+1}));
+  function drawParticles(t){
+    ctx.clearRect(0,0,1920,1080);
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>1920)p.vx*=-1;if(p.y<0||p.y>1080)p.vy*=-1;});
+    pts.forEach((p,i)=>{
+      pts.forEach((q,j)=>{if(j<=i)return;const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<200){ctx.strokeStyle=`rgba(192,57,43,${.15*(1-d/200)})`;ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}});
+      ctx.fillStyle='rgba(192,57,43,.5)';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+    });
+  }
+}
+
+// ── Architecture SVG arrows ───────────────────────────────────────────────
+function drawArrows(progress){
+  const svg=$('s3-svg'); if(!svg)return;
+  const existing=svg.querySelectorAll('line'); existing.forEach(e=>e.remove());
+  if(progress<0.01)return;
+  // Orchestrator center: ~700,80  Sub-agents: 140,300  440,300  800,300  1120,300
+  const orch={x:700,y:80};
+  const subs=[{x:140,y:280},{x:440,y:280},{x:800,y:280},{x:1120,y:280}];
+  subs.forEach((s,i)=>{
+    const delay=i*0.15;
+    const p=clamp((progress-delay)/(1-delay));
+    if(p<=0)return;
+    const ex=orch.x+(s.x-orch.x)*p, ey=orch.y+(s.y-orch.y)*p;
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',orch.x);line.setAttribute('y1',orch.y+40);
+    line.setAttribute('x2',ex);line.setAttribute('y2',ey);
+    line.setAttribute('stroke',`rgba(192,57,43,${.5*p})`);
+    line.setAttribute('stroke-width','1.5');
+    line.setAttribute('marker-end','url(#arr)');
+    svg.appendChild(line);
+  });
+}
+
+// ── Screenshot pan/zoom helpers ───────────────────────────────────────────
+function ssZoomIn(imgEl,t,t0,t1){ if(!imgEl)return; const p=lerp01(t,t0,t1); const sc=1+0.06*p; const ty=-30*p; imgEl.style.transform=`scale(${sc}) translateY(${ty}px)`; }
+function ssPanRight(imgEl,t,t0,t1){ if(!imgEl)return; const p=lerp01(t,t0,t1); imgEl.style.transform=`translateX(${-60*p}px)`; }
+function ssPanLeft(imgEl,t,t0,t1){ if(!imgEl)return; const p=lerp01(t,t0,t1); imgEl.style.transform=`translateX(${60*(p-0.5)*-1}px) scale(1.04)`; }
+function ssZoomOut(imgEl,t,t0,t1){ if(!imgEl)return; const p=lerp01(t,t0,t1); const sc=1.08-0.06*p; imgEl.style.transform=`scale(${sc})`; }
+
+// ── Main animation loop ───────────────────────────────────────────────────
+let startTime=null;
+function tick(now){
+  if(!startTime)startTime=now;
+  const t=(now-startTime)/1000;
+  if(canvas) drawParticles(t);
+
+  // helper: scene opacity with 0.5s fade in/out
+  function sceneOp(key){
+    const [a,b]=T[key]; const fade=0.5;
+    if(t<a||t>b)return 0;
+    if(t<a+fade)return lerp01(t,a,a+fade);
+    if(t>b-fade)return 1-lerp01(t,b-fade,b);
+    return 1;
+  }
+
+  // ── S0 Title ──
+  { const op=sceneOp('s0'); show($('s0'),op);
+    const [a]=T.s0;
+    fadeIn($('s0-logo'),t,a+.3,a+1.2,expoOut);
+    const line=$('s0-line'); if(line){const p=lerp01(t,a+1.0,a+1.8); line.style.width=(p*160)+'px';}
+    slideUp($('s0-tag'),t,a+1.6,a+2.4);
+    slideUp($('s0-sub'),t,a+2.0,a+2.8);
+  }
+
+  // ── S1 Problem ──
+  { const op=sceneOp('s1'); show($('s1'),op);
+    const [a]=T.s1;
+    slideUp($('s1-ey'),t,a+.2,a+.9);
+    slideUp($('s1-num'),t,a+.5,a+1.3);
+    slideUp($('s1-desc'),t,a+.9,a+1.6);
+    slideUp($('s1-p0'),t,a+1.4,a+2.0);
+    slideUp($('s1-p1'),t,a+1.8,a+2.4);
+    slideUp($('s1-p2'),t,a+2.2,a+2.8);
+  }
+
+  // ── S2 Solution ──
+  { const op=sceneOp('s2'); show($('s2'),op);
+    const [a]=T.s2;
+    slideUp($('s2-lbl'),t,a+.2,a+.8);
+    slideUp($('s2-hero'),t,a+.5,a+1.4);
+    slideUp($('s2-sub'),t,a+1.2,a+1.9);
+  }
+
+  // ── S3 Architecture ──
+  { const op=sceneOp('s3'); show($('s3'),op);
+    const [a]=T.s3;
+    slideUp($('s3-ttl'),t,a+.2,a+.8);
+    for(let i=0;i<5;i++){
+      const delay=i*0.3;
+      slideUp($(`s3-n${i}`),t,a+.6+delay,a+1.2+delay);
+    }
+    const arrowP=lerp01(t,a+1.5,a+3.5);
+    drawArrows(arrowP);
+    // Light up boxes sequentially
+    const boxes=['s3-b0','s3-b1','s3-b2','s3-b3','s3-b4'];
+    boxes.forEach((id,i)=>{
+      const el=$(id); if(!el)return;
+      const on=t>a+2.0+i*0.4 && t<T.s3[1]-0.5;
+      if(on)el.classList.add('lit'); else el.classList.remove('lit');
+    });
+  }
+
+  // ── S4 Homepage ──
+  { const op=sceneOp('s4'); show($('s4'),op);
+    const [a,b]=T.s4;
+    ssZoomIn($('s4-img'),t,a,b);
+    slideUp($('s4-lbl'),t,a+.4,a+1.0);
+    slideUp($('s4-ttl'),t,a+.7,a+1.5);
+    slideUp($('s4-desc'),t,a+1.1,a+1.9);
+    slideUp($('s4-badge'),t,a+1.6,a+2.3);
+  }
+
+  // ── S5 Song Detail ──
+  { const op=sceneOp('s5'); show($('s5'),op);
+    const [a,b]=T.s5;
+    ssPanRight($('s5-img'),t,a,b);
+    slideUp($('s5-lbl'),t,a+.4,a+1.0);
+    slideUp($('s5-ttl'),t,a+.7,a+1.5);
+    slideUp($('s5-desc'),t,a+1.1,a+1.9);
+    slideUp($('s5-badge'),t,a+1.6,a+2.3);
+  }
+
+  // ── S6 Lyrics ──
+  { const op=sceneOp('s6'); show($('s6'),op);
+    const [a,b]=T.s6;
+    ssPanLeft($('s6-img'),t,a,b);
+    slideUp($('s6-lbl'),t,a+.4,a+1.0);
+    slideUp($('s6-ttl'),t,a+.7,a+1.5);
+    slideUp($('s6-desc'),t,a+1.1,a+1.9);
+    slideUp($('s6-badge'),t,a+1.6,a+2.3);
+  }
+
+  // ── S7 Global ──
+  { const op=sceneOp('s7'); show($('s7'),op);
+    const [a]=T.s7;
+    slideUp($('s7-ey'),t,a+.2,a+.8);
+    slideUp($('s7-hero'),t,a+.5,a+1.3);
+    const langs=document.querySelectorAll('.s7-lang');
+    langs.forEach((el,i)=>{ const p=lerp01(t,a+1.2+i*.12,a+1.7+i*.12); show(el,expoOut(p)); });
+  }
+
+  // ── S8 English UI ──
+  { const op=sceneOp('s8'); show($('s8'),op);
+    const [a,b]=T.s8;
+    ssZoomOut($('s8-img'),t,a,b);
+    slideUp($('s8-lbl'),t,a+.4,a+1.0);
+    slideUp($('s8-ttl'),t,a+.7,a+1.5);
+    slideUp($('s8-desc'),t,a+1.1,a+1.9);
+  }
+
+  // ── S9 Japanese UI ──
+  { const op=sceneOp('s9'); show($('s9'),op);
+    const [a,b]=T.s9;
+    ssPanRight($('s9-img'),t,a,b);
+    slideUp($('s9-lbl'),t,a+.4,a+1.0);
+    slideUp($('s9-ttl'),t,a+.7,a+1.5);
+    slideUp($('s9-desc'),t,a+1.1,a+1.9);
+  }
+
+  // ── S10 Songs List ──
+  { const op=sceneOp('s10'); show($('s10'),op);
+    const [a,b]=T.s10;
+    ssZoomIn($('s10-img'),t,a,b);
+    slideUp($('s10-lbl'),t,a+.4,a+1.0);
+    slideUp($('s10-ttl'),t,a+.7,a+1.5);
+    slideUp($('s10-desc'),t,a+1.1,a+1.9);
+    slideUp($('s10-badge'),t,a+1.6,a+2.3);
+  }
+
+  // ── S11 Tech Stack ──
+  { const op=sceneOp('s11'); show($('s11'),op);
+    const [a]=T.s11;
+    slideUp($('s11-lbl'),t,a+.2,a+.8);
+    const chips=document.querySelectorAll('.s11-chip');
+    chips.forEach((el,i)=>{ slideUp(el,t,a+.6+i*.2,a+1.2+i*.2); });
+    slideUp($('s11-cap'),t,a+2.0,a+2.8);
+  }
+
+  // ── S12 Stats ──
+  { const op=sceneOp('s12'); show($('s12'),op);
+    const [a]=T.s12;
+    const cells=document.querySelectorAll('.s12-cell');
+    cells.forEach((el,i)=>{ const p=lerp01(t,a+.3+i*.25,a+.9+i*.25); show(el,expoOut(p)); });
+  }
+
+  // ── S13 Compare ──
+  { const op=sceneOp('s13'); show($('s13'),op);
+    const [a]=T.s13;
+    slideUp($('s13-ttl'),t,a+.2,a+.8);
+    ['s13-h0','s13-h1','s13-h2'].forEach((id,i)=>slideUp($(id),t,a+.5+i*.15,a+1.1+i*.15));
+    for(let i=0;i<4;i++) slideUp($(`s13-r${i}`),t,a+.9+i*.25,a+1.5+i*.25);
+  }
+
+  // ── S14 QR ──
+  { const op=sceneOp('s14'); show($('s14'),op);
+    const [a]=T.s14;
+    slideUp($('s14-l'),t,a+.3,a+1.1);
+    slideUp($('s14-r'),t,a+.6,a+1.4);
+  }
+
+  // ── S15 Closing ──
+  { const op=sceneOp('s15'); show($('s15'),op);
+    const [a]=T.s15;
+    const panel=$('s15-panel');
+    if(panel){ const p=lerp01(t,a+.1,a+.8); panel.style.transform=`translateY(${100*(1-expoOut(p))}%)`; }
+    slideUp($('s15-logo'),t,a+.7,a+1.4);
+    slideUp($('s15-url'),t,a+1.1,a+1.8);
+    slideUp($('s15-cta'),t,a+1.4,a+2.1);
+    slideUp($('s15-yy'),t,a+1.8,a+2.5);
+  }
+
+  if(t<T.TOTAL) requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+})();
+
+</script></body></html>

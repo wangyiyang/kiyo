@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>05 · Global</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide {
+    display: flex;
+    flex-direction: column;
+    padding: 60px 80px;
+    gap: 36px;
+    box-sizing: border-box;
+  }
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--vi-vermillion);
+  }
+  h1 {
+    font-family: var(--font-display-zh);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+  }
+  .i18n-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    flex: 1;
+    align-content: center;
+  }
+  .lang-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    max-height: 520px;
+  }
+  .lang-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+  .lang-label {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--vi-ink);
+    color: var(--vi-paper);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 4px 10px;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="header">
+    <p class="section-label">出海</p>
+    <h1>天生为全球创作者而建</h1>
+  </div>
+  <div class="i18n-grid">
+    <div class="lang-card">
+      <img src="../assets/ui-homepage-dark.png" alt="Chinese">
+      <span class="lang-label">中文</span>
+    </div>
+    <div class="lang-card">
+      <img src="../assets/ui-homepage-en.png" alt="English">
+      <span class="lang-label">EN</span>
+    </div>
+    <div class="lang-card">
+      <img src="../assets/ui-homepage-ja.png" alt="Japanese">
+      <span class="lang-label">日本語</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

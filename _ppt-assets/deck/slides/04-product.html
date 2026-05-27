@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>04 · Product Demo</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .slide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 60px 80px;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  .left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--vi-vermillion);
+  }
+  h1 {
+    font-family: var(--font-display-zh);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .feature {
+    font-size: var(--fs-body);
+    line-height: 1.5;
+    padding-left: 20px;
+    border-left: 2px solid var(--vi-vermillion);
+  }
+  .right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .screenshot {
+    width: 100%;
+    max-height: 600px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="left">
+    <p class="section-label">产品</p>
+    <h1>从灵感到成品<br>分钟级交付</h1>
+    <div class="features">
+      <p class="feature">多模型协同：歌词 × 旋律 × 人声 × 封面</p>
+      <p class="feature">全流程可控：不是黑盒，每步可调</p>
+      <p class="feature">AI 翻唱：一键风格转换</p>
+    </div>
+  </div>
+  <div class="right">
+    <img class="screenshot" src="../assets/ui-song-detail.png" alt="Song Detail">
+  </div>
+</div>
+</body>
+</html>
