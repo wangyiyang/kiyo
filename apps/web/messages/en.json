@@ -565,6 +565,12 @@
         "title": "No lyrics yet",
         "description": "Create your first lyric"
       }
+    },
+    "servicePaused": {
+      "title": "Service Paused",
+      "message": "AI generation services are paused. You can still browse and listen to music.",
+      "registerTitle": "Registration Paused",
+      "registerMessage": "New user registration is currently paused."
     }
   },
   "songs": {

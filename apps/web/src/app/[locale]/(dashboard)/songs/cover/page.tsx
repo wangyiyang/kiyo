@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@kiyo/ui'
 import { ArrowLeft, Mic2, Upload, Music } from 'lucide-react'
 import { createBrowserClient } from '@kiyo/supabase'
 import { useTranslations } from 'next-intl'
+import { ServicePausedBanner } from '@/components/service-paused-banner'
 
 type SourceMode = 'existing' | 'upload'
 
@@ -293,7 +294,10 @@ export default function CoverSongPage() {
 
       <h1 className="mb-6 text-2xl font-bold">{t('title')}</h1>
 
-      <div className="mb-6 space-y-4">
+      <ServicePausedBanner />
+
+      <div className="pointer-events-none opacity-50">
+        <div className="mb-6 space-y-4">
         <AudioSourceSelector
           sourceMode={sourceMode}
           selectedSongId={selectedSongId}
@@ -324,15 +328,16 @@ export default function CoverSongPage() {
         </div>
       </div>
 
-      {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
+        {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
 
-      <div className="flex justify-end gap-3">
-        <Link href="/songs">
-          <Button variant="outline" disabled={generating}>{tCommon('actions.cancel')}</Button>
-        </Link>
-        <Button onClick={handleGenerate} disabled={generating || !canSubmit}>
-          {generating ? tCommon('states.generating') : t('submit')}
-        </Button>
+        <div className="flex justify-end gap-3">
+          <Link href="/songs">
+            <Button variant="outline" disabled={generating}>{tCommon('actions.cancel')}</Button>
+          </Link>
+          <Button onClick={handleGenerate} disabled={generating || !canSubmit}>
+            {generating ? tCommon('states.generating') : t('submit')}
+          </Button>
+        </div>
       </div>
     </div>
   )

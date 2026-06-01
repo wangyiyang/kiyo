@@ -65,13 +65,13 @@ export default function LyricsList() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t('list.title')}</h1>
         <div className="flex gap-3">
-          <Link
-            href="/lyrics/generate"
-            className="inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted"
+          <button
+            disabled
+            className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-medium text-muted-foreground/50"
           >
             <Sparkles className="h-4 w-4" />
             {t('list.generate')}
-          </Link>
+          </button>
           <AuthGuardButton
             href="/lyrics/new"
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"

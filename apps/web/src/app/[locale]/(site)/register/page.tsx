@@ -12,6 +12,7 @@ import {
 
 import { RegisterForm } from '@/components/auth/register-form'
 import { GuestGuard } from '@/components/auth/guest-guard'
+import { ServicePausedBanner } from '@/components/service-paused-banner'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('auth')
@@ -30,7 +31,8 @@ export default async function RegisterPage() {
               <CardTitle className="text-2xl">{t('register.title')}</CardTitle>
               <CardDescription>{t('register.subtitle')}</CardDescription>
             </CardHeader>
-            <CardContent>
+            <ServicePausedBanner type="register" />
+            <CardContent className="pointer-events-none opacity-50">
               <RegisterForm />
               <p className="mt-4 text-center text-sm text-muted-foreground">
                 {t('register.hasAccount')}{' '}

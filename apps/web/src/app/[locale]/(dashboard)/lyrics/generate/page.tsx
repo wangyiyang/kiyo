@@ -5,6 +5,7 @@ import { useRouter, Link } from '@/i18n/navigation'
 import { Button, Input, Label, Textarea } from '@kiyo/ui'
 import { ArrowLeft, Sparkles, Loader2, Lightbulb } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { ServicePausedBanner } from '@/components/service-paused-banner'
 
 export default function LyricGeneratePage() {
   const router = useRouter()
@@ -88,7 +89,9 @@ export default function LyricGeneratePage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <ServicePausedBanner />
+
+      <form onSubmit={handleSubmit} className="space-y-5 pointer-events-none opacity-50">
         <div>
           <Label htmlFor="prompt">{t('fields.prompt')} *</Label>
           <Textarea

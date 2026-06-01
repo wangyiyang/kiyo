@@ -565,6 +565,12 @@
         "title": "가사가 없습니다",
         "description": "첫 번째 가사를 만들어 보세요"
       }
+    },
+    "servicePaused": {
+      "title": "서비스 일시 중지",
+      "message": "AI 생성 서비스가 일시 중지되었습니다. 음악 탐색 및 재생은 정상적으로 이용하실 수 있습니다.",
+      "registerTitle": "가입 일시 중지",
+      "registerMessage": "신규 사용자 가입이 일시 중지되었습니다."
     }
   },
   "songs": {

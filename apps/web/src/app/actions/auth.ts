@@ -32,24 +32,11 @@ export async function signUp(
   email: string,
   password: string
 ): Promise<AuthResult> {
-  const supabase = await createServerClient()
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/auth/callback`,
-    },
-  })
-
-  if (error) {
-    return {
-      ok: false,
-      message: error.message,
-      code: error.code ?? 'UNKNOWN',
-    }
+  return {
+    ok: false,
+    message: 'New user registration is currently paused.',
+    code: 'SERVICE_PAUSED',
   }
-
-  return { ok: true, message: 'Please check your email to verify your account.' }
 }
 
 export async function signOut(): Promise<AuthResult> {
