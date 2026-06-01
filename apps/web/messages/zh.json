@@ -565,6 +565,12 @@
         "title": "暂无歌词",
         "description": "创建你的第一首歌词吧"
       }
+    },
+    "servicePaused": {
+      "title": "服务暂停",
+      "message": "AI 生成服务暂停中，您仍可正常浏览和收听音乐。",
+      "registerTitle": "注册暂停",
+      "registerMessage": "新用户注册暂停中。"
     }
   },
   "songs": {

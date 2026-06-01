@@ -41,47 +41,10 @@ beforeEach(() => {
 })
 
 describe('POST /api/lyrics/generate', () => {
-  it('generates lyrics with provider routing and creates record (200)', async () => {
+  it('returns 503 SERVICE_PAUSED for authenticated user', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
-    const { routeLyrics } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(routeLyrics).mockResolvedValue({
-      text: '[Verse 1]\nGenerated line',
-    })
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({
-        prompt: '一首关于青春的歌',
-        language: 'zh',
-        style: '流行',
-        mood: '励志',
-      }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(200)
-    const json = await response.json()
-    expect(json.lyric.source).toBe('ai_generated')
-    expect(json.lyric.status).toBe('draft')
-    expect(json.lyric.ai_prompt).toBe('一首关于青春的歌')
-    expect(json.lyric.language).toBe('zh')
-    expect(json.lyric.title).toBe('一首关于青春的歌')
-  })
-
-  it('falls back to Minimax when provider routing fails (200)', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const { routeLyrics, generateLyrics } = await import('@kiyo/ai')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(routeLyrics).mockRejectedValue(
-      new ProviderError('GMI failed', 'gmi', 'api_error')
-    )
-    vi.mocked(generateLyrics).mockResolvedValue({
-      text: 'Fallback lyrics from Minimax',
-    })
 
     const request = new Request('http://localhost/api/lyrics/generate', {
       method: 'POST',
@@ -90,9 +53,26 @@ describe('POST /api/lyrics/generate', () => {
     })
 
     const response = await POST(request)
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(503)
     const json = await response.json()
-    expect(json.lyric.content).toBe('Fallback lyrics from Minimax')
+    expect(json.error.code).toBe('SERVICE_PAUSED')
+  })
+
+  it('returns 503 regardless of input validity', async () => {
+    const { createServerClient } = await import('@kiyo/supabase/server')
+    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
+    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
+
+    const request = new Request('http://localhost/api/lyrics/generate', {
+      method: 'POST',
+      body: JSON.stringify({ prompt: '' }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    const response = await POST(request)
+    expect(response.status).toBe(503)
+    const json = await response.json()
+    expect(json.error.code).toBe('SERVICE_PAUSED')
   })
 
   it('returns 401 when not authenticated', async () => {
@@ -110,183 +90,6 @@ describe('POST /api/lyrics/generate', () => {
     expect(response.status).toBe(401)
     const json = await response.json()
     expect(json.error.code).toBe('UNAUTHORIZED')
-  })
-
-  it('returns 400 when prompt is missing', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({ language: 'zh' }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(400)
-    const json = await response.json()
-    expect(json.error.code).toBe('VALIDATION_ERROR')
-  })
-
-  it('returns 422 when AI generation throws MinimaxError', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const { routeLyrics, generateLyrics } = await import('@kiyo/ai')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(routeLyrics).mockRejectedValue(new ProviderError('GMI failed', 'gmi', 'api_error'))
-    vi.mocked(generateLyrics).mockRejectedValue(new MinimaxError('API failed', 'api_error'))
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: 'test' }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(422)
-    const json = await response.json()
-    expect(json.error.code).toBe('GENERATION_FAILED')
-  })
-
-  it('returns 400 when prompt is empty string', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: '' }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(400)
-    const json = await response.json()
-    expect(json.error.code).toBe('VALIDATION_ERROR')
-  })
-
-  it('returns 400 when prompt is whitespace only', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: '   ' }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(400)
-    const json = await response.json()
-    expect(json.error.code).toBe('VALIDATION_ERROR')
-  })
-
-  it('returns 400 when prompt is not a string', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: 123 }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(400)
-    const json = await response.json()
-    expect(json.error.code).toBe('VALIDATION_ERROR')
-  })
-
-  it('returns 400 when language is not a string', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: 'test', language: 123 }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(400)
-    const json = await response.json()
-    expect(json.error.code).toBe('VALIDATION_ERROR')
-    expect(json.error.message).toBe('Language must be a string')
-  })
-
-  it('returns 400 when style is not a string', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: 'test', style: true }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(400)
-    const json = await response.json()
-    expect(json.error.code).toBe('VALIDATION_ERROR')
-    expect(json.error.message).toBe('Style must be a string')
-  })
-
-  it('returns 400 when mood is not a string', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: 'test', mood: {} }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(400)
-    const json = await response.json()
-    expect(json.error.code).toBe('VALIDATION_ERROR')
-    expect(json.error.message).toBe('Mood must be a string')
-  })
-
-  it('returns 500 when DB insert fails', async () => {
-    const { createServerClient } = await import('@kiyo/supabase/server')
-    const { routeLyrics } = await import('@kiyo/ai')
-    const mockClient = createMockSupabaseClient({ userId: 'user-1' })
-
-    const insertError = new Error('insert failed')
-    const originalFrom = mockClient.from
-    mockClient.from = vi.fn((table: string) => {
-      const chain = originalFrom(table)
-      return {
-        ...chain,
-        insert: () => ({
-          select: () => ({
-            single: () => Promise.resolve({ data: null, error: insertError }),
-          }),
-        }),
-      }
-    }) as any
-
-    vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(routeLyrics).mockResolvedValue({ text: 'lyric text' })
-
-    const request = new Request('http://localhost/api/lyrics/generate', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: 'test' }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    const response = await POST(request)
-    expect(response.status).toBe(500)
-    const json = await response.json()
-    expect(json.error.code).toBe('INTERNAL_ERROR')
-    expect(json.error.message).toBe('insert failed')
   })
 })
 

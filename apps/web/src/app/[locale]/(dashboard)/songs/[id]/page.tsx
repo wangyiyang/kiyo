@@ -166,12 +166,10 @@ async function SongDetailContent({ locale, id }: { locale: string; id: string })
           {song.status === 'completed' && (song.audio_url || song.file_path) && (
             <>
               <ExportDialog songId={song.id} songTitle={song.title} />
-              <Link href={`/songs/cover?original_song_id=${song.id}`}>
-                <Button variant="outline" size="sm">
-                  <Mic2 className="mr-1 h-4 w-4" />
-                  {t('aiCover')}
-                </Button>
-              </Link>
+              <Button variant="outline" size="sm" disabled>
+                <Mic2 className="mr-1 h-4 w-4" />
+                {t('aiCover')}
+              </Button>
             </>
           )}
           <ShareButton

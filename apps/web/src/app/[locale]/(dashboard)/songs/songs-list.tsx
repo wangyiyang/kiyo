@@ -92,20 +92,20 @@ export default function SongsList() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t('list.title')}</h1>
         <div className="flex items-center gap-3">
-          <AuthGuardButton
-            href="/songs/new"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+          <button
+            disabled
+            className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg bg-purple-600/50 px-4 py-2 text-sm font-medium text-white/70"
           >
             <Wand2 className="h-4 w-4" />
             {t('list.generate')}
-          </AuthGuardButton>
-          <Link
-            href="/songs/cover"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+          </button>
+          <button
+            disabled
+            className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg bg-purple-600/50 px-4 py-2 text-sm font-medium text-white/70"
           >
             <Mic2 className="h-4 w-4" />
             {t('list.cover')}
-          </Link>
+          </button>
         </div>
       </div>
 

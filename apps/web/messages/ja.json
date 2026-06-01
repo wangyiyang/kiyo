@@ -565,6 +565,12 @@
         "title": "歌詞がありません",
         "description": "最初の歌詞を作成"
       }
+    },
+    "servicePaused": {
+      "title": "サービス停止中",
+      "message": "AI生成サービスは停止中です。音楽の閲覧と再生は引き続きご利用いただけます。",
+      "registerTitle": "登録停止中",
+      "registerMessage": "新規ユーザー登録は現在停止中です。"
     }
   },
   "songs": {

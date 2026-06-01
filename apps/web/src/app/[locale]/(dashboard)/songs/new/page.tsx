@@ -5,6 +5,7 @@ import { useRouter, Link } from '@/i18n/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { SongCreateForm } from '@/components/songs/song-create-form'
+import { ServicePausedBanner } from '@/components/service-paused-banner'
 
 export default function NewSongPage() {
   const router = useRouter()
@@ -38,10 +39,14 @@ export default function NewSongPage() {
 
       <h1 className="mb-6 text-2xl font-bold">{t('title')}</h1>
 
-      <SongCreateForm
+      <ServicePausedBanner />
+
+      <div className="pointer-events-none opacity-50">
+        <SongCreateForm
         lyrics={lyrics}
         onSuccess={(songId) => router.push(`/songs/${songId}`)}
       />
+      </div>
     </div>
   )
 }

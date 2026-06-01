@@ -34,9 +34,8 @@ beforeEach(() => {
 })
 
 describe('POST /api/songs/:id/generate', () => {
-  it('generates music and updates song (200)', async () => {
+  it('returns 503 SERVICE_PAUSED for authenticated user', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
-    const { generateMusic } = await import('@kiyo/ai')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
       {
@@ -54,24 +53,14 @@ describe('POST /api/songs/:id/generate', () => {
       { id: 'l1', title: 'Lyric 1', user_id: 'user-1', content: 'Line 1\nLine 2' },
     ]
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
-    vi.mocked(generateMusic).mockResolvedValue({
-      audioUrl: 'https://cdn.minimaxi.com/audio/test.mp3',
-      duration: 60,
-    })
-
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(1024)),
-    })
 
     const response = await POST(new Request('http://localhost'), { params: { id: 's1' } })
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(503)
     const json = await response.json()
-    expect(json.song.status).toBe('completed')
-    expect(json.song.duration).toBe(60)
+    expect(json.error.code).toBe('SERVICE_PAUSED')
   })
 
-  it('returns 400 when song has no lyric_id', async () => {
+  it('returns 503 SERVICE_PAUSED even when song has no lyric_id', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     mockClient.dataStore.songs = [
@@ -80,20 +69,20 @@ describe('POST /api/songs/:id/generate', () => {
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
     const response = await POST(new Request('http://localhost'), { params: { id: 's1' } })
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(503)
     const json = await response.json()
-    expect(json.error.code).toBe('VALIDATION_ERROR')
+    expect(json.error.code).toBe('SERVICE_PAUSED')
   })
 
-  it('returns 404 for non-existent song', async () => {
+  it('returns 503 SERVICE_PAUSED even for non-existent song', async () => {
     const { createServerClient } = await import('@kiyo/supabase/server')
     const mockClient = createMockSupabaseClient({ userId: 'user-1' })
     vi.mocked(createServerClient).mockResolvedValue(mockClient as any)
 
     const response = await POST(new Request('http://localhost'), { params: { id: 'not-found' } })
-    expect(response.status).toBe(404)
+    expect(response.status).toBe(503)
     const json = await response.json()
-    expect(json.error.code).toBe('NOT_FOUND')
+    expect(json.error.code).toBe('SERVICE_PAUSED')
   })
 
   it('returns 401 when not authenticated', async () => {
